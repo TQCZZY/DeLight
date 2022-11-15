@@ -23,138 +23,138 @@
 //定义全局变量
 	//用于DFS的变量
 		//DFS的返回值
-struct dfs_return {
-	int Cost = 0;
+struct Dfs_Return {
+	int cost = 0;
 	//Order存储反向的顺序
-	std::vector<int>Order;
+	std::vector<int>order;
 };
 		//多源最短路
-std::vector<std::vector<int>>Dfs_Map;
+std::vector<std::vector<int>>dfs_map;
 	//用于Dijkstra的变量
 		//到起点的距离
-struct distance_to_start {
-	int Point_Number;
-	int Cost;
-	int From;
-	inline bool operator <(const distance_to_start X) {
-		return this->Cost < X.Cost;
+struct Distance_To_Start {
+	int point_number;
+	int cost;
+	int from;
+	inline bool operator <(const Distance_To_Start X) {
+		return this->cost < X.cost;
 	}
 };
 
 //声明
 	//求两个整型的最小值
-inline int min(int a, int b);
+inline int Min(int a, int b);
 	//求多源最短路
-std::vector<std::vector<int>>floyd(std::vector<std::vector<int>>Map);
+std::vector<std::vector<int>>Floyd(std::vector<std::vector<int>>map);
 	//求各点间的顺序
-dfs_return dfs(int Start, int From, std::vector<int>To, std::vector<bool>Visit, int Step);
+Dfs_Return Dfs(int start, int from, std::vector<int>to, std::vector<bool>visit, int step);
 	//获取到达各目的地的最优先后顺序
-std::vector<int>get_primary_order(int From, std::vector<int>To, std::vector<std::vector<int>>Map);
+std::vector<int>Get_Primary_Order(int from, std::vector<int>to, std::vector<std::vector<int>>map);
 	//堆优化的Dijkstra
-std::vector<int>dijkstra(int From, int To, std::vector<std::vector<int>>Map);
+std::vector<int>Dijkstra(int from, int to, std::vector<std::vector<int>>map);
 
 //返回最小值
-inline int min(int a, int b) {
+inline int Min(int a, int b) {
 	return a > b ? b : a;
 }
 
 //由已有有向图生成多源最短路,时间复杂度O(n³)
-std::vector<std::vector<int>>floyd(std::vector<std::vector<int>>Map) {
-	int N = sqrt(sizeof(Map));
-	for (int k = 0; k < N; k++)
-		for (int i = 0; i < N; i++) {
+std::vector<std::vector<int>>Floyd(std::vector<std::vector<int>>map) {
+	int n = sqrt(sizeof(map));
+	for (int k = 0; k < n; k++)
+		for (int i = 0; i < n; i++) {
 			if (k == i)
 				continue;
-			if (Map[i][k] == -1)
+			if (map[i][k] == -1)
 				continue;
-			for (int j = 0; j < N; j++) {
+			for (int j = 0; j < n; j++) {
 				if (k == j || i == j)
 					continue;
-				if (Map[k][j] == -1)
+				if (map[k][j] == -1)
 					continue;
-				Map[i][j] = min(Map[i][j], Map[i][k] + Map[j][k]);
+				map[i][j] = Min(map[i][j], map[i][k] + map[j][k]);
 			}
 		}
-	return Map;
+	return map;
 }
 
 //深度优先搜索,时间复杂度O(m!)
 	//Step初值为0
-dfs_return dfs(int Start, int From, std::vector<int>To, std::vector<bool>Visit, int Step) {
-	dfs_return Ans;
-	Ans.Cost = INF;
-	int N = To.size();
-	if (Step == N-1)
-		for (int i = 0; i < N; i++)
-			if (!Visit[i]) {
+Dfs_Return Dfs(int start, int from, std::vector<int>to, std::vector<bool>visit, int step) {
+	Dfs_Return ans;
+	ans.cost = INF;
+	int n = to.size();
+	if (step == n-1)
+		for (int i = 0; i < n; i++)
+			if (!visit[i]) {
 				//花费需要加上返回起点的费用
-				Ans.Cost = Dfs_Map[From][To[i]] + Dfs_Map[To[i]][Start];
-				Ans.Order.push_back(To[i]);
-				return Ans;
+				ans.cost = dfs_map[from][to[i]] + dfs_map[to[i]][start];
+				ans.order.push_back(to[i]);
+				return ans;
 			}
 	int Min_Distance = INF;
-	dfs_return Tmp;
-	for (int i = 0; i < N; i++)
-		if (!Visit[i]) {
-			Visit[i] = true;
-			Tmp = dfs(Start, To[i], To, Visit, Step + 1);
-			Visit[i] = false;
-			int New_Distance = Tmp.Cost + Dfs_Map[From][To[i]];
+	Dfs_Return tmp;
+	for (int i = 0; i < n; i++)
+		if (!visit[i]) {
+			visit[i] = true;
+			tmp = Dfs(start, to[i], to, visit, step + 1);
+			visit[i] = false;
+			int New_Distance = tmp.cost + dfs_map[from][to[i]];
 			if (New_Distance < Min_Distance) {
 				Min_Distance = New_Distance;
-				Ans = Tmp;
-				Ans.Cost += Dfs_Map[From][To[i]];
-				Ans.Order.push_back(To[i]);
+				ans = tmp;
+				ans.cost += dfs_map[from][to[i]];
+				ans.order.push_back(to[i]);
 			}
 		}
-	return Ans;
+	return ans;
 }
 
 //返回到各目的地的先后
-std::vector<int>get_primary_order(int From, std::vector<int>To, std::vector<std::vector<int>>Map) {
-	std::vector<int>Ans;
-	int N = To.size();
-	Dfs_Map = floyd(Map);
-	std::vector<bool>Visit;
-	for (int i = 0; i < N; i++)
-		Visit.push_back(false);
-	dfs_return Dfs_Return = dfs(From, From, To, Visit, 0);
-	for (int i = N - 1; i >= 0; i--)
-		Ans.push_back(Dfs_Return.Order[i]);
+std::vector<int>Get_Primary_Order(int from, std::vector<int>to, std::vector<std::vector<int>>map) {
+	std::vector<int>ans;
+	int n = to.size();
+	dfs_map = Floyd(map);
+	std::vector<bool>visit;
+	for (int i = 0; i < n; i++)
+		visit.push_back(false);
+	Dfs_Return Dfs_Return = Dfs(from, from, to, visit, 0);
+	for (int i = n - 1; i >= 0; i--)
+		ans.push_back(Dfs_Return.order[i]);
 	//返回起点
-	Ans.push_back(From);
-	return Ans;
+	ans.push_back(from);
+	return ans;
 }
 
 //堆优化的Dijkstra,但是仅用于求路径顺序,返回反向的不包含起点但包含终点的路径顺序
-std::vector<int>dijkstra(int From, int To, std::vector<std::vector<int>>Map) {
+std::vector<int>Dijkstra(int from, int to, std::vector<std::vector<int>>map) {
 	//初始化
-	std::vector<int>Ans;
-	std::vector<int>From_Point;
-	std::priority_queue<distance_to_start>Queue;
-	int N = sqrt(sizeof(Map));
-	distance_to_start Head{ From,0,-1 };
-	std::vector<int>Visit;
-	for (int i = 0; i < N; i++) {
-		Visit.push_back(false);
-		From_Point.push_back(-1);
+	std::vector<int>ans;
+	std::vector<int>from_point;
+	std::priority_queue<Distance_To_Start>queue;
+	int n = sqrt(sizeof(map));
+	Distance_To_Start head{ from,0,-1 };
+	std::vector<int>visit;
+	for (int i = 0; i < n; i++) {
+		visit.push_back(false);
+		from_point.push_back(-1);
 	}
-	Queue.push(Head);
+	queue.push(head);
 
-	while (Queue.top().Point_Number != To) {
-		distance_to_start Now = Queue.top();
-		Queue.pop();
-		if (Visit[Now.Point_Number])
+	while (queue.top().point_number != to) {
+		Distance_To_Start now = queue.top();
+		queue.pop();
+		if (visit[now.point_number])
 			continue;
-		Visit[Now.Point_Number] = true;
-		From_Point[Now.Point_Number] = Now.From;
-		for (int i = 0; i < N; i++)
-			if (!Visit[i] && Map[Now.Point_Number][i] != INF) {
-				distance_to_start Tmp{ i,Now.Cost + Map[Now.Point_Number][i],Now.Point_Number };
-				Queue.push(Tmp);
+		visit[now.point_number] = true;
+		from_point[now.point_number] = now.from;
+		for (int i = 0; i < n; i++)
+			if (!visit[i] && map[now.point_number][i] != INF) {
+				Distance_To_Start Tmp{ i,now.cost + map[now.point_number][i],now.point_number };
+				queue.push(Tmp);
 			}
 	}
-	for (int i = To; i != From; i = From_Point[i])
-		Ans.push_back(i);
-	return Ans;
+	for (int i = to; i != from; i = from_point[i])
+		ans.push_back(i);
+	return ans;
 }

@@ -102,8 +102,10 @@ void SystemDlg::OnBnClickedButton3()//增加
 {
 	// TODO: 在此添加控件通知处理程序代码
 	PropertyDlg dlg;
-	dlg.DoModal();//点击增加弹出子对话框2
+	dlg.DoModal();//点击增加，弹出子对话框2
 	int nCount=m_List.GetItemCount();
+	if (dlg.sType.IsEmpty() || dlg.sDate.IsEmpty() || dlg.sNumber.IsEmpty())
+		return;
 	m_List.InsertItem(nCount,dlg.sType);//新建类型
 	m_List.SetItemText(nCount, 1, dlg.sDate);
 	m_List.SetItemText(nCount, 2, dlg.sNumber);
@@ -137,7 +139,8 @@ void SystemDlg::OnBnClickedButton5()
 		{
 			PropertyDlg dlg;
 			dlg.DoModal();//弹窗
-
+			if (dlg.sType.IsEmpty() || dlg.sDate.IsEmpty() || dlg.sNumber.IsEmpty())
+				return;
 			m_List.SetItemText(i, 0, dlg.sType);
 			m_List.SetItemText(i, 1, dlg.sDate);
 			m_List.SetItemText(i, 2, dlg.sNumber);

@@ -26,4 +26,5 @@ public:
 	CString sDate;
 	CString sNumber;//创建成员
 	afx_msg void OnBnClickedButtonOk();
+	afx_msg void OnBnClickedButtonNo();
 };

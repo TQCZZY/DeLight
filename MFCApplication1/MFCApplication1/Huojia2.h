@@ -2,19 +2,19 @@
 #include "afxdialogex.h"
 
 
-// SystemDlg 对话框
+// Huojia2 对话框
 
-class SystemDlg : public CDialogEx
+class Huojia2 : public CDialogEx
 {
-	DECLARE_DYNAMIC(SystemDlg)
+	DECLARE_DYNAMIC(Huojia2)
 
 public:
-	SystemDlg(CWnd* pParent = nullptr);   // 标准构造函数
-	virtual ~SystemDlg();
+	Huojia2(CWnd* pParent = nullptr);   // 标准构造函数
+	virtual ~Huojia2();
 
 // 对话框数据
 #ifdef AFX_DESIGN_TIME
-	enum { IDD = IDD_DIALOG1 };
+	enum { IDD = IDD_DIALOG6 };
 #endif
 
 protected:
@@ -22,14 +22,12 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 public:
+	CListCtrl H2_List;
 	afx_msg void OnClose();
 	virtual BOOL OnInitDialog();
-	// 这是显示商品数据的列表
-	CListCtrl m_List;
 	afx_msg void OnBnClickedButton1();
-	afx_msg void OnBnClickedButtonReverse();
+	afx_msg void OnBnClickedButton7();
 	afx_msg void OnBnClickedButton3();
 	afx_msg void OnBnClickedButton4();
-	afx_msg void OnBnClickedButton5();
-	afx_msg void OnBnClickedButton2();
+	afx_msg void OnBnClickedButton9();
 };

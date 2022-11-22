@@ -39,6 +39,21 @@
     <ClInclude Include="PropertyDlg.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="ListDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Huojia1.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="PropertyDlg2.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Huojia2.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Huojia3.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MFCApplication1.cpp">
@@ -54,6 +69,21 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="PropertyDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ListDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Huojia1.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="PropertyDlg2.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Huojia2.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Huojia3.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

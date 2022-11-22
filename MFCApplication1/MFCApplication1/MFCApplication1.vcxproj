@@ -184,15 +184,24 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="framework.h" />
+    <ClInclude Include="Huojia1.h" />
+    <ClInclude Include="Huojia2.h" />
+    <ClInclude Include="Huojia3.h" />
+    <ClInclude Include="ListDlg.h" />
     <ClInclude Include="MFCApplication1.h" />
     <ClInclude Include="MFCApplication1Dlg.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="PropertyDlg.h" />
+    <ClInclude Include="PropertyDlg2.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="SystemDlg.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Huojia1.cpp" />
+    <ClCompile Include="Huojia2.cpp" />
+    <ClCompile Include="Huojia3.cpp" />
+    <ClCompile Include="ListDlg.cpp" />
     <ClCompile Include="MFCApplication1.cpp" />
     <ClCompile Include="MFCApplication1Dlg.cpp" />
     <ClCompile Include="pch.cpp">
@@ -202,6 +211,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="PropertyDlg.cpp" />
+    <ClCompile Include="PropertyDlg2.cpp" />
     <ClCompile Include="SystemDlg.cpp" />
   </ItemGroup>
   <ItemGroup>

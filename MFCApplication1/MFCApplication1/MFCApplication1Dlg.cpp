@@ -33,6 +33,9 @@ public:
 // 实现
 protected:
 	DECLARE_MESSAGE_MAP()
+public:
+	afx_msg void OnClose();
+	virtual BOOL OnInitDialog();
 };
 
 CAboutDlg::CAboutDlg() : CDialogEx(IDD_ABOUTBOX)
@@ -45,6 +48,8 @@ void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
+	ON_WM_CLOSE()
+	ON_WM_CLOSE()
 END_MESSAGE_MAP()
 
 
@@ -178,4 +183,22 @@ void CMFCApplication1Dlg::OnBnClickedButtonLgn()
 		MessageBox(_T("用户名或密码不正确"),_T("登录失败"));//用户登录
 	}
 
+}
+
+void CAboutDlg::OnClose()
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+
+	CDialogEx::OnClose();
+}
+
+
+BOOL CAboutDlg::OnInitDialog()
+{
+	CDialogEx::OnInitDialog();
+
+	// TODO:  在此添加额外的初始化
+
+	return TRUE;  // return TRUE unless you set the focus to a control
+	// 异常: OCX 属性页应返回 FALSE
 }

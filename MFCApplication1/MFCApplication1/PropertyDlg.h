@@ -24,7 +24,9 @@ protected:
 public:
 	CString sType;
 	CString sDate;
-	CString sNumber;//创建成员
+	CString sNumber;
+	CString sThing;//创建成员
 	afx_msg void OnBnClickedButtonOk();
 	afx_msg void OnBnClickedButtonNo();
+	afx_msg void OnEnChangeEditNum2();
 };

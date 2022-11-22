@@ -6,6 +6,7 @@
 #include "afxdialogex.h"
 #include "SystemDlg.h"
 #include "PropertyDlg.h"
+#include "ListDlg.h"
 
 
 // SystemDlg 对话框
@@ -36,6 +37,7 @@ BEGIN_MESSAGE_MAP(SystemDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON3, &SystemDlg::OnBnClickedButton3)
 	ON_BN_CLICKED(IDC_BUTTON4, &SystemDlg::OnBnClickedButton4)
 	ON_BN_CLICKED(IDC_BUTTON5, &SystemDlg::OnBnClickedButton5)
+	ON_BN_CLICKED(IDC_BUTTON2, &SystemDlg::OnBnClickedButton2)
 END_MESSAGE_MAP()
 
 
@@ -61,16 +63,19 @@ BOOL SystemDlg::OnInitDialog()
 	m_List.InsertColumn(0, _T("商品类型"),0,200/*宽度*/);
 	m_List.InsertColumn(1, _T("进货时间"),0,200);
 	m_List.InsertColumn(2, _T("商品库存"),0,200);
+	m_List.InsertColumn(3, _T("货架编号"), 0, 200);
 
-	CString itemName,snum,time;
+	CString itemName,snum,time,thing;
 	for(int i=0;i<10;i++)
 	{
 		itemName.Format(_T("itemName=%d"),i);
 		time.Format(_T("2008-05-13 09:0%d"),i);
 		snum.Format(_T("%d"), i);
+		thing.Format(_T("%d"), i);
 		m_List.InsertItem(i,itemName);//第一列数据
 		m_List.SetItemText(i, 1, time);
 		m_List.SetItemText(i, 2, snum);
+		m_List.SetItemText(i, 3, thing);
 	}
 
 	return TRUE;  // return TRUE unless you set the focus to a control
@@ -104,11 +109,12 @@ void SystemDlg::OnBnClickedButton3()//增加
 	PropertyDlg dlg;
 	dlg.DoModal();//点击增加，弹出子对话框2
 	int nCount=m_List.GetItemCount();
-	if (dlg.sType.IsEmpty() || dlg.sDate.IsEmpty() || dlg.sNumber.IsEmpty())
+	if (dlg.sType.IsEmpty() || dlg.sDate.IsEmpty() || dlg.sNumber.IsEmpty() || dlg.sThing.IsEmpty())
 		return;
 	m_List.InsertItem(nCount,dlg.sType);//新建类型
 	m_List.SetItemText(nCount, 1, dlg.sDate);
 	m_List.SetItemText(nCount, 2, dlg.sNumber);
+	m_List.SetItemText(nCount, 3, dlg.sThing);
 
 
 }
@@ -129,7 +135,7 @@ void SystemDlg::OnBnClickedButton4()//删除
 }
 
 
-void SystemDlg::OnBnClickedButton5()
+void SystemDlg::OnBnClickedButton5()//修改
 {
 	// TODO: 在此添加控件通知处理程序代码
 	for (int i = 0; i < m_List.GetItemCount/*获取条目的数量*/(); i++)
@@ -139,11 +145,21 @@ void SystemDlg::OnBnClickedButton5()
 		{
 			PropertyDlg dlg;
 			dlg.DoModal();//弹窗
-			if (dlg.sType.IsEmpty() || dlg.sDate.IsEmpty() || dlg.sNumber.IsEmpty())
+			if (dlg.sType.IsEmpty() || dlg.sDate.IsEmpty() || dlg.sNumber.IsEmpty()||dlg.sThing.IsEmpty())
 				return;
 			m_List.SetItemText(i, 0, dlg.sType);
 			m_List.SetItemText(i, 1, dlg.sDate);
 			m_List.SetItemText(i, 2, dlg.sNumber);
+			m_List.SetItemText(i, 3, dlg.sThing);
 		}
+		
 	}
+}
+
+
+void SystemDlg::OnBnClickedButton2()//货架详情
+{
+	// TODO: 在此添加控件通知处理程序代码
+	ListDlg dlg;
+	dlg.DoModal();
 }

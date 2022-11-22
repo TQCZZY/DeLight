@@ -41,7 +41,8 @@ void PropertyDlg::OnBnClickedButtonOk()//增加中的确定
 	// TODO: 在此添加控件通知处理程序代码
 	GetDlgItemText(IDC_EDIT_TYPE,sType);
 	GetDlgItemText(IDC_EDIT_DATE, sDate);
-	GetDlgItemText(IDC_EDIT_NUM, sNumber);//输入值
+	GetDlgItemText(IDC_EDIT_NUM, sNumber);
+	GetDlgItemText(IDC_EDIT_THING, sThing);//输入值
 	EndDialog(0);//关闭窗口
 }
 
@@ -51,3 +52,4 @@ void PropertyDlg::OnBnClickedButtonNo()
 	// TODO: 在此添加控件通知处理程序代码
 	EndDialog(0);
 }
+

@@ -13,6 +13,7 @@
 记点数为n,目的地数为m,边数为e,则时间复杂度为O(n³+m!+(e+n)logn)
 相比直接搜索的O(n!m!)略优
 */
+
 //这里引用其他人的头文件
 
 //这里引用库函数
@@ -52,6 +53,8 @@ Dfs_Return Dfs(int start, int from, std::vector<int>to, std::vector<bool>visit, 
 std::vector<int>Get_Primary_Order(int from, std::vector<int>to, std::vector<std::vector<int>>map);
 	//堆优化的Dijkstra
 std::vector<int>Dijkstra(int from, int to, std::vector<std::vector<int>>map);
+	//输出
+std::vector<int>Get_Order(int from, std::vector<int>to, std::vector<std::vector<int>>map);
 
 //返回最小值
 inline int Min(int a, int b) {
@@ -156,5 +159,19 @@ std::vector<int>Dijkstra(int from, int to, std::vector<std::vector<int>>map) {
 	}
 	for (int i = to; i != from; i = from_point[i])
 		ans.push_back(i);
+	return ans;
+}
+
+//输出具体路径信息
+std::vector<int>Get_Order(int from, std::vector<int>to, std::vector<std::vector<int>>map) {
+	std::vector<int>primary_order = Get_Primary_Order(from, to, map);
+	std::vector<int>tmp;
+	std::vector<int>ans;
+	ans.push_back(from);
+	for (int i = 0; i < primary_order.size() - 1; i++) {
+		tmp = Dijkstra(primary_order[i], primary_order[i + 1], map);
+		for (int j = 0; j < tmp.size(); j++)
+			ans.push_back(tmp[tmp.size() - j]);
+	}
 	return ans;
 }

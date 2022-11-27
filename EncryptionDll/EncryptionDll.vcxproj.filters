@@ -21,6 +21,27 @@
     <ClInclude Include="pch.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="base64.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Ecc.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="qmc.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="qmc_cipher.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="qmc_key.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="TencentTea.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="tommath.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">

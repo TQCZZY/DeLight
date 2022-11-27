@@ -105,7 +105,7 @@ public:
 
         // 前 128 字节使用不同的解密方案
         if (offset < FIRST_SEGMENT_SIZE) {
-            size_t len_segment = std::min(FIRST_SEGMENT_SIZE - offset, buf.size());
+            size_t len_segment = min(FIRST_SEGMENT_SIZE - offset, buf.size());
             tmpbuf.resize(len_segment);
             for (size_t i = 0; i < len_segment; i++)
             {
@@ -122,7 +122,7 @@ public:
 
         // 区块对齐
         if (offset % SEGMENT_SIZE != 0) {
-            size_t len_segment = std::min(SEGMENT_SIZE - (offset % SEGMENT_SIZE), toProcess);
+            size_t len_segment = min(SEGMENT_SIZE - (offset % SEGMENT_SIZE), toProcess);
             tmpbuf.resize(len_segment);
             for (size_t i = 0; i < len_segment; i++)
             {

@@ -26,3 +26,4 @@ qmcEncBlock | Encrypt | Param1 (uint8_t * block): Buffer To Encrypt<br>Param2 (s
 qmcDecBlock | Decrypt | Param1 (uint8_t * block): Buffer To Decrypt<br>Param2 (size_t blockSize): Bytes Of The Given Buffer<br>Param3 (size_t offset): Offset Of The Given Block From The Beginning Of The Whole Cipher Memory
 qmcPreEnc | Encrypt Preparations | Param1 (uint8_t * block): Empty Buffer For Key Storage<br>Param2 (size_t blockSize): Bytes Of The Given Buffer<br>Param3 (const char* type): Encryption type("Map"/"RC4"/"QTag"/"Static"/"cache"/"ios", Case-sensitive)
 qmcPreDec | Decrypt Preparations | Param1 (uint8_t * block): A Buffer Containing The Key<br>Param2 (size_t blockSize): Bytes Of The Given Buffer<br>Param3 (const char* type): Decryption type("normal"/"cache"/"ios", Case-sensitive)
+qmcGetErr | Get Error | Param (char* error): Empty Buffer To Store Error Message

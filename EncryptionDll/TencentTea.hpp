@@ -6,7 +6,8 @@
 #include <cstdint>
 #include <vector>
 #include <time.h>
-#include <arpa/inet.h>
+#include <winsock2.h>
+#pragma comment(lib,"ws2_32.lib")
 
 const uint32_t DELTA = 0x9e3779b9;
 

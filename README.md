@@ -18,7 +18,7 @@ Name | Usage | Params
 eccEnc | Encrypt, Simple | Param1 (const char* fn): Name of file to encrypt<br>Param2 (const char* pswfn): Name of file that stores the key
 eccDec | Decrypt, Simple | Param1 (const char* fn): Name of file to decrypt<br>Param2 (const char* pswFn): Name of file that stores the key
 eccEncEx | Encrypt, Extended(Decimal Curve Props As Params) | Param1 (const char* fn) & Param2 (const char* pswfn): see eccEnc<br>Param3 (const char* c_p): Limited Field<br>Param4 (const char* c_a): Curve Coefficient A<br>Param5 (const char* c_gx): X Coordinate Of Base Point<br>Param6 (const char* c_gy): Y Coordinate Of Base Point<br>Param7 (const char* c_qx): X Coordinate Of Public Key<br>Param8 (const char* c_qy): Y Coordinate Of Public Key
-eccDecEx | Decrypt, Extended(Decimal Curve Props As Params) | Param1 (const char* fn): see eccDecc<br>Param2 (const char* c_p): Limited Field<br>Param3 (const char* c_a): Curve Coefficient A<br>Param4 (const char* c_k): Private Key
+eccDecEx | Decrypt, Extended(Decimal Curve Props As Params) | Param1 (const char* fn): see eccDec<br>Param2 (const char* c_p): Limited Field<br>Param3 (const char* c_a): Curve Coefficient A<br>Param4 (const char* c_k): Private Key
 ## Memory Encryption (Using QQMusic EncV2 Cryptography)
 Name | Usage | Params
 ------------ | ------------- | -------------

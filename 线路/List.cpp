@@ -1,5 +1,7 @@
+#include "pch.h"
+#include "EncryptionDll.hpp"
 
-
+#include<fstream>
 #include<string>
 #include<vector>
 
@@ -34,16 +36,12 @@ struct Good_Info {
 };
 
 struct Search_Info {
-	union Info
-	{
-		std::string name;
-		int amount;
-		int number;
-		int location;
-		Time time;
-	};
+	std::string name;
+	int amount;
+	int number;
+	int location;
+	Time time;
 	int type;
-	Info information;
 };
 
 struct Search_Return {
@@ -78,9 +76,9 @@ Search_Return Search(Search_Info info) {
 	switch (info.type) {
 	  case 1: {//按名字查找第一个相同的
 		  int find_hash = 0;
-		  for (int i = 0; i < info.information.name.length(); i++) {
+		  for (int i = 0; i < info.name.length(); i++) {
 			  find_hash *= 10;
-			  find_hash += info.information.name[i];
+			  find_hash += info.name[i];
 			  find_hash %= MOD;
 		  }
 		  for (Good_Info* now = head->next; now != NULL; now = now->next) {
@@ -102,7 +100,7 @@ Search_Return Search(Search_Info info) {
 	  case 2: {//按数量查找所有相同的
 		  ans.find = false;
 		  for (Good_Info* now = head->next; now != NULL; now = now->next) {
-			  if (now->amount == info.information.amount)
+			  if (now->amount == info.amount)
 				  ans.find = true;
 				  ans.numbers.push_back(now->number);
 			  }
@@ -111,7 +109,7 @@ Search_Return Search(Search_Info info) {
 	  case 3: {//按货架编号查找所有相同的
 		  ans.find = false;
 		  for (Good_Info* now = head->next; now != NULL; now = now->next)
-			  if (now->location == info.information.location) {
+			  if (now->location == info.location) {
 				  ans.find = true;
 				  ans.numbers.push_back(now->number);
 			  }
@@ -120,7 +118,7 @@ Search_Return Search(Search_Info info) {
 	  case 4: {//按时间查找所有相同的
 		  ans.find = false;
 		  for (Good_Info* now = head->next; now != NULL; now = now->next)
-			  if (now->time == info.information.time) {
+			  if (now->time == info.time) {
 				  ans.find = true;
 				  ans.numbers.push_back(now->number);
 			  }
@@ -135,14 +133,45 @@ void sort(int command) {
 }
 
 void init() {
-	
+	std::fstream file = std::fstream("货物数据.data", std::ios::in);
+	std::vector<uint8_t>key(2 * 1024 * 1024);//定义一个2Mb内存块?
+	file.seekg(-(2 * 1024 * 1024), std::ios::end);
+	file.read((char*)key.data(), 2 * 1024 * 1024);
+	qmcPreDec(key.data(), 2 * 1024 * 1024, "normal");
+
+
+
+
+
+
 }
 
 void save() {
+	std::fstream file = std::fstream("货物数据.data", std::ios::out);
+	std::vector<uint8_t>key(2*1024*1024);//定义一个2Mb内存块?
+	int qmcrev = qmcPreEnc(key.data(), key.size(), "RC4");
+	if (qmcrev == -1) {
+		std::string error;
+		qmcGetErr((char*)error.c_str());
+		//把这个字符串给WJB再退出
+	}
+	key.resize(qmcrev);
 	int n = 0;//计数
 	for (Good_Info* now = head->next; now != NULL; now = now->next)
 		n++;
-	for (Good_Info* now = head->next; now != NULL; now = now->next) {
-
+	int cnt=0;
+	Good_Info* tmp = head->next;
+	for (Good_Info* now = tmp; now != NULL; now = tmp) {
+		tmp = tmp->next;
+		int lenth = qmcEncBlock((uint8_t*)now, sizeof(now), cnt);
+		if (lenth == 0) {
+			std::string error;
+			qmcGetErr((char*)error.c_str());
+			//把这个字符串给WJB再退出
+		}
+		file.write((const char*)now, lenth);
+		cnt += sizeof(now);
 	}
+	file.write((const char*)key.data(), key.size());
+	file.close();
 }

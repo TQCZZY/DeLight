@@ -19,7 +19,7 @@
 //这里引用库函数
 #include<vector>
 #include<queue>
-#define INF 0x7fffffff
+constexpr auto INF = 0x7fffffff;
 
 //定义全局变量
 	//用于DFS的变量

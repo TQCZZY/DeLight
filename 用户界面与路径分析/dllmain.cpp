@@ -47,10 +47,6 @@ int IsInRect(int LX, int LY, int RX, int RY, int x, int y)
     else { return 0; }
 }
 
-__declspec(dllexport)std::vector<std::pair<int, int> > Senpoints()
-{
-    return points;
-}//接口输出
 __declspec(dllexport)void receive(std::vector<std::pair<int, int> >Re)
 {
     Recepoints = Re;
@@ -528,6 +524,36 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
     }
     return (INT_PTR)FALSE;
 }
+__declspec(dllexport)std::vector<std::pair<int, int> > Sentpoints(HINSTANCE hInstance, int       nCmdShow)
+{
+
+
+    // 初始化全局字符串
+    LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDC_MAP, szWindowClass, MAX_LOADSTRING);
+    MyRegisterClass(hInstance);
+
+    // 执行应用程序初始化:
+    if (!InitInstance(hInstance, nCmdShow))
+    {
+        return {};
+    }
+
+    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_MAP));
+
+    MSG msg;
+
+    // 主消息循环:
+    while (GetMessage(&msg, nullptr, 0, 0))
+    {
+        if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+        {
+            TranslateMessage(&msg);
+            DispatchMessage(&msg);
+        }
+    }
+    return points;
+}//接口输出
 
 
 

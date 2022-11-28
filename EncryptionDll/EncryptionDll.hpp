@@ -7,3 +7,4 @@ extern "C" __declspec(dllimport) size_t qmcDecBlock(uint8_t * block, size_t bloc
 extern "C" __declspec(dllimport) int qmcPreEnc(uint8_t * block, size_t blockSize, const char* type);
 extern "C" __declspec(dllimport) size_t qmcEncBlock(uint8_t * block, size_t blockSize, size_t offset);
 extern "C" __declspec(dllimport) void qmcGetErr(char* error);
+#pragma comment(lib,"EncryptionDll.lib")

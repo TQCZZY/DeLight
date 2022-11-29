@@ -188,6 +188,7 @@ void SystemDlg::OnBnClickedButton6()//排序1
 		}
 	}
 	Sort(1);
+	transform();
 	for (int i = 0; i < Com.size(); i++)
 	{
 		m_List.InsertItem(i, Com[i].itemName);//第一列数据

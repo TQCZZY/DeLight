@@ -6,7 +6,7 @@
 #include "afxdialogex.h"
 #include "Huojia1.h"
 #include "PropertyDlg2.h"
-
+#include "data.cpp"
 
 // Huojia1 对话框
 
@@ -168,6 +168,19 @@ void Huojia1::OnBnClickedButton2()//排序1
 			i--;//若不i--则不能多项同时删除，因为当删除0栏后，1栏会为0栏，就删不掉了
 		}
 	}
+
+	Sort(1);
+	transform();
+	for (int i = 0; i < Com.size(); i++)
+	{
+		if (Com[i].huo == 1)
+		{
+			H1_List.InsertItem(i, Com[i].itemName);//第一列数据
+			H1_List.SetItemText(i, 1, Com[i].time);
+			H1_List.SetItemText(i, 2, Com[i].snum);
+			H1_List.SetItemText(i, 3, Com[i].thing);
+		}
+	}
 }
 
 
@@ -188,6 +201,19 @@ void Huojia1::OnBnClickedButton11()//排序2
 			i--;//若不i--则不能多项同时删除，因为当删除0栏后，1栏会为0栏，就删不掉了
 		}
 	}
+
+	Sort(4);
+	transform();
+	for (int i = 0; i < Com.size(); i++)
+	{
+		if (Com[i].huo == 1)
+		{
+			H1_List.InsertItem(i, Com[i].itemName);//第一列数据
+			H1_List.SetItemText(i, 1, Com[i].time);
+			H1_List.SetItemText(i, 2, Com[i].snum);
+			H1_List.SetItemText(i, 3, Com[i].thing);
+		}
+	}
 }
 
 
@@ -206,6 +232,19 @@ void Huojia1::OnBnClickedButton12()//排序3
 		{
 			H1_List.DeleteItem(i);
 			i--;//若不i--则不能多项同时删除，因为当删除0栏后，1栏会为0栏，就删不掉了
+		}
+	}
+
+	Sort(2);
+	transform();
+	for (int i = 0; i < Com.size(); i++)
+	{
+		if (Com[i].huo == 1)
+		{
+			H1_List.InsertItem(i, Com[i].itemName);//第一列数据
+			H1_List.SetItemText(i, 1, Com[i].time);
+			H1_List.SetItemText(i, 2, Com[i].snum);
+			H1_List.SetItemText(i, 3, Com[i].thing);
 		}
 	}
 }

@@ -28,15 +28,23 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 
 
 #define MAX_LOADSTRING 100
+#define GET_X_LPARAM(lp)                        ((int)(short)LOWORD(lp))
+
+#define GET_Y_LPARAM(lp)                        ((int)(short)HIWORD(lp))
 
 // 全局变量:
 HINSTANCE hInst;                                // 当前实例
 WCHAR szTitle[MAX_LOADSTRING];                  // 标题栏文本
 WCHAR szWindowClass[MAX_LOADSTRING];   // 主窗口类名
 std::vector<std::pair<int, int> > points; //存放点
-std::vector<std::pair<int, int> > Recepoints; //接收返回点
+std::vector<std::pair<int, int> > cornerpoints;//
+std::vector<std::pair<int, int> > Recepoints;//接收返回点
 int iclick = 0;    //鼠标点击次数
 HWND hWnd;
+
+
+
+
 
 
 int IsInRect(int LX, int LY, int RX, int RY, int x, int y)
@@ -54,6 +62,109 @@ __declspec(dllexport)void receive(std::vector<std::pair<int, int> >Re)
     GetClientRect(hWnd, r);
     InvalidateRect(hWnd, r, TRUE);
 }
+
+void judgecorner(int X,int Y)
+{
+    cornerpoints.push_back(std::pair<int, int>(50, 50));
+    cornerpoints.push_back(std::pair<int, int>(200, 50));
+    cornerpoints.push_back(std::pair<int, int>(200, 150));
+    cornerpoints.push_back(std::pair<int, int>(50, 150));
+    cornerpoints.push_back(std::pair<int, int>(320, 50));
+    cornerpoints.push_back(std::pair<int, int>(420, 50));
+    cornerpoints.push_back(std::pair<int, int>(420, 100));
+    cornerpoints.push_back(std::pair<int, int>(320, 100));
+    cornerpoints.push_back(std::pair<int, int>(440, 50));
+    cornerpoints.push_back(std::pair<int, int>(590, 50));
+    cornerpoints.push_back(std::pair<int, int>(590, 100));
+    cornerpoints.push_back(std::pair<int, int>(440, 100));
+    cornerpoints.push_back(std::pair<int, int>(640, 50));
+    cornerpoints.push_back(std::pair<int, int>(740, 50));
+    cornerpoints.push_back(std::pair<int, int>(740, 100));
+    cornerpoints.push_back(std::pair<int, int>(640, 100));
+    cornerpoints.push_back(std::pair<int, int>(790, 50));
+    cornerpoints.push_back(std::pair<int, int>(890, 50));
+    cornerpoints.push_back(std::pair<int, int>(890, 100));
+    cornerpoints.push_back(std::pair<int, int>(790, 100));
+    cornerpoints.push_back(std::pair<int, int>(940, 50));
+    cornerpoints.push_back(std::pair<int, int>(1090, 50));
+    cornerpoints.push_back(std::pair<int, int>(1090, 100));
+    cornerpoints.push_back(std::pair<int, int>(940, 100));
+    cornerpoints.push_back(std::pair<int, int>(1110, 50));
+    cornerpoints.push_back(std::pair<int, int>(1260, 50));
+    cornerpoints.push_back(std::pair<int, int>(1260, 100));
+    cornerpoints.push_back(std::pair<int, int>(1110, 100));
+    cornerpoints.push_back(std::pair<int, int>(320, 120));
+    cornerpoints.push_back(std::pair<int, int>(420, 120));
+    cornerpoints.push_back(std::pair<int, int>(420, 170));
+    cornerpoints.push_back(std::pair<int, int>(320, 170));
+    cornerpoints.push_back(std::pair<int, int>(440, 120));
+    cornerpoints.push_back(std::pair<int, int>(590, 120));
+    cornerpoints.push_back(std::pair<int, int>(590, 170));
+    cornerpoints.push_back(std::pair<int, int>(440, 170));
+    cornerpoints.push_back(std::pair<int, int>(640, 120));
+    cornerpoints.push_back(std::pair<int, int>(740, 120));
+    cornerpoints.push_back(std::pair<int, int>(740, 170));
+    cornerpoints.push_back(std::pair<int, int>(640, 170));
+    cornerpoints.push_back(std::pair<int, int>(790, 120));
+    cornerpoints.push_back(std::pair<int, int>(890, 120));
+    cornerpoints.push_back(std::pair<int, int>(890, 170));
+    cornerpoints.push_back(std::pair<int, int>(790, 170));
+    cornerpoints.push_back(std::pair<int, int>(150, 200));
+    cornerpoints.push_back(std::pair<int, int>(600, 200));
+    cornerpoints.push_back(std::pair<int, int>(600, 500));
+    cornerpoints.push_back(std::pair<int, int>(150, 500));
+    cornerpoints.push_back(std::pair<int, int>(640, 190));
+    cornerpoints.push_back(std::pair<int, int>(700, 190));
+    cornerpoints.push_back(std::pair<int, int>(700, 240));
+    cornerpoints.push_back(std::pair<int, int>(640, 240));
+    cornerpoints.push_back(std::pair<int, int>(700, 210));
+    cornerpoints.push_back(std::pair<int, int>(760, 210));
+    cornerpoints.push_back(std::pair<int, int>(760, 240));
+    cornerpoints.push_back(std::pair<int, int>(700, 240));
+    cornerpoints.push_back(std::pair<int, int>(790, 190));
+    cornerpoints.push_back(std::pair<int, int>(890, 190));
+    cornerpoints.push_back(std::pair<int, int>(890, 240));
+    cornerpoints.push_back(std::pair<int, int>(790, 240));
+    cornerpoints.push_back(std::pair<int, int>(1050, 360));
+    cornerpoints.push_back(std::pair<int, int>(1260, 360));
+    cornerpoints.push_back(std::pair<int, int>(1260, 410));
+    cornerpoints.push_back(std::pair<int, int>(1050, 410));
+    cornerpoints.push_back(std::pair<int, int>(800, 400));
+    cornerpoints.push_back(std::pair<int, int>(900, 400));
+    cornerpoints.push_back(std::pair<int, int>(800, 500));
+    cornerpoints.push_back(std::pair<int, int>(800, 500));
+    cornerpoints.push_back(std::pair<int, int>(1050, 460));
+    cornerpoints.push_back(std::pair<int, int>(1260, 510));
+    cornerpoints.push_back(std::pair<int, int>(1260, 510));
+    cornerpoints.push_back(std::pair<int, int>(1050, 460));
+    cornerpoints.push_back(std::pair<int, int>(300, 560));
+    cornerpoints.push_back(std::pair<int, int>(750, 560));
+    cornerpoints.push_back(std::pair<int, int>(750, 760));
+    cornerpoints.push_back(std::pair<int, int>(300, 760));
+    cornerpoints.push_back(std::pair<int, int>(940, 160));
+    cornerpoints.push_back(std::pair<int, int>(1090, 160));
+    cornerpoints.push_back(std::pair<int, int>(1090, 310));
+    cornerpoints.push_back(std::pair<int, int>(940, 310));
+
+
+
+
+    int num = iclick;
+    int i = 0;
+    int LX = cornerpoints[i].first - 8;
+    int LY = cornerpoints[i].second - 8;
+    int RX = cornerpoints[i].first + 8;
+    int RY = cornerpoints[i].second + 8;
+    if (i < num) {
+        
+        if (IsInRect(LX, LY, RX, RY,X, Y)) {
+            points.push_back(std::pair<int, int>(cornerpoints[i].first, cornerpoints[i].second));
+        }
+        i++;
+
+    }
+    return;
+}//判断四个顶点
 
 RECT rect;
 
@@ -273,116 +384,26 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         return 0;
     }
     break;
-#define GET_X_LPARAM(lp)                        ((int)(short)LOWORD(lp))
 
-#define GET_Y_LPARAM(lp)                        ((int)(short)HIWORD(lp))
 
 
 
     case WM_LBUTTONDOWN:
     {
-
-
-
-
-        const int length0 = 50;
-        const int length1 = 100;
-        const int length2 = 120;
-        const int length3 = 170;
-        const int length4 = 190;
-        const int length5 = 240;
-
+        iclick++;
         int x = GET_X_LPARAM(lParam);
         int y = GET_Y_LPARAM(lParam);
+        judgecorner(x, y);
+        
+       
+
+
+       
 
 
 
-        if (IsInRect(50, length0, 200, 150, x, y)) {
-           
-            points.push_back(std::pair<int, int>(125, 100));
-        }
-        else if (IsInRect(320, length0, 420, length1, x, y)) {
-           
-            points.push_back(std::pair<int, int>(370, 75));
-        }
-        else if (IsInRect(440, length0, 590, length1, x, y)) {
-          
-            points.push_back(std::pair<int, int>(515, 75));
-        }
-        else if (IsInRect(640, length0, 740, length1, x, y)) {
-          
-            points.push_back(std::pair<int, int>(690, 75));
-        }
-        else if (IsInRect(790, length0, 890, length1, x, y)) {
-            
-            points.push_back(std::pair<int, int>(840, 75));
-        }
-        else if (IsInRect(940, length0, 1090, length1, x, y)) {
-            
-            points.push_back(std::pair<int, int>(1015, 75));
-        }
-        else if (IsInRect(1110, length0, 1260, length1, x, y)) {
-           
-            points.push_back(std::pair<int, int>(1185, 75));
-        }
-        else if (IsInRect(320, length2, 420, length3, x, y)) {
-           
-            points.push_back(std::pair<int, int>(370, 145));
-        }
-        else if (IsInRect(440, length2, 590, length3, x, y)) {
-            
-            points.push_back(std::pair<int, int>(515, 145));
 
-        }
-        else if (IsInRect(640, length2, 740, length3, x, y)) {
-           
-            points.push_back(std::pair<int, int>(690, 145));
-
-        }
-        else if (IsInRect(790, length2, 890, length3, x, y)) {
-           
-            points.push_back(std::pair<int, int>(840, 145));
-
-        }
-        else if (IsInRect(940, 160, 1090, 190, x, y)) {
-          
-            points.push_back(std::pair<int, int>(375, 350));
-        }
-        else if (IsInRect(150, 200, 600, 500, x, y)) {
-         
-            points.push_back(std::pair<int, int>(770, 215));
-
-        }
-        else if (IsInRect(640, length4, 700, length5, x, y)) {
-         
-            points.push_back(std::pair<int, int>(730, 225));
-
-        }
-        else if (IsInRect(700, 210, 760, length5, x, y)) {
-           
-            points.push_back(std::pair<int, int>(840, 215));
-
-        }
-        else if (IsInRect(790, length4, 890, length5, x, y)) {
-          
-            points.push_back(std::pair<int, int>(1155, 385));
-        }
-        else if (IsInRect(1050, 360, 1260, 410, x, y)) {
-            
-            points.push_back(std::pair<int, int>(850, 450));
-        }
-        else if (IsInRect(800, 400, 900, 500, x, y)) {
-            
-            points.push_back(std::pair<int, int>(1155, 485));
-        }
-        else if (IsInRect(1050, 460, 1260, 510, x, y)) {
-           
-            points.push_back(std::pair<int, int>(525, 660));
-        }
-        else if (IsInRect(300, 560, 750, 760, x, y)) {
-         
-            points.push_back(std::pair<int, int>(1015, 235));
-        }
+    
 
 
 

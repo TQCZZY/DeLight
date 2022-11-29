@@ -52,7 +52,7 @@
     <ClInclude Include="callexcel.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Excel.h">
+    <ClInclude Include="Excel.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

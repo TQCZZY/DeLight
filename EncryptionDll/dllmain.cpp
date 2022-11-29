@@ -100,7 +100,14 @@ __declspec(dllexport) int qmcPreEnc(uint8_t * block, size_t blockSize, const cha
         e.error = "";
         return -1;
     }
-    memcpy(block, tail.data(), tail.size());
+    if (blockSize < tail.size()) {
+        err = "Cannot Copy Key Buffer: Out Of Memory";
+        e.error = "";
+        return -1;
+    }
+    if (blockSize != 0) {
+        memcpy(block, tail.data(), tail.size());
+    }
     return tail.size();
 }
 

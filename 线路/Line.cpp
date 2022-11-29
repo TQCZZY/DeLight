@@ -27,17 +27,17 @@ constexpr auto INF = 0x7fffffff;
 	//用于DFS的变量
 		//DFS的返回值
 struct Dfs_Return {
-	int cost = 0;
+	float cost = 0;
 	//Order存储反向的顺序
 	std::vector<int>order;
 };
 		//多源最短路
-std::vector<std::vector<int>>dfs_map;
+std::vector<std::vector<float>>dfs_map;
 	//用于Dijkstra的变量
 		//到起点的距离
 struct Distance_To_Start {
 	int point_number;
-	int cost;
+	float cost;
 	int from;
 	inline bool operator <(const Distance_To_Start X) {
 		return this->cost < X.cost;
@@ -46,26 +46,26 @@ struct Distance_To_Start {
 
 //声明
 	//求两个整型的最小值
-inline int Min(int a, int b);
+inline float Min(float a, float b);
 	//求多源最短路
-std::vector<std::vector<int>>Floyd(std::vector<std::vector<int>>map);
+std::vector<std::vector<float>>Floyd(std::vector<std::vector<float>>map);
 	//求各点间的顺序
 Dfs_Return Dfs(int start, int from, std::vector<int>to, std::vector<bool>visit, int step);
 	//获取到达各目的地的最优先后顺序
-std::vector<int>Get_Primary_Order(int from, std::vector<int>to, std::vector<std::vector<int>>map);
+std::vector<int>Get_Primary_Order(int from, std::vector<int>to, std::vector<std::vector<float>>map);
 	//堆优化的Dijkstra
-std::vector<int>Dijkstra(int from, int to, std::vector<std::vector<int>>map);
+std::vector<int>Dijkstra(int from, int to, std::vector<std::vector<float>>map);
 	//输出
-std::vector<int>Get_Order(int from, std::vector<int>to, std::vector<std::vector<int>>map);
+std::vector<int>Get_Order(int from, std::vector<int>to, std::vector<std::vector<float>>map);
 
 //返回最小值
-inline int Min(int a, int b) {
+inline float Min(float a, float b) {
 	return a > b ? b : a;
 }
 
 //由已有有向图生成多源最短路,时间复杂度O(n³)
-std::vector<std::vector<int>>Floyd(std::vector<std::vector<int>>map) {
-	int n = sqrt(sizeof(map));
+std::vector<std::vector<float>>Floyd(std::vector<std::vector<float>>map) {
+	int n = map[0].size();
 	for (int k = 0; k < n; k++)
 		for (int i = 0; i < n; i++) {
 			if (k == i)
@@ -97,14 +97,14 @@ Dfs_Return Dfs(int start, int from, std::vector<int>to, std::vector<bool>visit, 
 				ans.order.push_back(to[i]);
 				return ans;
 			}
-	int Min_Distance = INF;
+	float Min_Distance = INF;
 	Dfs_Return tmp;
 	for (int i = 0; i < n; i++)
 		if (!visit[i]) {
 			visit[i] = true;
 			tmp = Dfs(start, to[i], to, visit, step + 1);
 			visit[i] = false;
-			int New_Distance = tmp.cost + dfs_map[from][to[i]];
+			float New_Distance = tmp.cost + dfs_map[from][to[i]];
 			if (New_Distance < Min_Distance) {
 				Min_Distance = New_Distance;
 				ans = tmp;
@@ -116,7 +116,7 @@ Dfs_Return Dfs(int start, int from, std::vector<int>to, std::vector<bool>visit, 
 }
 
 //返回到各目的地的先后
-std::vector<int>Get_Primary_Order(int from, std::vector<int>to, std::vector<std::vector<int>>map) {
+std::vector<int>Get_Primary_Order(int from, std::vector<int>to, std::vector<std::vector<float>>map) {
 	std::vector<int>ans;
 	int n = to.size();
 	dfs_map = Floyd(map);
@@ -132,12 +132,12 @@ std::vector<int>Get_Primary_Order(int from, std::vector<int>to, std::vector<std:
 }
 
 //堆优化的Dijkstra,但是仅用于求路径顺序,返回反向的不包含起点但包含终点的路径顺序
-std::vector<int>Dijkstra(int from, int to, std::vector<std::vector<int>>map) {
+std::vector<int>Dijkstra(int from, int to, std::vector<std::vector<float>>map) {
 	//初始化
 	std::vector<int>ans;
-	std::vector<int>from_point;
+	std::vector<float>from_point;
 	std::priority_queue<Distance_To_Start>queue;
-	int n = sqrt(sizeof(map));
+	int n = map[0].size();
 	Distance_To_Start head{ from,0,-1 };
 	std::vector<int>visit;
 	for (int i = 0; i < n; i++) {
@@ -165,7 +165,7 @@ std::vector<int>Dijkstra(int from, int to, std::vector<std::vector<int>>map) {
 }
 
 //输出具体路径信息
-std::vector<int>Get_Order(int from, std::vector<int>to, std::vector<std::vector<int>>map) {
+std::vector<int>Get_Order(int from, std::vector<int>to, std::vector<std::vector<float>>map) {
 	std::vector<int>primary_order = Get_Primary_Order(from, to, map);
 	std::vector<int>tmp;
 	std::vector<int>ans;

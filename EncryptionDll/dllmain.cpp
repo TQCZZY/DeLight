@@ -23,22 +23,22 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReser
 	return TRUE;
 }
 
-extern "C" __declspec(dllexport) void eccEncEx(const char* fn, const char* pswfn, const char* c_p, const char* c_a, const char* c_gx, const char* c_gy, const char* c_qx, const char* c_qy)
+__declspec(dllexport) void eccEncEx(const char* fn, const char* pswfn, const char* c_p, const char* c_a, const char* c_gx, const char* c_gy, const char* c_qx, const char* c_qy)
 {
 	Ecc(fn, pswfn, c_p, c_a, c_gx, c_gy, c_qx, c_qy);
 }
 
-extern "C" __declspec(dllexport) void eccDecEx(const char* fn, const char* c_p, const char* c_a, const char* c_k)
+__declspec(dllexport) void eccDecEx(const char* fn, const char* c_p, const char* c_a, const char* c_k)
 {
 	Ecc(fn, c_p, c_a, c_k);
 }
 
-extern "C" __declspec(dllexport) void eccEnc(const char* fn, const char* pswfn)
+__declspec(dllexport) void eccEnc(const char* fn, const char* pswfn)
 {
 	Ecc(fn, pswfn, "", "", "", "", "", "");
 }
 
-extern "C" __declspec(dllexport) void eccDec(const char* fn, const char* pswfn)
+__declspec(dllexport) void eccDec(const char* fn, const char* pswfn)
 {
 	string p = "";
 	string a = "";
@@ -55,7 +55,7 @@ std::string sid = "";
 QmcDecode d;
 QmcEncode e;
 
-extern "C" __declspec(dllexport) int qmcPreDec(uint8_t * block, size_t blockSize, const char* type)
+__declspec(dllexport) int qmcPreDec(uint8_t * block, size_t blockSize, const char* type)
 {
     if (!d.SetBlock(block, blockSize))
     {
@@ -73,7 +73,7 @@ extern "C" __declspec(dllexport) int qmcPreDec(uint8_t * block, size_t blockSize
     return tailSize;
 }
 
-extern "C" __declspec(dllexport) size_t qmcDecBlock(uint8_t* block, size_t blockSize, size_t offset)
+__declspec(dllexport) size_t qmcDecBlock(uint8_t* block, size_t blockSize, size_t offset)
 {
     if (!d.SetBlock(block, blockSize))
     {
@@ -91,7 +91,7 @@ extern "C" __declspec(dllexport) size_t qmcDecBlock(uint8_t* block, size_t block
     return decData.size();
 }
 
-extern "C" __declspec(dllexport) int qmcPreEnc(uint8_t * block, size_t blockSize, const char* type)
+__declspec(dllexport) int qmcPreEnc(uint8_t * block, size_t blockSize, const char* type)
 {
     std::vector<uint8_t> tail = e.PreEncode(type);
     if (e.error != "")
@@ -104,7 +104,7 @@ extern "C" __declspec(dllexport) int qmcPreEnc(uint8_t * block, size_t blockSize
     return tail.size();
 }
 
-extern "C" __declspec(dllexport) size_t qmcEncBlock(uint8_t * block, size_t blockSize, size_t offset)
+__declspec(dllexport) size_t qmcEncBlock(uint8_t * block, size_t blockSize, size_t offset)
 {
     if (!e.SetBlock(block, blockSize))
     {
@@ -122,7 +122,7 @@ extern "C" __declspec(dllexport) size_t qmcEncBlock(uint8_t * block, size_t bloc
     return encData.size();
 }
 
-extern "C" __declspec(dllexport) void qmcGetErr(char* error)
+__declspec(dllexport) void qmcGetErr(char* error)
 {
     strcpy(error, err.c_str());
     return;

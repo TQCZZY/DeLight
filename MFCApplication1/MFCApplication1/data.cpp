@@ -2,7 +2,7 @@
 #include "framework.h"
 #include "MFCApplication1.h"
 #include "MFCApplication1Dlg.h"
-#include "head.h"
+//#include "head.h"
 
 struct Goodinfor {
 	CString itemName;

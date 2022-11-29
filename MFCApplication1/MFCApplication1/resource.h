@@ -35,7 +35,10 @@
 #define IDC_EDIT_THING                  1010
 #define IDC_BUTTON2                     1010
 #define IDC_LIST2                       1011
+#define IDC_BUTTON10                    1011
+#define IDC_BUTTON11                    1012
 #define IDC_BUTTON_FIRST                1013
+#define IDC_BUTTON12                    1013
 #define IDC_BUTTON_SECOND               1014
 #define IDC_BUTTON_SECOND2              1015
 #define IDC_EDIT_TIME                   1017

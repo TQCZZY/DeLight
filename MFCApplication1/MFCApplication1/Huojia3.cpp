@@ -36,6 +36,9 @@ BEGIN_MESSAGE_MAP(Huojia3, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON3, &Huojia3::OnBnClickedButton3)
 	ON_BN_CLICKED(IDC_BUTTON6, &Huojia3::OnBnClickedButton6)
 	ON_WM_CLOSE()
+	ON_BN_CLICKED(IDC_BUTTON2, &Huojia3::OnBnClickedButton2)
+	ON_BN_CLICKED(IDC_BUTTON5, &Huojia3::OnBnClickedButton5)
+	ON_BN_CLICKED(IDC_BUTTON9, &Huojia3::OnBnClickedButton9)
 END_MESSAGE_MAP()
 
 
@@ -156,3 +159,63 @@ void Huojia3::OnBnClickedButton6()//修改
 }
 
 
+
+
+void Huojia3::OnBnClickedButton2()//排序1
+{
+	// TODO: 在此添加控件通知处理程序代码
+	for (int i = 0; i < H3_List.GetItemCount/*获取条目的数量*/(); i++)
+	{
+		H3_List.SetCheck/*设置选中状态*/(i, TRUE);
+	}
+
+	for (int i = 0; i < H3_List.GetItemCount/*获取条目的数量*/(); i++)
+	{
+		BOOL state = H3_List.GetCheck(i);
+		if (state)
+		{
+			H3_List.DeleteItem(i);
+			i--;//若不i--则不能多项同时删除，因为当删除0栏后，1栏会为0栏，就删不掉了
+		}
+	}
+}
+
+
+void Huojia3::OnBnClickedButton5()//排序2
+{
+	// TODO: 在此添加控件通知处理程序代码
+	for (int i = 0; i < H3_List.GetItemCount/*获取条目的数量*/(); i++)
+	{
+		H3_List.SetCheck/*设置选中状态*/(i, TRUE);
+	}
+
+	for (int i = 0; i < H3_List.GetItemCount/*获取条目的数量*/(); i++)
+	{
+		BOOL state = H3_List.GetCheck(i);
+		if (state)
+		{
+			H3_List.DeleteItem(i);
+			i--;//若不i--则不能多项同时删除，因为当删除0栏后，1栏会为0栏，就删不掉了
+		}
+	}
+}
+
+
+void Huojia3::OnBnClickedButton9()//排序3
+{
+	// TODO: 在此添加控件通知处理程序代码
+	for (int i = 0; i < H3_List.GetItemCount/*获取条目的数量*/(); i++)
+	{
+		H3_List.SetCheck/*设置选中状态*/(i, TRUE);
+	}
+
+	for (int i = 0; i < H3_List.GetItemCount/*获取条目的数量*/(); i++)
+	{
+		BOOL state = H3_List.GetCheck(i);
+		if (state)
+		{
+			H3_List.DeleteItem(i);
+			i--;//若不i--则不能多项同时删除，因为当删除0栏后，1栏会为0栏，就删不掉了
+		}
+	}
+}

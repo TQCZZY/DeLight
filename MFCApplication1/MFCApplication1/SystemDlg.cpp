@@ -37,6 +37,10 @@ BEGIN_MESSAGE_MAP(SystemDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON4, &SystemDlg::OnBnClickedButton4)
 	ON_BN_CLICKED(IDC_BUTTON5, &SystemDlg::OnBnClickedButton5)
 	ON_BN_CLICKED(IDC_BUTTON2, &SystemDlg::OnBnClickedButton2)
+	ON_BN_CLICKED(IDC_BUTTON6, &SystemDlg::OnBnClickedButton6)
+	ON_BN_CLICKED(IDC_BUTTON9, &SystemDlg::OnBnClickedButton9)
+	ON_BN_CLICKED(IDC_BUTTON10, &SystemDlg::OnBnClickedButton10)
+	ON_BN_CLICKED(IDC_BUTTON11, &SystemDlg::OnBnClickedButton11)
 END_MESSAGE_MAP()
 
 
@@ -161,4 +165,84 @@ void SystemDlg::OnBnClickedButton2()//货架详情
 	// TODO: 在此添加控件通知处理程序代码
 	ListDlg dlg;
 	dlg.DoModal();
+}
+
+
+void SystemDlg::OnBnClickedButton6()//排序1
+{
+	// TODO: 在此添加控件通知处理程序代码
+	for (int i = 0; i < m_List.GetItemCount/*获取条目的数量*/(); i++)
+	{
+		m_List.SetCheck/*设置选中状态*/(i, TRUE);
+	}
+
+	for (int i = 0; i < m_List.GetItemCount/*获取条目的数量*/(); i++)
+	{
+		BOOL state = m_List.GetCheck(i);
+		if (state)
+		{
+			m_List.DeleteItem(i);
+			i--;//若不i--则不能多项同时删除，因为当删除0栏后，1栏会为0栏，就删不掉了
+		}
+	}
+}
+
+
+void SystemDlg::OnBnClickedButton9()//排序2
+{
+	// TODO: 在此添加控件通知处理程序代码
+	for (int i = 0; i < m_List.GetItemCount/*获取条目的数量*/(); i++)
+	{
+		m_List.SetCheck/*设置选中状态*/(i, TRUE);
+	}
+
+	for (int i = 0; i < m_List.GetItemCount/*获取条目的数量*/(); i++)
+	{
+		BOOL state = m_List.GetCheck(i);
+		if (state)
+		{
+			m_List.DeleteItem(i);
+			i--;//若不i--则不能多项同时删除，因为当删除0栏后，1栏会为0栏，就删不掉了
+		}
+	}
+}
+
+
+void SystemDlg::OnBnClickedButton10()//排序3
+{
+	// TODO: 在此添加控件通知处理程序代码
+	for (int i = 0; i < m_List.GetItemCount/*获取条目的数量*/(); i++)
+	{
+		m_List.SetCheck/*设置选中状态*/(i, TRUE);
+	}
+
+	for (int i = 0; i < m_List.GetItemCount/*获取条目的数量*/(); i++)
+	{
+		BOOL state = m_List.GetCheck(i);
+		if (state)
+		{
+			m_List.DeleteItem(i);
+			i--;//若不i--则不能多项同时删除，因为当删除0栏后，1栏会为0栏，就删不掉了
+		}
+	}
+}
+
+
+void SystemDlg::OnBnClickedButton11()//排序4
+{
+	// TODO: 在此添加控件通知处理程序代码
+	for (int i = 0; i < m_List.GetItemCount/*获取条目的数量*/(); i++)
+	{
+		m_List.SetCheck/*设置选中状态*/(i, TRUE);
+	}
+
+	for (int i = 0; i < m_List.GetItemCount/*获取条目的数量*/(); i++)
+	{
+		BOOL state = m_List.GetCheck(i);
+		if (state)
+		{
+			m_List.DeleteItem(i);
+			i--;//若不i--则不能多项同时删除，因为当删除0栏后，1栏会为0栏，就删不掉了
+		}
+	}
 }

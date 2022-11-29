@@ -298,150 +298,89 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 
         if (IsInRect(50, length0, 200, 150, x, y)) {
-            points.push_back(std::pair<int, int>(50, 50));
-            points.push_back(std::pair<int, int>(200, 50));
-            points.push_back(std::pair<int, int>(200, 150));
-            points.push_back(std::pair<int, int>(50, 150));
+           
             points.push_back(std::pair<int, int>(125, 100));
         }
         else if (IsInRect(320, length0, 420, length1, x, y)) {
-            points.push_back(std::pair<int, int>(320, 50));
-            points.push_back(std::pair<int, int>(420, 50));
-            points.push_back(std::pair<int, int>(420, 100));
-            points.push_back(std::pair<int, int>(320, 100));
+           
             points.push_back(std::pair<int, int>(370, 75));
         }
         else if (IsInRect(440, length0, 590, length1, x, y)) {
-            points.push_back(std::pair<int, int>(440, 50));
-            points.push_back(std::pair<int, int>(590, 50));
-            points.push_back(std::pair<int, int>(590, 100));
-            points.push_back(std::pair<int, int>(440, 100));
+          
             points.push_back(std::pair<int, int>(515, 75));
         }
         else if (IsInRect(640, length0, 740, length1, x, y)) {
-            points.push_back(std::pair<int, int>(640, 50));
-            points.push_back(std::pair<int, int>(740, 50));
-            points.push_back(std::pair<int, int>(740, 100));
-            points.push_back(std::pair<int, int>(640, 100));
+          
             points.push_back(std::pair<int, int>(690, 75));
         }
         else if (IsInRect(790, length0, 890, length1, x, y)) {
-            points.push_back(std::pair<int, int>(790, 50));
-            points.push_back(std::pair<int, int>(890, 50));
-            points.push_back(std::pair<int, int>(890, 100));
-            points.push_back(std::pair<int, int>(790, 100));
+            
             points.push_back(std::pair<int, int>(840, 75));
         }
         else if (IsInRect(940, length0, 1090, length1, x, y)) {
-            points.push_back(std::pair<int, int>(940, 50));
-            points.push_back(std::pair<int, int>(1090, 50));
-            points.push_back(std::pair<int, int>(1090, 100));
-            points.push_back(std::pair<int, int>(940, 100));
+            
             points.push_back(std::pair<int, int>(1015, 75));
         }
         else if (IsInRect(1110, length0, 1260, length1, x, y)) {
-            points.push_back(std::pair<int, int>(1110, 50));
-            points.push_back(std::pair<int, int>(1260, 50));
-            points.push_back(std::pair<int, int>(1260, 100));
-            points.push_back(std::pair<int, int>(1110, 100));
+           
             points.push_back(std::pair<int, int>(1185, 75));
         }
         else if (IsInRect(320, length2, 420, length3, x, y)) {
-            points.push_back(std::pair<int, int>(320, 120));
-            points.push_back(std::pair<int, int>(420, 120));
-            points.push_back(std::pair<int, int>(420, 170));
-            points.push_back(std::pair<int, int>(320, 170));
+           
             points.push_back(std::pair<int, int>(370, 145));
         }
         else if (IsInRect(440, length2, 590, length3, x, y)) {
-            points.push_back(std::pair<int, int>(440, 120));
-            points.push_back(std::pair<int, int>(590, 120));
-            points.push_back(std::pair<int, int>(590, 170));
-            points.push_back(std::pair<int, int>(440, 170));
+            
             points.push_back(std::pair<int, int>(515, 145));
 
         }
         else if (IsInRect(640, length2, 740, length3, x, y)) {
-            points.push_back(std::pair<int, int>(640, 120));
-            points.push_back(std::pair<int, int>(740, 120));
-            points.push_back(std::pair<int, int>(740, 170));
-            points.push_back(std::pair<int, int>(640, 170));
+           
             points.push_back(std::pair<int, int>(690, 145));
 
         }
         else if (IsInRect(790, length2, 890, length3, x, y)) {
-            points.push_back(std::pair<int, int>(790, 120));
-            points.push_back(std::pair<int, int>(890, 120));
-            points.push_back(std::pair<int, int>(890, 170));
-            points.push_back(std::pair<int, int>(790, 170));
+           
             points.push_back(std::pair<int, int>(840, 145));
 
         }
         else if (IsInRect(940, 160, 1090, 190, x, y)) {
-            points.push_back(std::pair<int, int>(150, 200));
-            points.push_back(std::pair<int, int>(600, 200));
-            points.push_back(std::pair<int, int>(600, 500));
-            points.push_back(std::pair<int, int>(150, 500));
+          
             points.push_back(std::pair<int, int>(375, 350));
         }
         else if (IsInRect(150, 200, 600, 500, x, y)) {
-            points.push_back(std::pair<int, int>(640, 190));
-            points.push_back(std::pair<int, int>(700, 190));
-            points.push_back(std::pair<int, int>(700, 240));
-            points.push_back(std::pair<int, int>(640, 240));
+         
             points.push_back(std::pair<int, int>(770, 215));
 
         }
         else if (IsInRect(640, length4, 700, length5, x, y)) {
-            points.push_back(std::pair<int, int>(700, 210));
-            points.push_back(std::pair<int, int>(760, 210));
-            points.push_back(std::pair<int, int>(760, 240));
-            points.push_back(std::pair<int, int>(700, 240));
+         
             points.push_back(std::pair<int, int>(730, 225));
 
         }
         else if (IsInRect(700, 210, 760, length5, x, y)) {
-            points.push_back(std::pair<int, int>(790, 190));
-            points.push_back(std::pair<int, int>(890, 190));
-            points.push_back(std::pair<int, int>(890, 240));
-            points.push_back(std::pair<int, int>(790, 240));
+           
             points.push_back(std::pair<int, int>(840, 215));
 
         }
         else if (IsInRect(790, length4, 890, length5, x, y)) {
-            points.push_back(std::pair<int, int>(1050, 360));
-            points.push_back(std::pair<int, int>(1260, 360));
-            points.push_back(std::pair<int, int>(1260, 410));
-            points.push_back(std::pair<int, int>(1050, 410));
+          
             points.push_back(std::pair<int, int>(1155, 385));
         }
         else if (IsInRect(1050, 360, 1260, 410, x, y)) {
-            points.push_back(std::pair<int, int>(800, 400));
-            points.push_back(std::pair<int, int>(900, 400));
-            points.push_back(std::pair<int, int>(800, 500));
-            points.push_back(std::pair<int, int>(800, 500));
+            
             points.push_back(std::pair<int, int>(850, 450));
         }
         else if (IsInRect(800, 400, 900, 500, x, y)) {
-            points.push_back(std::pair<int, int>(1050, 460));
-            points.push_back(std::pair<int, int>(1260, 510));
-            points.push_back(std::pair<int, int>(1260, 510));
-            points.push_back(std::pair<int, int>(1050, 460));
+            
             points.push_back(std::pair<int, int>(1155, 485));
         }
         else if (IsInRect(1050, 460, 1260, 510, x, y)) {
-            points.push_back(std::pair<int, int>(300, 560));
-            points.push_back(std::pair<int, int>(750, 560));
-            points.push_back(std::pair<int, int>(750, 760));
-            points.push_back(std::pair<int, int>(300, 760));
+           
             points.push_back(std::pair<int, int>(525, 660));
         }
-
         else if (IsInRect(300, 560, 750, 760, x, y)) {
-            points.push_back(std::pair<int, int>(940, 160));
-            points.push_back(std::pair<int, int>(1090, 160));
-            points.push_back(std::pair<int, int>(1090, 310));
-            points.push_back(std::pair<int, int>(940, 310));
+         
             points.push_back(std::pair<int, int>(1015, 235));
         }
 
@@ -485,7 +424,7 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
     }
     return (INT_PTR)FALSE;
 }
-__declspec(dllexport)std::vector<std::pair<int, int> > Sentpoints(HINSTANCE hInstance, int       nCmdShow)
+__declspec(dllexport)std::vector<std::pair<int, int> > Sentpoints(HINSTANCE hInstance, int nCmdShow)
 {
 
 
@@ -515,6 +454,7 @@ __declspec(dllexport)std::vector<std::pair<int, int> > Sentpoints(HINSTANCE hIns
     }
     return points;
 }//接口输出
+
 
 
 

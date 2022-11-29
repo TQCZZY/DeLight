@@ -55,21 +55,6 @@
     <ClInclude Include="Excel.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\Shared\Statisticssubject.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Shared\Statisticsinfos.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Shared\Statisticsinfo.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Shared\Statisticsgroup.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Shared\SHARED.H">
-      <Filter>头文件</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Excel.rc">

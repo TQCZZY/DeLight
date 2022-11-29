@@ -214,11 +214,6 @@
     <None Include="res\Excel.rc2" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Shared\SHARED.H" />
-    <ClInclude Include="..\Shared\Statisticsgroup.h" />
-    <ClInclude Include="..\Shared\Statisticsinfo.h" />
-    <ClInclude Include="..\Shared\Statisticsinfos.h" />
-    <ClInclude Include="..\Shared\Statisticssubject.h" />
     <ClInclude Include="callexcel.h" />
     <ClInclude Include="Excel.h" />
     <ClInclude Include="framework.h" />

@@ -10,14 +10,8 @@
 #define EXCEL_API __declspec(dllimport)
 #endif
 
-// 此类是从 dll 导出的
-//class EXCEL_API CExcel {
-//public:
-//	CExcel(void);
-//	// TODO: 在此处添加方法。
-//};
-
-extern EXCEL_API short item;
-
-EXCEL_API void perfExcel(CString PathName);
-EXCEL_API void setInfo(Statisticsinfos& infos);
+EXCEL_API void global2Excel(CString PathName, bool AutoQuit = false, bool ReadOnly = false, CString Password = L"", CString WriteResPassword = L"");
+EXCEL_API void singleGoods2Excel(CString PathName, bool AutoQuit = false, bool ReadOnly = false, CString Password = L"", CString WriteResPassword = L"");
+EXCEL_API void shelf2Excel(CString PathName, bool AutoQuit = false, bool ReadOnly = false, CString Password = L"", CString WriteResPassword = L"");
+EXCEL_API void specDate2Excel(CString PathName, bool AutoQuit = false, bool ReadOnly = false, CString Password = L"", CString WriteResPassword = L"");
+EXCEL_API void setInfo(std::vector<std::string> goods, std::vector<int> count, std::vector<Time> date, std::vector<int> shelf);

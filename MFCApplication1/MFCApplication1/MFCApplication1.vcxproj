@@ -202,6 +202,7 @@
     <ClCompile Include="Huojia1.cpp" />
     <ClCompile Include="Huojia2.cpp" />
     <ClCompile Include="Huojia3.cpp" />
+    <ClCompile Include="List.cpp" />
     <ClCompile Include="ListDlg.cpp" />
     <ClCompile Include="MFCApplication1.cpp" />
     <ClCompile Include="MFCApplication1Dlg.cpp" />

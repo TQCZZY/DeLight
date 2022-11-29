@@ -7,6 +7,9 @@
 #include "SystemDlg.h"
 #include "PropertyDlg.h"
 #include "ListDlg.h"
+#include "data.cpp"
+
+
 
 // SystemDlg 对话框
 
@@ -68,17 +71,17 @@ BOOL SystemDlg::OnInitDialog()
 	m_List.InsertColumn(2, _T("商品库存"),0,200);
 	m_List.InsertColumn(3, _T("货架编号"), 0, 200);
 
-	CString itemName,snum,time,thing;
-	for(int i=0;i<10;i++)
+	//CString itemName,snum,time,thing;
+	for(int i=0;i<Com.size(); i++)
 	{
-		itemName.Format(_T("%d"),i);// Format 使任意数据转化成字符串
+		/*itemName.Format(_T("%d"),i);// Format 使任意数据转化成字符串
 		time.Format(_T("%d"),i);
 		snum.Format(_T("%d"), i);
-		thing.Format(_T("%d"), i);
-		m_List.InsertItem(i,itemName);//第一列数据
-		m_List.SetItemText(i, 1, time);
-		m_List.SetItemText(i, 2, snum);
-		m_List.SetItemText(i, 3, thing);
+		thing.Format(_T("%d"), i);*/
+		m_List.InsertItem(i,Com[i].itemName);//第一列数据
+		m_List.SetItemText(i, 1, Com[i].time);
+		m_List.SetItemText(i, 2, Com[i].snum);
+		m_List.SetItemText(i, 3, Com[i].thing);
 	}
 
 	return TRUE;  // return TRUE unless you set the focus to a control
@@ -118,7 +121,6 @@ void SystemDlg::OnBnClickedButton3()//增加
 	m_List.SetItemText(nCount, 1, dlg.sDate);
 	m_List.SetItemText(nCount, 2, dlg.sNumber);
 	m_List.SetItemText(nCount, 3, dlg.sThing);
-
 
 }
 
@@ -185,6 +187,14 @@ void SystemDlg::OnBnClickedButton6()//排序1
 			i--;//若不i--则不能多项同时删除，因为当删除0栏后，1栏会为0栏，就删不掉了
 		}
 	}
+	Sort(1);
+	for (int i = 0; i < Com.size(); i++)
+	{
+		m_List.InsertItem(i, Com[i].itemName);//第一列数据
+		m_List.SetItemText(i, 1, Com[i].time);
+		m_List.SetItemText(i, 2, Com[i].snum);
+		m_List.SetItemText(i, 3, Com[i].thing);
+	}
 }
 
 
@@ -204,6 +214,15 @@ void SystemDlg::OnBnClickedButton9()//排序2
 			m_List.DeleteItem(i);
 			i--;//若不i--则不能多项同时删除，因为当删除0栏后，1栏会为0栏，就删不掉了
 		}
+	}
+
+	Sort(4);
+	for (int i = 0; i < Com.size(); i++)
+	{
+		m_List.InsertItem(i, Com[i].itemName);//第一列数据
+		m_List.SetItemText(i, 1, Com[i].time);
+		m_List.SetItemText(i, 2, Com[i].snum);
+		m_List.SetItemText(i, 3, Com[i].thing);
 	}
 }
 
@@ -225,6 +244,15 @@ void SystemDlg::OnBnClickedButton10()//排序3
 			i--;//若不i--则不能多项同时删除，因为当删除0栏后，1栏会为0栏，就删不掉了
 		}
 	}
+
+	Sort(2);
+	for (int i = 0; i < Com.size(); i++)
+	{
+		m_List.InsertItem(i, Com[i].itemName);//第一列数据
+		m_List.SetItemText(i, 1, Com[i].time);
+		m_List.SetItemText(i, 2, Com[i].snum);
+		m_List.SetItemText(i, 3, Com[i].thing);
+	}
 }
 
 
@@ -244,5 +272,14 @@ void SystemDlg::OnBnClickedButton11()//排序4
 			m_List.DeleteItem(i);
 			i--;//若不i--则不能多项同时删除，因为当删除0栏后，1栏会为0栏，就删不掉了
 		}
+	}
+
+	Sort(3);
+	for (int i = 0; i < Com.size(); i++)
+	{
+		m_List.InsertItem(i, Com[i].itemName);//第一列数据
+		m_List.SetItemText(i, 1, Com[i].time);
+		m_List.SetItemText(i, 2, Com[i].snum);
+		m_List.SetItemText(i, 3, Com[i].thing);
 	}
 }

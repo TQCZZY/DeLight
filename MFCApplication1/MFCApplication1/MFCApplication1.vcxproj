@@ -198,6 +198,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="data.cpp" />
     <ClCompile Include="Huojia1.cpp" />
     <ClCompile Include="Huojia2.cpp" />
     <ClCompile Include="Huojia3.cpp" />

@@ -8,7 +8,6 @@
 #include "PropertyDlg.h"
 #include "ListDlg.h"
 
-
 // SystemDlg 对话框
 
 IMPLEMENT_DYNAMIC(SystemDlg, CDialogEx)
@@ -60,7 +59,7 @@ BOOL SystemDlg::OnInitDialog()
 	// TODO:  在此添加额外的初始化
 	m_List.SetExtendedStyle(LVS_EX_FULLROWSELECT/*整行选中*/ | LVS_EX_CHECKBOXES/*复选框*/);//扩展样式
 
-	m_List.InsertColumn(0, _T("商品类型"),0,200/*宽度*/);
+	m_List.InsertColumn(0, _T("商品名称"),0,200/*宽度*/);
 	m_List.InsertColumn(1, _T("进货时间"),0,200);
 	m_List.InsertColumn(2, _T("商品库存"),0,200);
 	m_List.InsertColumn(3, _T("货架编号"), 0, 200);
@@ -68,8 +67,8 @@ BOOL SystemDlg::OnInitDialog()
 	CString itemName,snum,time,thing;
 	for(int i=0;i<10;i++)
 	{
-		itemName.Format(_T("itemName=%d"),i);
-		time.Format(_T("2008-05-13 09:0%d"),i);
+		itemName.Format(_T("%d"),i);// Format 使任意数据转化成字符串
+		time.Format(_T("%d"),i);
 		snum.Format(_T("%d"), i);
 		thing.Format(_T("%d"), i);
 		m_List.InsertItem(i,itemName);//第一列数据

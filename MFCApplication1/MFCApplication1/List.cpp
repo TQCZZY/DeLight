@@ -8,7 +8,7 @@ constexpr auto MOD = 19491001;
 
 void Insert(Good_Info good_to_be_insert);
 bool Delete(int number);
-Search_Return Search(Search_Info info);
+std::vector<int>Search(Search_Info info);
 void Sort(int command);
 void Init();
 void Save();
@@ -55,13 +55,8 @@ struct Search_Info {
 	int type;//1名称2数量3货架4时间
 };
 
-struct Search_Return {
-	bool find;
-	std::vector<int>numbers;
-};
-
 Good_Info* head;
-
+int cnt;
 
 void Insert(Good_Info good_to_be_insert) {
 	Good_Info* tmp = new Good_Info;
@@ -69,15 +64,13 @@ void Insert(Good_Info good_to_be_insert) {
 	s.name = good_to_be_insert.name;
 	s.type = 1;
 	//能否合并?
-	Search_Return rev = Search(s);
-	for (int i = 0; i < rev.numbers.size(); i++)
-	{
+	std::vector<int>rev = Search(s);
+	for (int i = 0; i < rev.size(); i++)
 		for (Good_Info* now = head->next; now != NULL; now = now->next)
-		{
-			if (now->number == rev.numbers[i])
-			{
+			if (now->number == rev[i])
 				if (now->location == good_to_be_insert.location && now->time == good_to_be_insert.time) {
 					now->amount += good_to_be_insert.amount;
+					delete tmp;
 					return;
 				}
 			}
@@ -87,6 +80,7 @@ void Insert(Good_Info good_to_be_insert) {
 	tmp->next = head->next;
 	head->next = tmp;
 	*tmp = good_to_be_insert;
+	tmp->number = ++cnt;
 }
 
 bool Delete(int number) {
@@ -102,55 +96,46 @@ bool Delete(int number) {
 	return false;
 }
 
-Search_Return Search(Search_Info info) {
-	Search_Return ans;
-	ans.find = false;
+std::vector<int> Search(Search_Info info) {
+	std::vector<int> ans;
 	switch (info.type) {
-	case 1: {//按名字查找所有相同的
-		int find_hash = 0;
-		for (int i = 0; i < info.name.length(); i++) {
-			find_hash *= 10;
-			find_hash += info.name[i];
-			find_hash %= MOD;
-		}
-		for (Good_Info* now = head->next; now != NULL; now = now->next) {
-			int hash = 0;
-			for (int i = 0; i < now->name.length(); i++) {
-				hash *= 10;
-				hash += now->name[i];
-				hash %= MOD;
-			}
-			if (find_hash == hash) {
-				ans.find = true;
-				ans.numbers.push_back(now->number);
-			}
-		}
-		return ans;//未找到
-	}
-	case 2: {//按数量查找所有相同的
-		for (Good_Info* now = head->next; now != NULL; now = now->next) {
-			if (now->amount == info.amount)
-				ans.find = true;
-			ans.numbers.push_back(now->number);
-		}
-		return ans;
-	}
-	case 3: {//按货架编号查找所有相同的
-		for (Good_Info* now = head->next; now != NULL; now = now->next)
-			if (now->location == info.location) {
-				ans.find = true;
-				ans.numbers.push_back(now->number);
-			}
-		return ans;
-	}
-	case 4: {//按时间查找所有相同的
-		for (Good_Info* now = head->next; now != NULL; now = now->next)
-			if (now->time == info.time) {
-				ans.find = true;
-				ans.numbers.push_back(now->number);
-			}
-		return ans;
-	}
+	  case 1: {//按名字查找所有相同的
+		  int find_hash = 0;
+		  for (int i = 0; i < info.name.length(); i++) {
+			  find_hash *= 10;
+			  find_hash += info.name[i];
+			  find_hash %= MOD;
+		  }
+		  for (Good_Info* now = head->next; now != NULL; now = now->next) {
+			  int hash = 0;
+			  for (int i = 0; i < now->name.length(); i++) {
+				  hash *= 10;
+				  hash += now->name[i];
+				  hash %= MOD;
+			  }
+			  if (find_hash == hash)
+				  ans.push_back(now->number);
+		  }
+		  return ans;//未找到
+	  }
+	  case 2: {//按数量查找所有相同的
+		  for (Good_Info* now = head->next; now != NULL; now = now->next)
+			  if (now->amount == info.amount)
+				  ans.push_back(now->number);
+		  return ans;
+	  }
+	  case 3: {//按货架编号查找所有相同的
+		  for (Good_Info* now = head->next; now != NULL; now = now->next)
+			  if (now->location == info.location)
+				  ans.push_back(now->number);
+		  return ans;
+	  }
+	  case 4: {//按时间查找所有相同的
+		  for (Good_Info* now = head->next; now != NULL; now = now->next)
+			  if (now->time == info.time)
+				  ans.push_back(now->number);
+		  return ans;
+	  }
 	}
 	return ans;
 }
@@ -251,7 +236,15 @@ void Init() {
 		n *= 10;
 		n += c;
 	}
-	Good_Info* now = head;
+	cnt = n;
+	c = '\0';
+	n = 0;
+	while (c != '\n') {
+		file.read(&c, 1);
+		n *= 10;
+		n += c;
+	}
+	Good_Info* now=head;
 	Good_Info* tmp;
 	int cnt = 0;
 	for (int i = 0; i < n; i++) {
@@ -286,10 +279,18 @@ void Save() {
 		//把这个字符串给WJB再退出
 	}
 	key.resize(qmcrev);
-	int n = 0;//计数
+	int n = cnt;//计数
+	std::vector<char>s;
+	while (n != 0) {
+		s.push_back(n % 10);
+		n /= 10;
+	}
+	s.push_back('\n');
+	file.write((const char*)s.data(), sizeof(s));
+	n = 0;
+	s.clear();
 	for (Good_Info* now = head->next; now != NULL; now = now->next)
 		n++;
-	std::vector<char>s;
 	while (n != 0) {
 		s.push_back(n % 10);
 		n /= 10;

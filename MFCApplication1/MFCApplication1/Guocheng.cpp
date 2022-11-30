@@ -35,7 +35,7 @@ END_MESSAGE_MAP()
 
 
 // Guocheng 消息处理程序
-
+std::vector<int>middle;
 
 void Guocheng::OnBnClickedButton1()
 {
@@ -46,21 +46,18 @@ void Guocheng::OnBnClickedButton1()
 	{
 		std::string sou1 = Sousuo.GetBuffer();
 		Sou2.name = sou1;
-		Search(Sou2);
 	}
 	case 2:
 	{
 		int sou2;
 		sou2 = _ttoi(Sousuo);
 		Sou2.amount = sou2;
-		Search(Sou2);
 	}
 	case 3:
 	{
 		int sou3;
 		sou3 = _ttoi(Sousuo);
 		Sou2.location = sou3;
-		Search(Sou2);
 	}
 	case 4:
 	{
@@ -84,9 +81,10 @@ void Guocheng::OnBnClickedButton1()
 		Sou2.time.year=t.year;
 		Sou2.time.month = t.month;
 		Sou2.time.date = t.date;
-		Search(Sou2);
 	}
 	}
+	auto b = Search(Sou2);
+	middle = Search_Return:b.numbers;
 	EndDialog(0);
 	kuang dlg;
 	dlg.DoModal();

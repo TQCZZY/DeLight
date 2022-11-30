@@ -6,6 +6,7 @@
 #include "afxdialogex.h"
 #include "kuang.h"
 #include "Guocheng.cpp"
+#include "List.cpp"
 
 // kuang 对话框
 
@@ -68,14 +69,9 @@ BOOL kuang::OnInitDialog()
 	S_List.InsertColumn(2, _T("商品库存"), 0, 200);
 	S_List.InsertColumn(3, _T("货架编号"), 0, 200);
 
-	int a[10000] = { 0 };
 	for (int i = 0; i < Com.size(); i++)
 	{
-		a[i] = Com[i].bian;
-	}
 
-	for (int i = 0; i < Com.size(); i++)
-	{
 		S_List.InsertItem(i, Com[i].itemName);//第一列数据
 		S_List.SetItemText(i, 1, Com[i].time);
 		S_List.SetItemText(i, 2, Com[i].snum);

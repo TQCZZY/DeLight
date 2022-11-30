@@ -22,8 +22,5 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 public:CString Sousuo;
-	CString a;
-	CString b;
-	CString c;
 	afx_msg void OnBnClickedButton1();
 };

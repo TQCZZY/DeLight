@@ -10,7 +10,7 @@
 #include "QueryDlg.h"
 #include "data.cpp"
 #include "Sou.h"
-
+#include "List.cpp"
 
 
 // SystemDlg 对话框

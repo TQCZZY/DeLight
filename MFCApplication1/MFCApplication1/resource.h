@@ -14,6 +14,9 @@
 #define IDD_DIALOG5                     138
 #define IDD_DIALOG6                     140
 #define IDD_DIALOG7                     142
+#define IDD_DIALOG8                     144
+#define IDD_DIALOG9                     146
+#define IDD_DIALOG10                    148
 #define IDC_BUTTON_LGN                  1000
 #define IDC_EDIT_UNAME                  1001
 #define IDC_EDIT_PWD                    1002
@@ -40,26 +43,28 @@
 #define IDC_BUTTON_FIRST                1013
 #define IDC_BUTTON12                    1013
 #define IDC_BUTTON_SECOND               1014
-#define IDC_BUTTON_THIRD                 1015
-#define IDC_REMOTEQUERY                 1016
-#define IDC_EDIT_TIME                   1017
+#define IDC_BUTTON_THIRD                1015
+#define IDC_EDIT_SOU                    1016
+#define IDC_BUTTON13                    1017
+#define IDC_REMOTEQUERY                 1018
+#define IDC_EDIT_TIME                   1019
 
-#define IDD_REMOTEQUERY_DIALOG                 103
+#define IDD_REMOTEQUERY_DIALOG          103
 #define IDP_SOCKETS_INIT_FAILED         104
-#define IDC_NAME                        1018
-#define IDC_IP                          1019
-#define IDC_ENTER                       1020
-#define IDC_LIST                        1021
-#define IDC_MESSAGE                     1022
-#define IDC_SEND                        1023
+#define IDC_NAME                        1020
+#define IDC_IP                          1021
+#define IDC_ENTER                       1022
+#define IDC_LIST                        1023
+#define IDC_MESSAGE                     1024
+#define IDC_SEND                        1025
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        144
+#define _APS_NEXT_RESOURCE_VALUE        150
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1016
+#define _APS_NEXT_CONTROL_VALUE         1026
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

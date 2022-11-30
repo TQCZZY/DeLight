@@ -29,3 +29,5 @@ void transform() {
 		Com.push_back(tmp);
 	}
 }
+
+Search_Info Sou2;

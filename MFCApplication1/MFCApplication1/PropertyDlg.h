@@ -29,4 +29,5 @@ public:
 	afx_msg void OnBnClickedButtonOk();
 	afx_msg void OnBnClickedButtonNo();
 	afx_msg void OnEnChangeEditNum2();
+	afx_msg void OnEnChangeEditType();
 };

@@ -30,6 +30,7 @@ void PropertyDlg::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(PropertyDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_OK, &PropertyDlg::OnBnClickedButtonOk)
 	ON_BN_CLICKED(IDC_BUTTON_NO, &PropertyDlg::OnBnClickedButtonNo)
+	ON_EN_CHANGE(IDC_EDIT_TYPE, &PropertyDlg::OnEnChangeEditType)
 END_MESSAGE_MAP()
 
 
@@ -52,4 +53,3 @@ void PropertyDlg::OnBnClickedButtonNo()
 	// TODO: 在此添加控件通知处理程序代码
 	EndDialog(0);
 }
-

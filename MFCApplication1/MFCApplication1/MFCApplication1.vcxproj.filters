@@ -54,6 +54,15 @@
     <ClInclude Include="Huojia3.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Sou.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="kuang.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Guocheng.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MFCApplication1.cpp">
@@ -90,6 +99,15 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="List.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Sou.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="kuang.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Guocheng.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

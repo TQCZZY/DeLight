@@ -149,13 +149,14 @@ void judgecorner(int X,int Y)
 
 
 
-    int num = iclick;
+    int num = cornerpoints.size();
     int i = 0;
-    int LX = cornerpoints[i].first - 8;
-    int LY = cornerpoints[i].second - 8;
-    int RX = cornerpoints[i].first + 8;
-    int RY = cornerpoints[i].second + 8;
-    if (i < num) {
+   
+    while (i < num) {
+        int LX = cornerpoints[i].first - 8;
+        int LY = cornerpoints[i].second - 8;
+        int RX = cornerpoints[i].first + 8;
+        int RY = cornerpoints[i].second + 8;
         
         if (IsInRect(LX, LY, RX, RY,X, Y)) {
             points.push_back(std::pair<int, int>(cornerpoints[i].first, cornerpoints[i].second));
@@ -390,25 +391,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
     case WM_LBUTTONDOWN:
     {
-        iclick++;
+       
         int x = GET_X_LPARAM(lParam);
         int y = GET_Y_LPARAM(lParam);
         judgecorner(x, y);
         
-       
-
-
-       
-
-
-
-
-    
-
-
-
-
-
+      
 
     }
 

@@ -73,15 +73,11 @@ BOOL Huojia3::OnInitDialog()
 	H3_List.InsertColumn(1, _T("进货时间"), 0, 200);
 	H3_List.InsertColumn(2, _T("商品库存"), 0, 200);
 
-	CString itemName, snum, time, thing;
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < Com.size(); i++)
 	{
-		itemName.Format(_T("%d"), i);
-		time.Format(_T("%d"), i);
-		snum.Format(_T("%d"), i);
-		H3_List.InsertItem(i, itemName);//第一列数据
-		H3_List.SetItemText(i, 1, time);
-		H3_List.SetItemText(i, 2, snum);
+		H3_List.InsertItem(i, Com[i].itemName);//第一列数据
+		H3_List.SetItemText(i, 1, Com[i].time);
+		H3_List.SetItemText(i, 2, Com[i].snum);
 	}
 
 	return TRUE;  // return TRUE unless you set the focus to a control
@@ -120,6 +116,33 @@ void Huojia3::OnBnClickedButton3()//增添
 	H3_List.InsertItem(nCount, dlg.sType1);//新建类型
 	H3_List.SetItemText(nCount, 1, dlg.sDate1);
 	H3_List.SetItemText(nCount, 2, dlg.sNumber1);
+
+	Good_Info new_good;
+	new_good.name = dlg.sType1.GetBuffer();
+
+	std::string sou4 = dlg.sDate1.GetBuffer();
+	Time t = { 0,0,0 };
+	int p = 0;
+	while (sou4[p] != '-') {
+		t.year *= 10;
+		t.year += sou4[p++] - '0';
+	}
+	p++;
+	while (sou4[p] != '-') {
+		t.month *= 10;
+		t.month += sou4[p++] - '0';
+	}
+	p++;
+	while (sou4[p] != '\0') {
+		t.date *= 10;
+		t.date += sou4[p++] - '0';
+	}
+	new_good.time.year = t.year;
+	new_good.time.month = t.month;
+	new_good.time.date = t.date;
+
+	new_good.amount = _ttoi(dlg.sNumber1);
+	Insert(new_good);
 }
 
 

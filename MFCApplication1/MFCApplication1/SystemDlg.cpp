@@ -125,7 +125,34 @@ void SystemDlg::OnBnClickedButton3()//增加
 	m_List.SetItemText(nCount, 1, dlg.sDate);
 	m_List.SetItemText(nCount, 2, dlg.sNumber);
 	m_List.SetItemText(nCount, 3, dlg.sThing);
+	Good_Info new_good;
+	new_good.name = dlg.sType.GetBuffer();
 
+	std::string sou4 = dlg.sDate.GetBuffer();
+	Time t = { 0,0,0 };
+	int p = 0;
+	while (sou4[p] != '-') {
+		t.year *= 10;
+		t.year += sou4[p++] - '0';
+	}
+	p++;
+	while (sou4[p] != '-') {
+		t.month *= 10;
+		t.month += sou4[p++] - '0';
+	}
+	p++;
+	while (sou4[p] != '\0') {
+		t.date *= 10;
+		t.date += sou4[p++] - '0';
+	}
+	new_good.time.year = t.year;
+	new_good.time.month = t.month;
+	new_good.time.date = t.date;
+
+	new_good.amount = _ttoi(dlg.sNumber);
+	new_good.location= _ttoi(dlg.sThing);
+	Insert(new_good);
+	transform();
 }
 
 
@@ -138,6 +165,8 @@ void SystemDlg::OnBnClickedButton4()//删除
 		if (state)
 		{
 			m_List.DeleteItem(i);
+			Delete(Com[i].bian);
+			transform();
 			i--;//若不i--则不能多项同时删除，因为当删除0栏后，1栏会为0栏，就删不掉了
 		}
 	}

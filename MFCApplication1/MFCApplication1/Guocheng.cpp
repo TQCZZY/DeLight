@@ -35,7 +35,7 @@ END_MESSAGE_MAP()
 
 
 // Guocheng 消息处理程序
-std::vector<int>middle;
+std::vector<int>b;
 
 void Guocheng::OnBnClickedButton1()
 {
@@ -81,10 +81,9 @@ void Guocheng::OnBnClickedButton1()
 		Sou2.time.year=t.year;
 		Sou2.time.month = t.month;
 		Sou2.time.date = t.date;
+	}	
 	}
-	}
-	auto b = Search(Sou2);
-	middle = Search_Return:b.numbers;
+	b == Search(Sou2);
 	EndDialog(0);
 	kuang dlg;
 	dlg.DoModal();

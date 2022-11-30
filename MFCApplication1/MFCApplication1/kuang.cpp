@@ -35,6 +35,7 @@ BEGIN_MESSAGE_MAP(kuang, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON1, &kuang::OnBnClickedButton1)
 	ON_BN_CLICKED(IDC_BUTTON7, &kuang::OnBnClickedButton7)
 	ON_BN_CLICKED(IDC_BUTTON3, &kuang::OnBnClickedButton3)
+	ON_BN_CLICKED(IDC_BUTTON2, &kuang::OnBnClickedButton2)
 END_MESSAGE_MAP()
 
 
@@ -71,11 +72,15 @@ BOOL kuang::OnInitDialog()
 
 	for (int i = 0; i < Com.size(); i++)
 	{
-
-		S_List.InsertItem(i, Com[i].itemName);//第一列数据
-		S_List.SetItemText(i, 1, Com[i].time);
-		S_List.SetItemText(i, 2, Com[i].snum);
-		S_List.SetItemText(i, 3, Com[i].thing);
+		for(int j=0;j<b.size();j++)
+			if(Com[i].bian==b[j])
+			{
+				S_List.InsertItem(i, Com[i].itemName);//第一列数据
+				S_List.SetItemText(i, 1, Com[i].time);
+				S_List.SetItemText(i, 2, Com[i].snum);
+				S_List.SetItemText(i, 3, Com[i].thing);
+				break;
+			}
 	}
 
 	return TRUE;  // return TRUE unless you set the focus to a control
@@ -103,7 +108,8 @@ void kuang::OnBnClickedButton7()
 }
 
 
-void kuang::OnBnClickedButton3()
+
+void kuang::OnBnClickedButton2()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	for (int i = 0; i < S_List.GetItemCount/*获取条目的数量*/(); i++)

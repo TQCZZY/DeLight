@@ -42,29 +42,7 @@ std::vector<std::pair<int, int> > Recepoints;//接收返回点
 int iclick = 0;    //鼠标点击次数
 HWND hWnd;
 
-
-
-
-
-
-int IsInRect(int LX, int LY, int RX, int RY, int x, int y)
-{
-    if (LX <= x && RX >= x && LY <= y && RY >= y) {
-        return 1;
-    }
-    else { return 0; }
-}
-
-__declspec(dllexport)void receive(std::vector<std::pair<int, int> >Re)
-{
-    Recepoints = Re;
-    LPRECT r = NULL;
-    GetClientRect(hWnd, r);
-    InvalidateRect(hWnd, r, TRUE);
-}
-
-void judgecorner(int X,int Y)
-{
+void cornerpointsbegin() {
     cornerpoints.push_back(std::pair<int, int>(50, 50));
     cornerpoints.push_back(std::pair<int, int>(200, 50));
     cornerpoints.push_back(std::pair<int, int>(200, 150));
@@ -145,8 +123,31 @@ void judgecorner(int X,int Y)
     cornerpoints.push_back(std::pair<int, int>(1090, 160));
     cornerpoints.push_back(std::pair<int, int>(1090, 310));
     cornerpoints.push_back(std::pair<int, int>(940, 310));
+    return;
+}
 
 
+
+
+int IsInRect(int LX, int LY, int RX, int RY, int x, int y)
+{
+    if (LX <= x && RX >= x && LY <= y && RY >= y) {
+        return 1;
+    }
+    else { return 0; }
+}
+
+__declspec(dllexport)void receive(std::vector<std::pair<int, int> >Re)
+{
+    Recepoints = Re;
+    LPRECT r = NULL;
+    GetClientRect(hWnd, r);
+    InvalidateRect(hWnd, r, TRUE);
+}
+
+void judgecorner(int X,int Y)
+{
+   
 
 
     int num = cornerpoints.size();
@@ -160,7 +161,9 @@ void judgecorner(int X,int Y)
         
         if (IsInRect(LX, LY, RX, RY,X, Y)) {
             points.push_back(std::pair<int, int>(cornerpoints[i].first, cornerpoints[i].second));
+            return;
         }
+
         i++;
 
     }
@@ -226,6 +229,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
     ShowWindow(hWnd, nCmdShow);
     UpdateWindow(hWnd);
+
+    cornerpointsbegin();//初始化
 
     return TRUE;
 }
@@ -394,7 +399,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
        
         int x = GET_X_LPARAM(lParam);
         int y = GET_Y_LPARAM(lParam);
-        judgecorner(x, y);
+        judgecorner(x,y);
         
       
 

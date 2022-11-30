@@ -18,6 +18,8 @@ public:
 #endif
 
 protected:
+	CWnd* m_pParent;
+
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
 
 	DECLARE_MESSAGE_MAP()
@@ -36,4 +38,5 @@ public:
 	afx_msg void OnBnClickedButton9();
 	afx_msg void OnBnClickedButton10();
 	afx_msg void OnBnClickedButton11();
+	afx_msg void OnBnClickedRemotequery();
 };

@@ -7,6 +7,7 @@
 #include "SystemDlg.h"
 #include "PropertyDlg.h"
 #include "ListDlg.h"
+#include "QueryDlg.h"
 #include "data.cpp"
 
 
@@ -18,7 +19,7 @@ IMPLEMENT_DYNAMIC(SystemDlg, CDialogEx)
 SystemDlg::SystemDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_DIALOG1, pParent)
 {
-
+	m_pParent = pParent;
 }
 
 SystemDlg::~SystemDlg()
@@ -44,6 +45,7 @@ BEGIN_MESSAGE_MAP(SystemDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON9, &SystemDlg::OnBnClickedButton9)
 	ON_BN_CLICKED(IDC_BUTTON10, &SystemDlg::OnBnClickedButton10)
 	ON_BN_CLICKED(IDC_BUTTON11, &SystemDlg::OnBnClickedButton11)
+	ON_BN_CLICKED(IDC_REMOTEQUERY, &SystemDlg::OnBnClickedRemotequery)
 END_MESSAGE_MAP()
 
 
@@ -283,4 +285,11 @@ void SystemDlg::OnBnClickedButton11()//排序4
 		m_List.SetItemText(i, 2, Com[i].snum);
 		m_List.SetItemText(i, 3, Com[i].thing);
 	}
+}
+
+void SystemDlg::OnBnClickedRemotequery()
+{
+	CQueryDlg qd;
+	qd.Create(CQueryDlg::IDD, m_pParent);
+	qd.ShowWindow(SW_SHOW);
 }

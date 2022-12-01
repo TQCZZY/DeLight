@@ -185,10 +185,10 @@
   <ItemGroup>
     <ClInclude Include="framework.h" />
     <ClInclude Include="GoodsMngmntDlg.h" />
+    <ClInclude Include="List.h" />
     <ClInclude Include="SearchMethodDlg.h" />
     <ClInclude Include="SearchResultDlg.h" />
     <ClInclude Include="SearchValueDlg.h" />
-    <ClInclude Include="List.hpp" />
     <ClInclude Include="DeLight.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="PswDlg.h" />

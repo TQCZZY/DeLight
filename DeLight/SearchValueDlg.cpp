@@ -48,18 +48,21 @@ void SearchValueDlg::OnBnClickedButton1()
 		std::string sou1 = W2A(Sousuo);
 		Sou2.name = sou1;
 	}
+	break;
 	case 2:
 	{
 		int sou2;
 		sou2 = _ttoi(Sousuo);
 		Sou2.amount = sou2;
 	}
+	break;
 	case 3:
 	{
 		int sou3;
 		sou3 = _ttoi(Sousuo);
 		Sou2.location = sou3;
 	}
+	break;
 	case 4:
 	{
 		std::string sou4 = W2A(Sousuo);
@@ -83,8 +86,9 @@ void SearchValueDlg::OnBnClickedButton1()
 		Sou2.time.month = t.month;
 		Sou2.time.date = t.date;
 	}	
+	break;
 	}
-	b == Search(Sou2);
+	b = Search(Sou2);
 	EndDialog(0);
 	SearchResultDlg dlg;
 	dlg.DoModal();

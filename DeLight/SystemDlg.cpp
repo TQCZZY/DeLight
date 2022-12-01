@@ -69,7 +69,7 @@ BOOL SystemDlg::OnInitDialog()
 	d.DoModal();
 	CDialogEx::OnInitDialog();
 
-	// TODO:  在此添加额外的初始化
+	head->next = NULL;
 	m_List.SetExtendedStyle(LVS_EX_FULLROWSELECT/*整行选中*/ | LVS_EX_CHECKBOXES/*复选框*/);//扩展样式
 
 	m_List.InsertColumn(0, _T("商品名称"),0,200/*宽度*/);
@@ -248,6 +248,7 @@ void SystemDlg::OnBnClickedSortdt()//排序2
 	}
 
 	Sort(4);
+	transform();
 	for (int i = 0; i < Com.size(); i++)
 	{
 		m_List.InsertItem(i, Com[i].itemName);//第一列数据
@@ -277,6 +278,7 @@ void SystemDlg::OnBnClickedSortqt()//排序3
 	}
 
 	Sort(2);
+	transform();
 	for (int i = 0; i < Com.size(); i++)
 	{
 		m_List.InsertItem(i, Com[i].itemName);//第一列数据
@@ -305,6 +307,7 @@ void SystemDlg::OnBnClickedSortsf()//排序4
 	}
 
 	Sort(3);
+	transform();
 	for (int i = 0; i < Com.size(); i++)
 	{
 		m_List.InsertItem(i, Com[i].itemName);//第一列数据

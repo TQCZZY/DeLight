@@ -6,15 +6,15 @@
 //#include "EncryptionDll.hpp"
 
 std::vector<Goodinfor>Com;
+Goodinfor tmp;
 
 Search_Info Sou2;
 
-Good_Info* head;
+Good_Info* head = new Good_Info;
 int cnt;
 
 
 void transform() {
-	Goodinfor tmp;
 	Com.clear();
 	for (Good_Info* now = head; now != NULL; now = now->next) {
 		tmp.itemName.Format(_T("%s"), now->name.c_str());
@@ -47,38 +47,27 @@ bool Time::operator >(const Time x) {
 }
 
 void Insert(Good_Info good_to_be_insert) {
-	Good_Info* tmp = new Good_Info;
 	Search_Info s;
 	s.name = good_to_be_insert.name;
 	s.type = 1;
-	if (head)
-	{
-		//能否合并?
-		std::vector<int>rev = Search(s);
-		for (int i = 0; i < rev.size(); i++) {
-			for (Good_Info* now = head->next; now != NULL; now = now->next) {
-				if (now->number == rev[i]) {
-					if (now->location == good_to_be_insert.location && now->time == good_to_be_insert.time) {
-						now->amount += good_to_be_insert.amount;
-						delete tmp;
-						return;
-					}
+	//能否合并?
+	std::vector<int>rev = Search(s);
+	for (int i = 0; i < rev.size(); i++) {
+		for (Good_Info* now = head->next; now != NULL; now = now->next) {
+			if (now->number == rev[i]) {
+				if (now->location == good_to_be_insert.location && now->time == good_to_be_insert.time) {
+					now->amount += good_to_be_insert.amount;
+					return;
 				}
 			}
 		}
-		//新建
-		tmp->next = head->next;
-		head->next = tmp;
-		*tmp = good_to_be_insert;
-		tmp->number = ++cnt;
 	}
-	else
-	{
-		//新建
-		head = tmp;
-		*tmp = good_to_be_insert;
-		tmp->number = ++cnt;
-	}
+	//新建
+	Good_Info* tmp = new Good_Info;
+	*tmp = good_to_be_insert;
+	tmp->next = head->next;
+	head->next = tmp;
+	tmp->number = ++cnt;
 }
 
 bool Delete(int number) {
@@ -138,6 +127,14 @@ std::vector<int> Search(Search_Info info) {
 	return ans;
 }
 
+void Swap(Good_Info* x) {
+	Good_Info* tmp1 = x->next;
+	Good_Info* tmp2 = tmp1->next;
+	tmp1->next = tmp2->next;
+	tmp2->next = tmp1;
+	x->next = tmp2;
+}
+
 void Sort(int command) {
 	int n = 0;
 	for (Good_Info* tmp = head; tmp != NULL; tmp = tmp->next)
@@ -157,14 +154,12 @@ void Sort(int command) {
 						break;
 					}
 				if (flag) {
-					Good_Info* swap = tmp->next->next;
-					tmp->next->next = tmp->next->next->next;
-					swap->next = tmp->next;
-					tmp->next = swap;
+					Swap(tmp);
 				}
 			}
 		}
 	}
+	break;
 	case 2: {//数量
 		for (int i = 1; i < n; i++)
 		{
@@ -173,14 +168,12 @@ void Sort(int command) {
 				for (int k = 0; k < j; k++)
 					tmp = tmp->next;
 				if (tmp->next->amount > tmp->next->next->amount) {
-					Good_Info* swap = tmp->next->next;
-					tmp->next->next = tmp->next->next->next;
-					swap->next = tmp->next;
-					tmp->next = swap;
+					Swap(tmp);
 				}
 			}
 		}
 	}
+	break;
 	case 3: {//货架
 		for (int i = 1; i < n; i++)
 		{
@@ -189,14 +182,12 @@ void Sort(int command) {
 				for (int k = 0; k < j; k++)
 					tmp = tmp->next;
 				if (tmp->next->location > tmp->next->next->location) {
-					Good_Info* swap = tmp->next->next;
-					tmp->next->next = tmp->next->next->next;
-					swap->next = tmp->next;
-					tmp->next = swap;
+					Swap(tmp);
 				}
 			}
 		}
 	}
+	break;
 	case 4: {//时间
 		for (int i = 1; i < n; i++)
 		{
@@ -205,14 +196,12 @@ void Sort(int command) {
 				for (int k = 0; k < j; k++)
 					tmp = tmp->next;
 				if (tmp->next->time > tmp->next->next->time) {
-					Good_Info* swap = tmp->next->next;
-					tmp->next->next = tmp->next->next->next;
-					swap->next = tmp->next;
-					tmp->next = swap;
+					Swap(tmp);
 				}
 			}
 		}
 	}
+	break;
 	}
 }
 

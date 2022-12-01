@@ -43,34 +43,34 @@ END_MESSAGE_MAP()
 void SearchMethodDlg::OnBnClickedButton1()//名称
 {
 	// TODO: 在此添加控件通知处理程序代码
+	Sou2.type = 1;
 	SearchValueDlg dlg;
 	dlg.DoModal();
-	Sou2.type = 1;
 }
 
 
 void SearchMethodDlg::OnBnClickedButton2()//时间
 {
 	// TODO: 在此添加控件通知处理程序代码
+	Sou2.type = 4;
 	SearchValueDlg dlg;
 	dlg.DoModal();
-	Sou2.type = 4;
 }
 
 
 void SearchMethodDlg::OnBnClickedButton3()//数量
 {
 	// TODO: 在此添加控件通知处理程序代码
+	Sou2.type = 2;
 	SearchValueDlg dlg;
 	dlg.DoModal();
-	Sou2.type = 2;
 }
 
 
 void SearchMethodDlg::OnBnClickedButton4()//货架
 {
 	// TODO: 在此添加控件通知处理程序代码
+	Sou2.type = 3;
 	SearchValueDlg dlg;
 	dlg.DoModal();
-	Sou2.type = 3;
 }

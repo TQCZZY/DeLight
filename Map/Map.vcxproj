@@ -22,7 +22,7 @@
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{cdebbf14-6c20-4107-93ff-3be1cdbde864}</ProjectGuid>
-    <RootNamespace>用户界面与路径分析</RootNamespace>
+    <RootNamespace>Map</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

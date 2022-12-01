@@ -1,10 +1,10 @@
 ﻿// dllmain.cpp : 定义 DLL 应用程序的入口点。
 #include "pch.h"
 
-BOOL APIENTRY DllMain( HMODULE hModule,
-                       DWORD  ul_reason_for_call,
-                       LPVOID lpReserved
-                     )
+BOOL APIENTRY DllMain(HMODULE hModule,
+    DWORD  ul_reason_for_call,
+    LPVOID lpReserved
+)
 {
     switch (ul_reason_for_call)
     {
@@ -25,8 +25,6 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 #include<windows.h>
 #include<vector>
 
-
-
 #define MAX_LOADSTRING 100
 #define GET_X_LPARAM(lp)                        ((int)(short)LOWORD(lp))
 
@@ -41,6 +39,8 @@ std::vector<std::pair<int, int> > cornerpoints;//
 std::vector<std::pair<int, int> > Recepoints;//接收返回点
 int iclick = 0;    //鼠标点击次数
 HWND hWnd;
+RECT rect;
+bool confirmedSel = false;
 
 void cornerpointsbegin() {
     cornerpoints.push_back(std::pair<int, int>(50, 50));
@@ -126,9 +126,6 @@ void cornerpointsbegin() {
     return;
 }
 
-
-
-
 int IsInRect(int LX, int LY, int RX, int RY, int x, int y)
 {
     if (LX <= x && RX >= x && LY <= y && RY >= y) {
@@ -137,47 +134,31 @@ int IsInRect(int LX, int LY, int RX, int RY, int x, int y)
     else { return 0; }
 }
 
-__declspec(dllexport)void receive(std::vector<std::pair<int, int> >Re)
+void judgecorner(int X, int Y)
 {
-    Recepoints = Re;
-    LPRECT r = NULL;
-    GetClientRect(hWnd, r);
-    InvalidateRect(hWnd, r, TRUE);
-}
-
-void judgecorner(int X,int Y)
-{
-   
-
-
     int num = cornerpoints.size();
     int i = 0;
-   
+
     while (i < num) {
         int LX = cornerpoints[i].first - 8;
         int LY = cornerpoints[i].second - 8;
         int RX = cornerpoints[i].first + 8;
         int RY = cornerpoints[i].second + 8;
-        
-        if (IsInRect(LX, LY, RX, RY,X, Y)) {
+
+        if (IsInRect(LX, LY, RX, RY, X, Y)) {
             points.push_back(std::pair<int, int>(cornerpoints[i].first, cornerpoints[i].second));
             return;
         }
-
         i++;
-
     }
     return;
 }//判断四个顶点
-
-RECT rect;
 
 // 此代码模块中包含的函数的前向声明:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
-
 
 //
 //  函数: MyRegisterClass()
@@ -263,6 +244,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         case IDM_EXIT:
             DestroyWindow(hWnd);
             break;
+        case IDM_CMPLTSEL:
+            confirmedSel = true;
+            break;
         default:
             return DefWindowProc(hWnd, message, wParam, lParam);
         }
@@ -279,9 +263,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         const int length3 = 170;
         const int length4 = 190;
         const int length5 = 240;
-
-
-
 
         Rectangle(hdc, 50, length0, 200, 150);
         Rectangle(hdc, 220, length0, 300, length1);
@@ -313,9 +294,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         GetClientRect(hWnd, &rect);
         DrawText(hdc, TEXT("请点击您想要配送的地址"), -1, &rect, DT_CENTER | DT_VCENTER);
 
-
-
-
         RECT aa{ 50 , length0,200 ,150 };
         DrawText(hdc, TEXT("女生宿舍1"), -1, &aa, DT_CENTER | DT_VCENTER);
         RECT ab{ 220, length0,300 , length1 };
@@ -332,7 +310,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         DrawText(hdc, TEXT("二教"), -1, &ag, DT_CENTER | DT_VCENTER);
         RECT ah{ 1110, length0,1260 ,length1 };
         DrawText(hdc, TEXT("一教"), -1, &ah, DT_CENTER | DT_VCENTER);
-
 
         RECT ba{ 320, length2,420 , length3 };
         DrawText(hdc, TEXT("停车场1"), -1, &ba, DT_CENTER | DT_VCENTER);
@@ -372,7 +349,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             int x2 = 0;
             int y2 = 0;
 
-
             x1 = Recepoints[i].first;
             y1 = Recepoints[i].second;
             x2 = Recepoints[i + 1].first;
@@ -381,43 +357,25 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             LineTo(hdc, x2, y2);
             i++;
         }
-
-
-
-
-
         EndPaint(hWnd, &ps);
         return 0;
     }
     break;
-
-
-
-
     case WM_LBUTTONDOWN:
     {
-       
         int x = GET_X_LPARAM(lParam);
         int y = GET_Y_LPARAM(lParam);
-        judgecorner(x,y);
-        
-      
-
+        judgecorner(x, y);
     }
-
     break;
-
     case WM_DESTROY:
         PostQuitMessage(0);
-
         break;
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
     }
     return 0;
 }
-
-
 
 // “关于”框的消息处理程序。
 INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
@@ -438,10 +396,9 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
     }
     return (INT_PTR)FALSE;
 }
-__declspec(dllexport)std::vector<std::pair<int, int> > Sentpoints(HINSTANCE hInstance, int nCmdShow)
+
+__declspec(dllexport)int itfCreateWindow(HINSTANCE hInstance, int nCmdShow)
 {
-
-
     // 初始化全局字符串
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
     LoadStringW(hInstance, IDC_MAP, szWindowClass, MAX_LOADSTRING);
@@ -450,7 +407,7 @@ __declspec(dllexport)std::vector<std::pair<int, int> > Sentpoints(HINSTANCE hIns
     // 执行应用程序初始化:
     if (!InitInstance(hInstance, nCmdShow))
     {
-        return {};
+        return 1;
     }
 
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_MAP));
@@ -466,11 +423,21 @@ __declspec(dllexport)std::vector<std::pair<int, int> > Sentpoints(HINSTANCE hIns
             DispatchMessage(&msg);
         }
     }
+    return 0;
+}//接口输出
+
+__declspec(dllexport)std::vector<std::pair<int, int> > Sentpoints()
+{
+    while (!confirmedSel)
+    {
+    }
     return points;
 }//接口输出
 
-
-
-
-
-
+__declspec(dllexport)void receive(std::vector<std::pair<int, int> >Re)
+{
+    Recepoints = Re;
+    LPRECT r = NULL;
+    GetClientRect(hWnd, r);
+    InvalidateRect(hWnd, r, TRUE);
+}

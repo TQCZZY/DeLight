@@ -1,14 +1,14 @@
-﻿// kuang.cpp: 实现文件
+﻿// SearchResultDlg.cpp: 实现文件
 //
 
 #include "pch.h"
 #include "DeLight.h"
 #include "afxdialogex.h"
-#include "List.hpp"
+#include "List.h"
 #include "SearchResultDlg.h"
 #include "SearchValueDlg.h"
 
-// kuang 对话框
+// SearchResultDlg 对话框
 
 IMPLEMENT_DYNAMIC(SearchResultDlg, CDialogEx)
 

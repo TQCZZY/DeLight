@@ -2,7 +2,7 @@
 //#define LIST_HPP
 #pragma once
 #include "pch.h"
-#include "List.hpp"
+#include "List.h"
 //#include "EncryptionDll.hpp"
 
 std::vector<Goodinfor>Com;

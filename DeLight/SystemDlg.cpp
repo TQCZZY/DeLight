@@ -4,7 +4,7 @@
 #include "pch.h"
 #include "afxdialogex.h"
 #include "resource.h"
-#include "List.hpp"
+#include "List.h"
 #include "SystemDlg.h"
 #include "PswDlg.h"
 #include "GoodsMngmntDlg.h"

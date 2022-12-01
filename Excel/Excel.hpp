@@ -8,6 +8,7 @@
 #define EXCEL_API __declspec(dllexport)
 #else
 #define EXCEL_API __declspec(dllimport)
+#pragma comment(lib,"Excel.lib")
 #endif
 
 EXCEL_API void global2Excel(CString PathName, bool AutoQuit = false, bool ReadOnly = false, CString Password = L"", CString WriteResPassword = L"");
@@ -15,4 +16,3 @@ EXCEL_API void singleGoods2Excel(CString PathName, bool AutoQuit = false, bool R
 EXCEL_API void shelf2Excel(CString PathName, bool AutoQuit = false, bool ReadOnly = false, CString Password = L"", CString WriteResPassword = L"");
 EXCEL_API void specDate2Excel(CString PathName, bool AutoQuit = false, bool ReadOnly = false, CString Password = L"", CString WriteResPassword = L"");
 EXCEL_API void setInfo(std::vector<std::string> goods, std::vector<int> count, std::vector<Time> date, std::vector<int> shelf);
-#pragma comment(lib,"Excel.lib")

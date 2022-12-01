@@ -1,3 +1,4 @@
+#pragma once
 // Machine generated IDispatch wrapper class(es) created with ClassWizard
 /////////////////////////////////////////////////////////////////////////////
 // Adjustments wrapper class

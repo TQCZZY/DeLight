@@ -7,7 +7,6 @@
 #include "comutil.h"
 #include "afxdisp.h"
 #include "callexcel.h"
-#include "Excel.h"
 #include <vector>
 #include <string>
 
@@ -30,12 +29,15 @@ struct Time {
 	}
 };
 
+#define EXCEL_EXPORTS
+#include "Excel.hpp"
+
 std::vector<std::string> internalGoods;
 std::vector<int> internalCount;
 std::vector<Time> internalDate;
 std::vector<int> internalShelf;
 
-EXCEL_API void global2Excel(CString PathName, bool AutoQuit = false, bool ReadOnly = false, CString Password = L"", CString WriteResPassword = L"")
+EXCEL_API void global2Excel(CString PathName, bool AutoQuit, bool ReadOnly, CString Password, CString WriteResPassword)
 {
 	_Application app;
 	Workbooks books;
@@ -121,7 +123,7 @@ EXCEL_API void global2Excel(CString PathName, bool AutoQuit = false, bool ReadOn
 	return;
 }
 
-EXCEL_API void singleGoods2Excel(CString PathName, bool AutoQuit = false, bool ReadOnly = false, CString Password = L"", CString WriteResPassword = L"")
+EXCEL_API void singleGoods2Excel(CString PathName, bool AutoQuit, bool ReadOnly, CString Password, CString WriteResPassword)
 {
 	_Application app;
 	Workbooks books;
@@ -210,7 +212,7 @@ EXCEL_API void singleGoods2Excel(CString PathName, bool AutoQuit = false, bool R
 	return;
 }
 
-EXCEL_API void shelf2Excel(CString PathName, bool AutoQuit = false, bool ReadOnly = false, CString Password = L"", CString WriteResPassword = L"")
+EXCEL_API void shelf2Excel(CString PathName, bool AutoQuit, bool ReadOnly, CString Password, CString WriteResPassword)
 {
 	_Application app;
 	Workbooks books;
@@ -299,7 +301,7 @@ EXCEL_API void shelf2Excel(CString PathName, bool AutoQuit = false, bool ReadOnl
 	return;
 }
 
-EXCEL_API void specDate2Excel(CString PathName, bool AutoQuit = false, bool ReadOnly = false, CString Password = L"", CString WriteResPassword = L"")
+EXCEL_API void specDate2Excel(CString PathName, bool AutoQuit, bool ReadOnly, CString Password, CString WriteResPassword)
 {
 	_Application app;
 	Workbooks books;

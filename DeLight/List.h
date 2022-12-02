@@ -1,10 +1,4 @@
-//#ifndef LIST_HPP
-//#define LIST_HPP
 #pragma once
-#include<fstream>
-#include<string>
-#include<vector>
-//#include "EncryptionDll.hpp"
 
 constexpr auto MOD = 19491001;
 

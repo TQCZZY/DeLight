@@ -1,7 +1,9 @@
-#pragma once
 #include "pch.h"
+#include<fstream>
+#include<string>
+#include<vector>
 #include "List.h"
-//#include "EncryptionDll.hpp"
+#include "EncryptionDll.hpp"
 
 std::vector<Goodinfor>Com;
 Goodinfor tmp;
@@ -241,8 +243,8 @@ void Sort(int command) {
 }
 
 void Init() {
-	//std::fstream file = std::fstream("货物数据.data", std::ios::in);
-	//std::vector<uint8_t>key(2 * 1024 * 1024);//定义一个2Mb内存块?
+	std::fstream file = std::fstream("货物数据.data", std::ios::in);
+	std::vector<uint8_t>key(2 * 1024 * 1024);//定义一个2Mb内存块
 	//file.seekg(-(2 * 1024 * 1024), std::ios::end);
 	//file.read((char*)key.data(), 2 * 1024 * 1024);
 	//int qmcrev = qmcPreDec(key.data(), 2 * 1024 * 1024, "normal");
@@ -292,9 +294,9 @@ void Init() {
 }
 
 void Save() {
-	//std::fstream file = std::fstream("货物数据.data", std::ios::out);
-	//std::vector<uint8_t>key(2 * 1024 * 1024);//定义一个2Mb内存块?
-	//int qmcrev = qmcPreEnc(key.data(), key.size(), "RC4");
+	std::fstream file = std::fstream("货物数据.data", std::ios::out);
+	std::vector<uint8_t>key(2 * 1024 * 1024);//定义一个2Mb内存块
+	int qmcrev = qmcPreEnc(key.data(), key.size(), "RC4");
 	//if (qmcrev == -1) {
 	//	std::string error;
 	//	qmcGetErr((char*)error.c_str());

@@ -10,32 +10,13 @@
 #include <vector>
 #include <string>
 
-struct Time {
-	int year;
-	int month;
-	int date;
-	void operator =(const Time x) {
-		this->year = x.year;
-		this->month = x.month;
-		this->date = x.date;
-		return;
-	}
-	bool operator ==(const Time x) {
-		if (this->year != x.year ||
-			this->month != x.month ||
-			this->date != x.date)
-			return false;
-		return true;
-	}
-};
-
 #define EXCEL_EXPORTS
 #include "Excel.hpp"
 
 std::vector<std::string> internalGoods;
-std::vector<int> internalCount;
-std::vector<Time> internalDate;
-std::vector<int> internalShelf;
+std::vector<std::string> internalCount;
+std::vector<std::string> internalDate;
+std::vector<std::string> internalShelf;
 
 EXCEL_API void global2Excel(CString PathName, bool AutoQuit, bool ReadOnly, CString Password, CString WriteResPassword)
 {
@@ -75,10 +56,10 @@ EXCEL_API void global2Excel(CString PathName, bool AutoQuit, bool ReadOnly, CStr
 	range.SetItem(_variant_t((LONG)2), _variant_t((LONG)4), _variant_t("所在货架"));
 	for (long i = 0; i < internalCount.size(); i++)
 	{
-		range.SetItem(_variant_t((LONG)3 + i), _variant_t((LONG)1), _variant_t((internalGoods[i]+" - "+ std::to_string(internalShelf[i])).c_str()));
-		range.SetItem(_variant_t((LONG)3 + i), _variant_t((LONG)2), _variant_t(std::to_string(internalCount[i]).c_str()));
-		range.SetItem(_variant_t((LONG)3 + i), _variant_t((LONG)3), _variant_t((std::to_string(internalDate[i].year) + "/" + std::to_string(internalDate[i].month) + "/" + std::to_string(internalDate[i].date)).c_str()));
-		range.SetItem(_variant_t((LONG)3 + i), _variant_t((LONG)4), _variant_t(std::to_string(internalShelf[i]).c_str()));
+		range.SetItem(_variant_t((LONG)3 + i), _variant_t((LONG)1), _variant_t((internalGoods[i]+" - "+ internalShelf[i]).c_str()));
+		range.SetItem(_variant_t((LONG)3 + i), _variant_t((LONG)2), _variant_t(internalCount[i].c_str()));
+		range.SetItem(_variant_t((LONG)3 + i), _variant_t((LONG)3), _variant_t(internalDate[i].c_str()));
+		range.SetItem(_variant_t((LONG)3 + i), _variant_t((LONG)4), _variant_t(internalShelf[i].c_str()));
 	}
 	range.SetHorizontalAlignment(_variant_t((long)-4108));
 	range.SetVerticalAlignment(_variant_t((long)-4108));
@@ -92,7 +73,7 @@ EXCEL_API void global2Excel(CString PathName, bool AutoQuit, bool ReadOnly, CStr
 	chartobject = chartobjects.Add(left, top, width, height);
 	chart.AttachDispatch(chartobject.GetChart());
 	chart.SetChartType(72);
-	lpDisp = sheet.GetRange(range.GetItem(_variant_t(2), _variant_t(1)), range.GetItem(_variant_t(2 + internalCount.size()), _variant_t(2)));
+	lpDisp = sheet.GetRange(range.GetItem(_variant_t(3), _variant_t(1)), range.GetItem(_variant_t(2 + internalCount.size()), _variant_t(2)));
 	ASSERT(lpDisp);
 	VARIANT var;
 	var.vt = VT_DISPATCH;
@@ -165,9 +146,9 @@ EXCEL_API void singleGoods2Excel(CString PathName, bool AutoQuit, bool ReadOnly,
 	range.SetItem(_variant_t((LONG)3), _variant_t((LONG)1), _variant_t(internalGoods[0].c_str()));
 	for (long i = 0; i < internalCount.size(); i++)
 	{
-		range.SetItem(_variant_t((LONG)3 + i), _variant_t((LONG)2), _variant_t(std::to_string(internalShelf[i]).c_str()));
-		range.SetItem(_variant_t((LONG)3 + i), _variant_t((LONG)3), _variant_t(std::to_string(internalCount[i]).c_str()));
-		range.SetItem(_variant_t((LONG)3 + i), _variant_t((LONG)4), _variant_t((std::to_string(internalDate[i].year) + "/" + std::to_string(internalDate[i].month) + "/" + std::to_string(internalDate[i].date)).c_str()));
+		range.SetItem(_variant_t((LONG)3 + i), _variant_t((LONG)2), _variant_t(internalShelf[i].c_str()));
+		range.SetItem(_variant_t((LONG)3 + i), _variant_t((LONG)3), _variant_t(internalCount[i].c_str()));
+		range.SetItem(_variant_t((LONG)3 + i), _variant_t((LONG)4), _variant_t(internalDate[i].c_str()));
 	}
 	range.SetHorizontalAlignment(_variant_t((long)-4108));
 	range.SetVerticalAlignment(_variant_t((long)-4108));
@@ -181,7 +162,7 @@ EXCEL_API void singleGoods2Excel(CString PathName, bool AutoQuit, bool ReadOnly,
 	chartobject = chartobjects.Add(left, top, width, height);
 	chart.AttachDispatch(chartobject.GetChart());
 	chart.SetChartType(72);
-	lpDisp = sheet.GetRange(range.GetItem(_variant_t(2), _variant_t(2)), range.GetItem(_variant_t(2 + internalCount.size()), _variant_t(3)));
+	lpDisp = sheet.GetRange(range.GetItem(_variant_t(3), _variant_t(2)), range.GetItem(_variant_t(2 + internalCount.size()), _variant_t(3)));
 	ASSERT(lpDisp);
 	VARIANT var;
 	var.vt = VT_DISPATCH;
@@ -240,7 +221,7 @@ EXCEL_API void shelf2Excel(CString PathName, bool AutoQuit, bool ReadOnly, CStri
 	sheets.AttachDispatch(book.GetWorksheets(), true);
 	sheet.AttachDispatch(sheets.Add(covOptional, covOptional, _variant_t(1), covOptional));
 	USES_CONVERSION;
-	sheet.SetName(A2W(("货架概况 " + std::to_string(internalShelf[0])).c_str()));
+	sheet.SetName(A2W(("货架概况 " + internalShelf[0]).c_str()));
 	range.AttachDispatch(sheet.GetCells(), true);
 	range.AttachDispatch(sheet.GetRange(range.GetItem(_variant_t(3), _variant_t(1)), range.GetItem(_variant_t(2 + internalCount.size()), _variant_t(1))), true);
 	range.Merge(_variant_t((long)0));
@@ -251,12 +232,12 @@ EXCEL_API void shelf2Excel(CString PathName, bool AutoQuit, bool ReadOnly, CStri
 	range.SetItem(_variant_t((LONG)2), _variant_t((LONG)2), _variant_t("货物"));
 	range.SetItem(_variant_t((LONG)2), _variant_t((LONG)3), _variant_t("数量"));
 	range.SetItem(_variant_t((LONG)2), _variant_t((LONG)4), _variant_t("入库日期"));
-	range.SetItem(_variant_t((LONG)3), _variant_t((LONG)1), _variant_t(internalShelf[0]));
+	range.SetItem(_variant_t((LONG)3), _variant_t((LONG)1), _variant_t(internalShelf[0].c_str()));
 	for (long i = 0; i < internalCount.size(); i++)
 	{
 		range.SetItem(_variant_t((LONG)3 + i), _variant_t((LONG)2), _variant_t(internalGoods[i].c_str()));
-		range.SetItem(_variant_t((LONG)3 + i), _variant_t((LONG)3), _variant_t(std::to_string(internalCount[i]).c_str()));
-		range.SetItem(_variant_t((LONG)3 + i), _variant_t((LONG)4), _variant_t((std::to_string(internalDate[i].year) + "/" + std::to_string(internalDate[i].month) + "/" + std::to_string(internalDate[i].date)).c_str()));
+		range.SetItem(_variant_t((LONG)3 + i), _variant_t((LONG)3), _variant_t(internalCount[i].c_str()));
+		range.SetItem(_variant_t((LONG)3 + i), _variant_t((LONG)4), _variant_t(internalDate[i].c_str()));
 	}
 	range.SetHorizontalAlignment(_variant_t((long)-4108));
 	range.SetVerticalAlignment(_variant_t((long)-4108));
@@ -270,7 +251,7 @@ EXCEL_API void shelf2Excel(CString PathName, bool AutoQuit, bool ReadOnly, CStri
 	chartobject = chartobjects.Add(left, top, width, height);
 	chart.AttachDispatch(chartobject.GetChart());
 	chart.SetChartType(72);
-	lpDisp = sheet.GetRange(range.GetItem(_variant_t(2), _variant_t(2)), range.GetItem(_variant_t(2 + internalCount.size()), _variant_t(3)));
+	lpDisp = sheet.GetRange(range.GetItem(_variant_t(3), _variant_t(2)), range.GetItem(_variant_t(2 + internalCount.size()), _variant_t(3)));
 	ASSERT(lpDisp);
 	VARIANT var;
 	var.vt = VT_DISPATCH;
@@ -329,7 +310,7 @@ EXCEL_API void specDate2Excel(CString PathName, bool AutoQuit, bool ReadOnly, CS
 	sheets.AttachDispatch(book.GetWorksheets(), true);
 	sheet.AttachDispatch(sheets.Add(covOptional, covOptional, _variant_t(1), covOptional));
 	USES_CONVERSION;
-	sheet.SetName(A2W(("入库清单 " + std::to_string(internalDate[0].year) + "/" + std::to_string(internalDate[0].month) + "/" + std::to_string(internalDate[0].date)).c_str()));
+	sheet.SetName(A2W(("入库清单 " + internalDate[0]).c_str()));
 	range.AttachDispatch(sheet.GetCells(), true);
 	range.AttachDispatch(sheet.GetRange(range.GetItem(_variant_t(3), _variant_t(1)), range.GetItem(_variant_t(2 + internalCount.size()), _variant_t(1))), true);
 	range.Merge(_variant_t((long)0));
@@ -340,12 +321,12 @@ EXCEL_API void specDate2Excel(CString PathName, bool AutoQuit, bool ReadOnly, CS
 	range.SetItem(_variant_t((LONG)2), _variant_t((LONG)2), _variant_t("货物"));
 	range.SetItem(_variant_t((LONG)2), _variant_t((LONG)3), _variant_t("数量"));
 	range.SetItem(_variant_t((LONG)2), _variant_t((LONG)4), _variant_t("所在货架"));
-	range.SetItem(_variant_t((LONG)3), _variant_t((LONG)1), _variant_t((std::to_string(internalDate[0].year) + "/" + std::to_string(internalDate[0].month) + "/" + std::to_string(internalDate[0].date)).c_str()));
+	range.SetItem(_variant_t((LONG)3), _variant_t((LONG)1), _variant_t(internalDate[0].c_str()));
 	for (long i = 0; i < internalCount.size(); i++)
 	{
-		range.SetItem(_variant_t((LONG)3 + i), _variant_t((LONG)1), _variant_t((internalGoods[i] + " - " + std::to_string(internalShelf[i])).c_str()));
-		range.SetItem(_variant_t((LONG)3 + i), _variant_t((LONG)2), _variant_t(std::to_string(internalCount[i]).c_str()));
-		range.SetItem(_variant_t((LONG)3 + i), _variant_t((LONG)3), _variant_t(std::to_string(internalShelf[i]).c_str()));
+		range.SetItem(_variant_t((LONG)3 + i), _variant_t((LONG)1), _variant_t((internalGoods[i] + " - " + internalShelf[i]).c_str()));
+		range.SetItem(_variant_t((LONG)3 + i), _variant_t((LONG)2), _variant_t(internalCount[i].c_str()));
+		range.SetItem(_variant_t((LONG)3 + i), _variant_t((LONG)3), _variant_t(internalShelf[i].c_str()));
 	}
 	range.SetHorizontalAlignment(_variant_t((long)-4108));
 	range.SetVerticalAlignment(_variant_t((long)-4108));
@@ -359,7 +340,7 @@ EXCEL_API void specDate2Excel(CString PathName, bool AutoQuit, bool ReadOnly, CS
 	chartobject = chartobjects.Add(left, top, width, height);
 	chart.AttachDispatch(chartobject.GetChart());
 	chart.SetChartType(72);
-	lpDisp = sheet.GetRange(range.GetItem(_variant_t(2), _variant_t(2)), range.GetItem(_variant_t(2 + internalCount.size()), _variant_t(3)));
+	lpDisp = sheet.GetRange(range.GetItem(_variant_t(3), _variant_t(2)), range.GetItem(_variant_t(2 + internalCount.size()), _variant_t(3)));
 	ASSERT(lpDisp);
 	VARIANT var;
 	var.vt = VT_DISPATCH;
@@ -390,7 +371,7 @@ EXCEL_API void specDate2Excel(CString PathName, bool AutoQuit, bool ReadOnly, CS
 	return;
 }
 
-EXCEL_API void setInfo(std::vector<std::string> goods, std::vector<int> count, std::vector<Time> date, std::vector<int> shelf)
+EXCEL_API void setInfo(std::vector<std::string> goods, std::vector<std::string> count, std::vector<std::string> date, std::vector<std::string> shelf)
 {
 	internalGoods = goods;
 	internalCount = count;

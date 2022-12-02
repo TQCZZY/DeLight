@@ -15,4 +15,4 @@ EXCEL_API void global2Excel(CString PathName, bool AutoQuit = false, bool ReadOn
 EXCEL_API void singleGoods2Excel(CString PathName, bool AutoQuit = false, bool ReadOnly = false, CString Password = L"", CString WriteResPassword = L"");
 EXCEL_API void shelf2Excel(CString PathName, bool AutoQuit = false, bool ReadOnly = false, CString Password = L"", CString WriteResPassword = L"");
 EXCEL_API void specDate2Excel(CString PathName, bool AutoQuit = false, bool ReadOnly = false, CString Password = L"", CString WriteResPassword = L"");
-EXCEL_API void setInfo(std::vector<std::string> goods, std::vector<int> count, std::vector<Time> date, std::vector<int> shelf);
+EXCEL_API void setInfo(std::vector<std::string> goods, std::vector<std::string> count, std::vector<std::string> date, std::vector<std::string> shelf);

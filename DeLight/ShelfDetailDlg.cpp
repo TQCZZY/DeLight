@@ -67,13 +67,16 @@ BOOL ShelfDetailDlg::OnInitDialog()
 	H1_List.InsertColumn(1, _T("进货时间"), 0, 200);
 	H1_List.InsertColumn(2, _T("商品库存"), 0, 200);
 
+	transform(true);
 	for (int i = 0; i < Com.size(); i++)
 	{
-		if (Com[i].huo == shelfNumber)
+		if (Com[i].shelfNo == shelfNumber)
 		{
-			H1_List.InsertItem(i, Com[i].itemName);//第一列数据
+			H1_List.InsertItem(i, L"");
+			H1_List.SetItemText(i, 0, Com[i].name);
 			H1_List.SetItemText(i, 1, Com[i].time);
-			H1_List.SetItemText(i, 2, Com[i].snum);
+			H1_List.SetItemText(i, 2, Com[i].num);
+			H1_List.SetItemText(i, 3, Com[i].shelf);
 		}
 	}
 
@@ -110,7 +113,8 @@ void ShelfDetailDlg::OnBnClickedButton3()//增添
 	int nCount = H1_List.GetItemCount();
 	if (dlg.sType1.IsEmpty() || dlg.sDate1.IsEmpty() || dlg.sNumber1.IsEmpty())
 		return;
-	H1_List.InsertItem(nCount, dlg.sType1);//新建类型
+	H1_List.InsertItem(nCount, L"");
+	H1_List.SetItemText(nCount, 0, dlg.sType1);
 	H1_List.SetItemText(nCount, 1, dlg.sDate1);
 	H1_List.SetItemText(nCount, 2, dlg.sNumber1);
 
@@ -140,31 +144,35 @@ void ShelfDetailDlg::OnBnClickedButton3()//增添
 	new_good.time.date = t.date;
 
 	new_good.amount = _ttoi(dlg.sNumber1);
+	new_good.location = shelfNumber;
 	Insert(new_good);
-	transform();
+	transform(true);
 }
 
 
 void ShelfDetailDlg::OnBnClickedButton7()//删除
 {
 	// TODO: 在此添加控件通知处理程序代码
-	for (int i = 0; i < H1_List.GetItemCount/*获取条目的数量*/(); i++)
+	size_t realIdx = 0;
+	for (int i = 0; i < H1_List.GetItemCount/*获取条目的数量*/(); ++i, ++realIdx)
 	{
 		BOOL state = H1_List.GetCheck(i);
 		if (state)
 		{
-			//fixme: del from database
+			Delete(Com[realIdx].code);
 			H1_List.DeleteItem(i);
 			i--;//若不i--则不能多项同时删除，因为当删除0栏后，1栏会为0栏，就删不掉了
 		}
 	}
+	transform(true);
 }
 
 
 void ShelfDetailDlg::OnBnClickedButton8()//修改
 {
 	// TODO: 在此添加控件通知处理程序代码
-	for (int i = 0; i < H1_List.GetItemCount/*获取条目的数量*/(); i++)
+	size_t realIdx = 0;
+	for (int i = 0; i < H1_List.GetItemCount/*获取条目的数量*/(); ++i, ++realIdx)
 	{
 		BOOL state = H1_List.GetCheck(i);
 		if (state)
@@ -177,10 +185,9 @@ void ShelfDetailDlg::OnBnClickedButton8()//修改
 			H1_List.SetItemText(i, 0, dlg.sType1);
 			H1_List.SetItemText(i, 1, dlg.sDate1);
 			H1_List.SetItemText(i, 2, dlg.sNumber1);
-
 		}
-
 	}
+	transform(true);
 }
 
 
@@ -203,15 +210,15 @@ void ShelfDetailDlg::OnBnClickedButton2()//排序1
 	}
 
 	Sort(1);
-	transform();
+	transform(true);
 	for (int i = 0; i < Com.size(); i++)
 	{
-		if (Com[i].huo == shelfNumber)
+		if (Com[i].shelfNo == shelfNumber)
 		{
-			H1_List.InsertItem(i, Com[i].itemName);//第一列数据
+			H1_List.InsertItem(i, Com[i].name);//第一列数据
 			H1_List.SetItemText(i, 1, Com[i].time);
-			H1_List.SetItemText(i, 2, Com[i].snum);
-			H1_List.SetItemText(i, 3, Com[i].thing);
+			H1_List.SetItemText(i, 2, Com[i].num);
+			H1_List.SetItemText(i, 3, Com[i].shelf);
 		}
 	}
 }
@@ -236,15 +243,15 @@ void ShelfDetailDlg::OnBnClickedButton11()//排序2
 	}
 
 	Sort(4);
-	transform();
+	transform(true);
 	for (int i = 0; i < Com.size(); i++)
 	{
-		if (Com[i].huo == shelfNumber)
+		if (Com[i].shelfNo == shelfNumber)
 		{
-			H1_List.InsertItem(i, Com[i].itemName);//第一列数据
+			H1_List.InsertItem(i, Com[i].name);//第一列数据
 			H1_List.SetItemText(i, 1, Com[i].time);
-			H1_List.SetItemText(i, 2, Com[i].snum);
-			H1_List.SetItemText(i, 3, Com[i].thing);
+			H1_List.SetItemText(i, 2, Com[i].num);
+			H1_List.SetItemText(i, 3, Com[i].shelf);
 		}
 	}
 }
@@ -269,15 +276,15 @@ void ShelfDetailDlg::OnBnClickedButton12()//排序3
 	}
 
 	Sort(2);
-	transform();
+	transform(true);
 	for (int i = 0; i < Com.size(); i++)
 	{
-		if (Com[i].huo == shelfNumber)
+		if (Com[i].shelfNo == shelfNumber)
 		{
-			H1_List.InsertItem(i, Com[i].itemName);//第一列数据
+			H1_List.InsertItem(i, Com[i].name);//第一列数据
 			H1_List.SetItemText(i, 1, Com[i].time);
-			H1_List.SetItemText(i, 2, Com[i].snum);
-			H1_List.SetItemText(i, 3, Com[i].thing);
+			H1_List.SetItemText(i, 2, Com[i].num);
+			H1_List.SetItemText(i, 3, Com[i].shelf);
 		}
 	}
 }

@@ -1,5 +1,3 @@
-//#ifndef LIST_HPP
-//#define LIST_HPP
 #pragma once
 #include "pch.h"
 #include "List.h"
@@ -13,17 +11,52 @@ Search_Info Sou2;
 Good_Info* head = new Good_Info;
 int cnt;
 
+void transform(bool fromList) {
+	if (fromList)
+	{
+		Com.clear();
+		for (Good_Info* now = head->next; now != NULL; now = now->next) {
+			tmp.name = now->name.c_str();
+			tmp.time = (std::to_string(now->time.year) + "-" + std::to_string(now->time.month) + "-" + std::to_string(now->time.date)).c_str();
+			tmp.num = std::to_string(now->amount).c_str();
+			tmp.shelf = std::to_string(now->location).c_str();
+			tmp.shelfNo = now->location;
+			tmp.code = now->number;
+			Com.push_back(tmp);
+		}
+	} else {
+		Delete(-1);
+		USES_CONVERSION;
+		for (int i = 0; i < Com.size(); ++i) {
+			Good_Info new_good;
+			USES_CONVERSION;
+			new_good.name = W2A(Com[i].name);
 
-void transform() {
-	Com.clear();
-	for (Good_Info* now = head; now != NULL; now = now->next) {
-		tmp.itemName.Format(_T("%s"), now->name.c_str());
-		tmp.time.Format(_T("%d-%d-%d"), now->time.year, now->time.month, now->time.date);
-		tmp.snum.Format(_T("%d"), now->amount);
-		tmp.thing.Format(_T("%d"), now->location);
-		tmp.huo = now->location;
-		tmp.bian = now->number;
-		Com.push_back(tmp);
+			std::string rawDate = W2A(Com[i].time);
+			Time t = { 0,0,0 };
+			int p = 0;
+			while (rawDate[p] != '-') {
+				t.year *= 10;
+				t.year += rawDate[p++] - '0';
+			}
+			p++;
+			while (rawDate[p] != '-') {
+				t.month *= 10;
+				t.month += rawDate[p++] - '0';
+			}
+			p++;
+			while (rawDate[p] != '\0') {
+				t.date *= 10;
+				t.date += rawDate[p++] - '0';
+			}
+			new_good.time.year = t.year;
+			new_good.time.month = t.month;
+			new_good.time.date = t.date;
+
+			new_good.amount = _ttoi(Com[i].num);
+			new_good.location = Com[i].shelfNo;
+			Insert(new_good);
+		}
 	}
 }
 
@@ -71,16 +104,18 @@ void Insert(Good_Info good_to_be_insert) {
 }
 
 bool Delete(int number) {
-	for (Good_Info* now = head; now->next != NULL; now = now->next)
+	bool deleted = false;
+	for (Good_Info* now = head->next; now->next != NULL; now = now->next)
 	{
-		if (now->next->number == number) {
+		if (now->next->number == number || number == -1) {
 			Good_Info* tmp = now->next;
 			now->next = tmp->next;
 			delete tmp;
-			return true;
+			deleted = true;
+			break;
 		}
 	}
-	return false;
+	return deleted;
 }
 
 std::vector<int> Search(Search_Info info) {
@@ -93,7 +128,7 @@ std::vector<int> Search(Search_Info info) {
 			find_hash += info.name[i];
 			find_hash %= MOD;
 		}
-		for (Good_Info* now = head; now != NULL; now = now->next) {
+		for (Good_Info* now = head->next; now != NULL; now = now->next) {
 			int hash = 0;
 			for (int i = 0; i < now->name.length(); i++) {
 				hash *= 10;
@@ -106,19 +141,19 @@ std::vector<int> Search(Search_Info info) {
 		return ans;//未找到
 	}
 	case 2: {//按数量查找所有相同的
-		for (Good_Info* now = head; now != NULL; now = now->next)
+		for (Good_Info* now = head->next; now != NULL; now = now->next)
 			if (now->amount == info.amount)
 				ans.push_back(now->number);
 		return ans;
 	}
 	case 3: {//按货架编号查找所有相同的
-		for (Good_Info* now = head; now != NULL; now = now->next)
+		for (Good_Info* now = head->next; now != NULL; now = now->next)
 			if (now->location == info.location)
 				ans.push_back(now->number);
 		return ans;
 	}
 	case 4: {//按时间查找所有相同的
-		for (Good_Info* now = head; now != NULL; now = now->next)
+		for (Good_Info* now = head->next; now != NULL; now = now->next)
 			if (now->time == info.time)
 				ans.push_back(now->number);
 		return ans;
@@ -137,7 +172,7 @@ void Swap(Good_Info* x) {
 
 void Sort(int command) {
 	int n = 0;
-	for (Good_Info* tmp = head; tmp != NULL; tmp = tmp->next)
+	for (Good_Info* tmp = head->next; tmp != NULL; tmp = tmp->next)
 		n++;
 	switch (command) {
 	case 1: {//名称(非字典序)
@@ -309,5 +344,4 @@ void Save() {
 	//file.write((const char*)key.data(), key.size());
 	//file.close();
 }
-//#endif // !LIST_HPP
 

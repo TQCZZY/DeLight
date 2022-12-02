@@ -40,4 +40,5 @@ public:
 	afx_msg void OnBnClickedSortdt();
 	afx_msg void OnBnClickedSortqt();
 	afx_msg void OnBnClickedSortsf();
+	afx_msg void OnBnClickedSysdlgSeldst();
 };

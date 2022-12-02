@@ -36,12 +36,12 @@ struct Search_Info {
 };
 
 struct Goodinfor {
-	CString itemName;
-	CString snum;
+	CString name;
+	CString num;
 	CString time;
-	CString thing;
-	int huo;// »õ¼Ü±àºÅ
-	int bian;//±àºÅ
+	CString shelf;
+	int shelfNo;// »õ¼Ü±àºÅ
+	int code;//±àºÅ
 };
 
 extern std::vector<Goodinfor>Com;
@@ -59,4 +59,4 @@ void Sort(int command);
 void Init();
 void Save();
 
-void transform();
+void transform(bool fromList);

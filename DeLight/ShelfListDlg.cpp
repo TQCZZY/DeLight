@@ -50,14 +50,13 @@ BOOL ShelfListDlg::OnInitDialog()
 		T_List.InsertItem(i, sthing);
 	}
 	
-
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常: OCX 属性页应返回 FALSE
 }
 
 void ShelfListDlg::OnDblclkSlfdtldlgList(NMHDR* pNMHDR, LRESULT* pResult)
 {
-	shelfNo = ((NM_LISTVIEW*)pNMHDR)->iItem;
+	shelfNo = ((NM_LISTVIEW*)pNMHDR)->iItem + 1;
 	ShelfDetailDlg dlg;
 	dlg.DoModal(shelfNo);
 	*pResult = 0;

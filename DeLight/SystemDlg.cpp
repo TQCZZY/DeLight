@@ -11,6 +11,8 @@
 #include "ShelfListDlg.h"
 #include "QueryDlg.h"
 #include "SearchMethodDlg.h"
+#include "map.hpp"
+#include "Excel.hpp"
 
 
 // SystemDlg 对话框
@@ -48,6 +50,7 @@ BEGIN_MESSAGE_MAP(SystemDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_SYSDLG_SORT_DT, &SystemDlg::OnBnClickedSortdt)
 	ON_BN_CLICKED(IDC_SYSDLG_SORT_QT, &SystemDlg::OnBnClickedSortqt)
 	ON_BN_CLICKED(IDC_SYSDLG_SORT_SF, &SystemDlg::OnBnClickedSortsf)
+	ON_BN_CLICKED(IDC_SYSDLG_SELDST, &SystemDlg::OnBnClickedSysdlgSeldst)
 END_MESSAGE_MAP()
 
 
@@ -80,18 +83,13 @@ BOOL SystemDlg::OnInitDialog()
 	//CString itemName,snum,time,thing;
 	for(int i=0;i<Com.size(); i++)
 	{
-		/*itemName.Format(_T("%d"),i);// Format 使任意数据转化成字符串
-		time.Format(_T("%d"),i);
-		snum.Format(_T("%d"), i);
-		thing.Format(_T("%d"), i);*/
-		m_List.InsertItem(i,Com[i].itemName);//第一列数据
+		m_List.InsertItem(i,Com[i].name);//第一列数据
 		m_List.SetItemText(i, 1, Com[i].time);
-		m_List.SetItemText(i, 2, Com[i].snum);
-		m_List.SetItemText(i, 3, Com[i].thing);
+		m_List.SetItemText(i, 2, Com[i].num);
+		m_List.SetItemText(i, 3, Com[i].shelf);
 	}
 
 	return TRUE;  // return TRUE unless you set the focus to a control
-	// 异常: OCX 属性页应返回 FALSE
 }
 
 
@@ -152,7 +150,7 @@ void SystemDlg::OnBnClickedAdd()//增加
 	new_good.amount = _ttoi(dlg.sNumber);
 	new_good.location= _ttoi(dlg.sShelf);
 	Insert(new_good);
-	transform();
+	transform(true);
 }
 
 
@@ -164,8 +162,8 @@ void SystemDlg::OnBnClickedDel()//删除
 		if (state)
 		{
 			m_List.DeleteItem(i);
-			Delete(Com[i].bian);
-			transform();
+			Delete(Com[i].code);
+			transform(true);
 			i--;//若不i--则不能多项同时删除，因为当删除0栏后，1栏会为0栏，就删不掉了
 		}
 	}
@@ -219,13 +217,13 @@ void SystemDlg::OnBnClickedSortnm()//排序1
 		}
 	}
 	Sort(1);
-	transform();
+	transform(true);
 	for (int i = 0; i < Com.size(); i++)
 	{
-		m_List.InsertItem(i, Com[i].itemName);//第一列数据
+		m_List.InsertItem(i, Com[i].name);//第一列数据
 		m_List.SetItemText(i, 1, Com[i].time);
-		m_List.SetItemText(i, 2, Com[i].snum);
-		m_List.SetItemText(i, 3, Com[i].thing);
+		m_List.SetItemText(i, 2, Com[i].num);
+		m_List.SetItemText(i, 3, Com[i].shelf);
 	}
 }
 
@@ -248,13 +246,13 @@ void SystemDlg::OnBnClickedSortdt()//排序2
 	}
 
 	Sort(4);
-	transform();
+	transform(true);
 	for (int i = 0; i < Com.size(); i++)
 	{
-		m_List.InsertItem(i, Com[i].itemName);//第一列数据
+		m_List.InsertItem(i, Com[i].name);//第一列数据
 		m_List.SetItemText(i, 1, Com[i].time);
-		m_List.SetItemText(i, 2, Com[i].snum);
-		m_List.SetItemText(i, 3, Com[i].thing);
+		m_List.SetItemText(i, 2, Com[i].num);
+		m_List.SetItemText(i, 3, Com[i].shelf);
 	}
 }
 
@@ -278,13 +276,13 @@ void SystemDlg::OnBnClickedSortqt()//排序3
 	}
 
 	Sort(2);
-	transform();
+	transform(true);
 	for (int i = 0; i < Com.size(); i++)
 	{
-		m_List.InsertItem(i, Com[i].itemName);//第一列数据
+		m_List.InsertItem(i, Com[i].name);//第一列数据
 		m_List.SetItemText(i, 1, Com[i].time);
-		m_List.SetItemText(i, 2, Com[i].snum);
-		m_List.SetItemText(i, 3, Com[i].thing);
+		m_List.SetItemText(i, 2, Com[i].num);
+		m_List.SetItemText(i, 3, Com[i].shelf);
 	}
 }
 
@@ -307,13 +305,13 @@ void SystemDlg::OnBnClickedSortsf()//排序4
 	}
 
 	Sort(3);
-	transform();
+	transform(true);
 	for (int i = 0; i < Com.size(); i++)
 	{
-		m_List.InsertItem(i, Com[i].itemName);//第一列数据
+		m_List.InsertItem(i, Com[i].name);//第一列数据
 		m_List.SetItemText(i, 1, Com[i].time);
-		m_List.SetItemText(i, 2, Com[i].snum);
-		m_List.SetItemText(i, 3, Com[i].thing);
+		m_List.SetItemText(i, 2, Com[i].num);
+		m_List.SetItemText(i, 3, Com[i].shelf);
 	}
 }
 
@@ -340,6 +338,41 @@ void SystemDlg::OnBnClickedRemotequery()
 
 void SystemDlg::OnBnClickedGlbtoexcel()
 {
-	SearchMethodDlg dlg;
-	dlg.DoModal();
+	int item;
+	item = MessageBox(L"导出完毕后,是否自动打开导出的图表?", L"自动启动Excel", MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2);
+	MessageBox(L"你可以在你选择的目录下新建受支持格式的文档;或者你也可以从存在的文档中选择一个,但是这可能会导致原有的数据因被覆盖而丢失.", L"当心数据丢失", MB_ICONINFORMATION);
+	CString Filters = L"Excel 工作簿(*.xlsx)|*.xlsx|Excel 97-2003工作簿(*.xls)|*.xls|文本文档(含有制表符)(*.txt)|*.txt||";
+	CFileDialog dlg(TRUE, NULL, NULL, OFN_CREATEPROMPT | OFN_HIDEREADONLY, Filters);
+	dlg.m_ofn.lpstrTitle = L"打开Excel文档";
+	if (dlg.DoModal() == IDOK)
+	{
+		std::vector<std::string> nm;
+		std::vector<std::string> qt;
+		std::vector<std::string> dt;
+		std::vector<std::string> sf;
+		USES_CONVERSION;
+		transform(true);
+		for (size_t i = 0; i < Com.size(); i++)
+		{
+			nm.push_back(W2A(Com[i].name));
+			qt.push_back(W2A(Com[i].num));
+			dt.push_back(W2A(Com[i].time));
+			sf.push_back(W2A(Com[i].shelf));
+		}
+		setInfo(nm, qt, dt, sf);
+		global2Excel(dlg.GetPathName());
+		//setInfo(inf);
+		//perfExcel(dlg);
+	}
+}
+
+ULONG WINAPI GetRoute(LPVOID p) {
+	std::vector<std::pair<int, int> >points = Sentpoints();
+	return 0;
+}
+
+void SystemDlg::OnBnClickedSysdlgSeldst()
+{
+	itfCreateWindow(0, SW_SHOW);
+	CreateThread(NULL, 0, GetRoute, NULL, NULL, NULL);//创建一个新线程
 }

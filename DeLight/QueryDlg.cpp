@@ -4,7 +4,9 @@
 #include "pch.h"
 #include "DeLight.h"
 #include <string>
+#include <vector>
 #include "afxdialogex.h"
+#include "List.h"
 #include "QueryDlg.h"
 
 
@@ -118,13 +120,16 @@ ULONG WINAPI LinsenThread(LPVOID p) {
 			pDlg->m_show.InsertString(-1, name + " " + header + "s: " + data);
 			if (header == "require")
 			{
-				//search
-				if (true)//search success
+				USES_CONVERSION;
+				Search_Info si;
+				si.name = W2A(data);
+				si.type = 1;
+				std::vector<int> sr = Search(si);
+				if (!sr.size())//search success
 				{
 					CSocket m_SendSocket;//构造一个套接字对象
 
 					//发送数据的初始化
-					USES_CONVERSION;
 					Msg.ip = W2A(pDlg->m_localIP);
 					Msg.name = W2A(pDlg->m_name);
 					Msg.header = "respond";

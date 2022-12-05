@@ -54,8 +54,8 @@ BOOL SearchResultDlg::OnInitDialog()
 
 	for (int i = 0; i < Com.size(); i++)
 	{
-		for(int j=0;j<b.size();j++)
-			if(Com[i].code==b[j])
+		for (int j = 0; j < b.size(); j++)
+			if (Com[i].code == b[j])
 			{
 				S_List.InsertItem(i, Com[i].name);//第一列数据
 				S_List.SetItemText(i, 1, Com[i].time);

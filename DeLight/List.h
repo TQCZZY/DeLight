@@ -46,7 +46,7 @@ extern Search_Info Sou2;
 extern Good_Info* head;
 extern int cnt;
 
-void Insert(Good_Info good_to_be_insert);
+void Insert(Good_Info good_to_be_insert, int position = 0);
 bool Delete(int number);
 std::vector<int>Search(Search_Info info);
 void Sort(int command);

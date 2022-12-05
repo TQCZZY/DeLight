@@ -1,7 +1,7 @@
 #include "pch.h"
-#include<fstream>
-#include<string>
-#include<vector>
+#include <fstream>
+#include <string>
+#include <vector>
 #include "List.h"
 #include "EncryptionDll.hpp"
 
@@ -81,7 +81,8 @@ bool Time::operator >(const Time x) {
 	return true;
 }
 
-void Insert(Good_Info good_to_be_insert) {
+void Insert(Good_Info good_to_be_insert, int position) {
+	Good_Info* tmp = new Good_Info;
 	Search_Info s;
 	s.name = good_to_be_insert.name;
 	s.type = 1;
@@ -92,16 +93,26 @@ void Insert(Good_Info good_to_be_insert) {
 			if (now->number == rev[i]) {
 				if (now->location == good_to_be_insert.location && now->time == good_to_be_insert.time) {
 					now->amount += good_to_be_insert.amount;
+					delete tmp;
 					return;
 				}
 			}
 		}
 	}
 	//新建
-	Good_Info* tmp = new Good_Info;
-	*tmp = good_to_be_insert;
+	if (position == 0) {
+		tmp->next = head->next;
+		head->next = tmp;
+		*tmp = good_to_be_insert;
+		tmp->number = ++cnt;
+		return;
+	}
+	Good_Info* now = head;
+	for (int i = 0; i < position; i++)
+		now = now->next;
 	tmp->next = head->next;
-	head->next = tmp;
+	now->next = tmp;
+	*tmp = good_to_be_insert;
 	tmp->number = ++cnt;
 }
 
@@ -297,12 +308,14 @@ void Save() {
 	std::fstream file = std::fstream("货物数据.data", std::ios::out);
 	std::vector<uint8_t>key(2 * 1024 * 1024);//定义一个2Mb内存块
 	int qmcrev = qmcPreEnc(key.data(), key.size(), "RC4");
-	//if (qmcrev == -1) {
-	//	std::string error;
-	//	qmcGetErr((char*)error.c_str());
-	//	//把这个字符串给WJB再退出
-	//}
-	//key.resize(qmcrev);
+	if (qmcrev == -1) {
+		std::string error;
+		qmcGetErr((char*)error.c_str());
+		//把这个字符串给WJB再退出
+	}
+	key.resize(qmcrev);
+	transform(true);
+	qmcEncBlock((uint8_t*)Com.data(), sizeof(Com), 0);
 	//int n = cnt;//计数
 	//std::vector<char>s;
 	//while (n != 0) {

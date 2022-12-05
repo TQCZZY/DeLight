@@ -4,6 +4,8 @@
 #include "pch.h"
 #include "afxdialogex.h"
 #include "resource.h"
+#include <string>
+#include <vector>
 #include "List.h"
 #include "SystemDlg.h"
 #include "PswDlg.h"
@@ -361,8 +363,6 @@ void SystemDlg::OnBnClickedGlbtoexcel()
 		}
 		setInfo(nm, qt, dt, sf);
 		global2Excel(dlg.GetPathName());
-		//setInfo(inf);
-		//perfExcel(dlg);
 	}
 }
 
@@ -373,6 +373,6 @@ ULONG WINAPI GetRoute(LPVOID p) {
 
 void SystemDlg::OnBnClickedSysdlgSeldst()
 {
-	itfCreateWindow(0, SW_SHOW);
+	itfCreateWindow(SW_SHOW);
 	CreateThread(NULL, 0, GetRoute, NULL, NULL, NULL);//创建一个新线程
 }

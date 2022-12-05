@@ -284,13 +284,14 @@ public:
 
     std::vector<uint8_t> PreEncode(std::string type) {
         cipherType = type;
+        std::vector<uint8_t> tmp;
         if (cipherType != "Static" &&
             cipherType != "Map" &&
             cipherType != "RC4" &&
             cipherType != "cache" &&
             cipherType != "ios") {
             error = "type is invalid";
-            return std::vector<uint8_t>{};
+            return tmp;
         }
         size_t tailSize = 0;
         if (cipherType == "QTag") {
@@ -302,44 +303,39 @@ public:
         if (tailSize > 0) {
             if (!genRawKey())
             {
-                std::cout << "Key generating failed." << std::endl;
+                error = "Key generating failed.";
                 return std::vector<uint8_t>{};
             }
-            std::vector<uint8_t> tmp;
             if (!QmcEncryptKey(rawKeyBuf, tmp, rand() % 2))
             {
                 error = "Key encryption failed.";
                 return std::vector<uint8_t>{};
             }
-            rawKeyBuf = tmp;
             if (tailSize == 8) {
-                rawKeyBuf.push_back(',');
-                rawKeyBuf.push_back('0');
-                rawKeyBuf.push_back(',');
-                rawKeyBuf.push_back('2');
-            }
-            if (tailSize == 8)
-            {
-                uint32_t sizeNet = htonl((uint32_t)rawKeyBuf.size());
-                rawKeyBuf.push_back(*((uint8_t*)&sizeNet));
-                rawKeyBuf.push_back(*(((uint8_t*)&sizeNet) + 1));
-                rawKeyBuf.push_back(*(((uint8_t*)&sizeNet) + 2));
-                rawKeyBuf.push_back(*(((uint8_t*)&sizeNet) + 3));
-                rawKeyBuf.push_back('Q');
-                rawKeyBuf.push_back('T');
-                rawKeyBuf.push_back('a');
-                rawKeyBuf.push_back('g');
+                tmp.push_back(',');
+                tmp.push_back('0');
+                tmp.push_back(',');
+                tmp.push_back('2');
+                uint32_t sizeNet = htonl((uint32_t)tmp.size());
+                tmp.push_back(*((uint8_t*)&sizeNet));
+                tmp.push_back(*(((uint8_t*)&sizeNet) + 1));
+                tmp.push_back(*(((uint8_t*)&sizeNet) + 2));
+                tmp.push_back(*(((uint8_t*)&sizeNet) + 3));
+                tmp.push_back('Q');
+                tmp.push_back('T');
+                tmp.push_back('a');
+                tmp.push_back('g');
             }
             else
             {
-                uint32_t size = rawKeyBuf.size();
-                rawKeyBuf.push_back(*((uint8_t*)&size));
-                rawKeyBuf.push_back(*(((uint8_t*)&size) + 1));
-                rawKeyBuf.push_back(*(((uint8_t*)&size) + 2));
-                rawKeyBuf.push_back(*(((uint8_t*)&size) + 3));
+                uint32_t size = tmp.size();
+                tmp.push_back(*((uint8_t*)&size));
+                tmp.push_back(*(((uint8_t*)&size) + 1));
+                tmp.push_back(*(((uint8_t*)&size) + 2));
+                tmp.push_back(*(((uint8_t*)&size) + 3));
             }
         }
-        return rawKeyBuf;
+        return tmp;
     }
 
     std::vector<uint8_t> Encode(size_t offset);

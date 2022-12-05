@@ -3,9 +3,9 @@
 
 #include "pch.h"
 #include "DeLight.h"
+#include <string>
 #include "afxdialogex.h"
 #include "QueryDlg.h"
-#include <string>
 
 
 // CQueryDlg 对话框

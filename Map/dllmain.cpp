@@ -1,6 +1,8 @@
 ﻿// dllmain.cpp : 定义 DLL 应用程序的入口点。
 #include "pch.h"
 
+HINSTANCE hInst;                                // 当前实例
+
 BOOL APIENTRY DllMain(HMODULE hModule,
     DWORD  ul_reason_for_call,
     LPVOID lpReserved
@@ -9,6 +11,7 @@ BOOL APIENTRY DllMain(HMODULE hModule,
     switch (ul_reason_for_call)
     {
     case DLL_PROCESS_ATTACH:
+        hInst = hModule;
     case DLL_THREAD_ATTACH:
     case DLL_THREAD_DETACH:
     case DLL_PROCESS_DETACH:
@@ -17,13 +20,10 @@ BOOL APIENTRY DllMain(HMODULE hModule,
     return TRUE;
 }
 
-// 333.cpp : 定义应用程序的入口点。
-//
-
 #include "framework.h"
 #include "Resource.h"
-#include<windows.h>
-#include<vector>
+#include <windows.h>
+#include <vector>
 
 #define MAX_LOADSTRING 100
 #define GET_X_LPARAM(lp)                        ((int)(short)LOWORD(lp))
@@ -31,7 +31,6 @@ BOOL APIENTRY DllMain(HMODULE hModule,
 #define GET_Y_LPARAM(lp)                        ((int)(short)HIWORD(lp))
 
 // 全局变量:
-HINSTANCE hInst;                                // 当前实例
 WCHAR szTitle[MAX_LOADSTRING];                  // 标题栏文本
 WCHAR szWindowClass[MAX_LOADSTRING];   // 主窗口类名
 std::vector<std::pair<int, int> > points; //存放点
@@ -156,7 +155,7 @@ void judgecorner(int X, int Y)
 
 // 此代码模块中包含的函数的前向声明:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
-BOOL                InitInstance(HINSTANCE, int);
+BOOL                InitInstance(int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
@@ -196,12 +195,10 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 //        在此函数中，我们在全局变量中保存实例句柄并
 //        创建和显示主程序窗口。
 //
-BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
+BOOL InitInstance(int nCmdShow)
 {
-    hInst = hInstance; // 将实例句柄存储在全局变量中
-
     hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-        CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
+        CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInst, nullptr);
 
     if (!hWnd)
     {
@@ -397,20 +394,20 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
     return (INT_PTR)FALSE;
 }
 
-__declspec(dllexport)int itfCreateWindow(HINSTANCE hInstance, int nCmdShow)
+__declspec(dllexport)int itfCreateWindow(int nCmdShow)
 {
     // 初始化全局字符串
-    LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
-    LoadStringW(hInstance, IDC_MAP, szWindowClass, MAX_LOADSTRING);
-    MyRegisterClass(hInstance);
+    LoadStringW(hInst, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
+    LoadStringW(hInst, IDC_MAP, szWindowClass, MAX_LOADSTRING);
+    MyRegisterClass(hInst);
 
     // 执行应用程序初始化:
-    if (!InitInstance(hInstance, nCmdShow))
+    if (!InitInstance(nCmdShow))
     {
         return 1;
     }
 
-    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_MAP));
+    HACCEL hAccelTable = LoadAccelerators(hInst, MAKEINTRESOURCE(IDC_MAP));
 
     MSG msg;
 

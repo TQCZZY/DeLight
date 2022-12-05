@@ -196,7 +196,6 @@
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ShelfDetailDlg.h" />
     <ClInclude Include="ShelfListDlg.h" />
-    <ClInclude Include="ShelfMngmntDlg.h" />
     <ClInclude Include="SystemDlg.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
@@ -217,7 +216,6 @@
     <ClCompile Include="QueryDlg.cpp" />
     <ClCompile Include="ShelfDetailDlg.cpp" />
     <ClCompile Include="ShelfListDlg.cpp" />
-    <ClCompile Include="ShelfMngmntDlg.cpp" />
     <ClCompile Include="SystemDlg.cpp" />
   </ItemGroup>
   <ItemGroup>

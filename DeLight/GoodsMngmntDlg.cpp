@@ -13,6 +13,10 @@ IMPLEMENT_DYNAMIC(GoodsMngmntDlg, CDialogEx)
 
 GoodsMngmntDlg::GoodsMngmntDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_GOODS_MNG, pParent)
+	, sType(_T(""))
+	, sNumber(_T(""))
+	, sDate(_T(""))
+	, sShelf(_T(""))
 {
 
 }
@@ -24,6 +28,11 @@ GoodsMngmntDlg::~GoodsMngmntDlg()
 void GoodsMngmntDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_GDMDLG_SLF, m_editShelf);
+	DDX_Text(pDX, IDC_GDMDLG_DATE, sDate);
+	DDX_Text(pDX, IDC_GDMDLG_SLF, sShelf);
+	DDX_Text(pDX, IDC_GDMDLG_TYPE, sType);
+	DDX_Text(pDX, IDC_GDMDLG_NUM, sNumber);
 }
 
 
@@ -38,17 +47,37 @@ END_MESSAGE_MAP()
 
 void GoodsMngmntDlg::OnBnClickedButtonOk()//增加中的确定
 {
-	// TODO: 在此添加控件通知处理程序代码
 	GetDlgItemText(IDC_GDMDLG_TYPE,sType);
 	GetDlgItemText(IDC_GDMDLG_DATE, sDate);
 	GetDlgItemText(IDC_GDMDLG_NUM, sNumber);
 	GetDlgItemText(IDC_GDMDLG_SLF, sShelf);//输入值
-	EndDialog(0);//关闭窗口
+	CDialogEx::OnOK();//关闭窗口
 }
 
 
 void GoodsMngmntDlg::OnBnClickedButtonNo()
 {
-	// TODO: 在此添加控件通知处理程序代码
-	EndDialog(0);
+	CDialogEx::OnCancel();
+}
+
+
+INT_PTR GoodsMngmntDlg::DoModal(CString name, CString count, CString date, CString shelf, bool specShelf)
+{
+	sType = name;
+	sDate = date;
+	sNumber = count;
+	sShelf = shelf;
+	enableShelf = !specShelf;
+	return CDialogEx::DoModal();
+}
+
+
+BOOL GoodsMngmntDlg::OnInitDialog()
+{
+	CDialogEx::OnInitDialog();
+
+	m_editShelf.EnableWindow(enableShelf);
+
+	return TRUE;  // return TRUE unless you set the focus to a control
+	// 异常: OCX 属性页应返回 FALSE
 }

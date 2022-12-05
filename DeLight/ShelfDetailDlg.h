@@ -19,7 +19,7 @@ public:
 
 protected:
 	int shelfNumber;
-
+	std::vector<int> indexInCom;
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
 
 	DECLARE_MESSAGE_MAP()

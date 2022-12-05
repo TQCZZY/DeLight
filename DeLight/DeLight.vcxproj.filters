@@ -34,9 +34,6 @@
     <ClCompile Include="ShelfListDlg.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="ShelfMngmntDlg.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="SystemDlg.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -76,9 +73,6 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="ShelfListDlg.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="ShelfMngmntDlg.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="SystemDlg.h">

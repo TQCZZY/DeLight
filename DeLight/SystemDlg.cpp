@@ -116,10 +116,10 @@ void SystemDlg::OnBnClickedReversesel()//反选
 void SystemDlg::OnBnClickedAdd()//增加
 {
 	GoodsMngmntDlg dlg;
-	dlg.DoModal();//点击增加，弹出子对话框2
-	int nCount=m_List.GetItemCount();
-	if (dlg.sType.IsEmpty() || dlg.sDate.IsEmpty() || dlg.sNumber.IsEmpty() || dlg.sShelf.IsEmpty())
+	if (IDCANCEL == dlg.DoModal(L"", L"", L"", L"", false) ||//点击增加，弹出子对话框2
+		dlg.sType.IsEmpty() || dlg.sDate.IsEmpty() || dlg.sNumber.IsEmpty() || dlg.sShelf.IsEmpty())
 		return;
+	int nCount = m_List.GetItemCount();
 	m_List.InsertItem(nCount,dlg.sType);//新建类型
 	m_List.SetItemText(nCount, 1, dlg.sDate);
 	m_List.SetItemText(nCount, 2, dlg.sNumber);
@@ -165,32 +165,60 @@ void SystemDlg::OnBnClickedDel()//删除
 		{
 			m_List.DeleteItem(i);
 			Delete(Com[i].code);
-			transform(true);
 			i--;//若不i--则不能多项同时删除，因为当删除0栏后，1栏会为0栏，就删不掉了
 		}
 	}
+	transform(true);
 }
 
 
 void SystemDlg::OnBnClickedEdit()//修改
 {
-	// TODO: 在此添加控件通知处理程序代码
 	for (int i = 0; i < m_List.GetItemCount/*获取条目的数量*/(); i++)
 	{
 		BOOL state = m_List.GetCheck(i);
 		if (state)
 		{
 			GoodsMngmntDlg dlg;
-			dlg.DoModal();//弹窗
-			if (dlg.sType.IsEmpty() || dlg.sDate.IsEmpty() || dlg.sNumber.IsEmpty()||dlg.sShelf.IsEmpty())
+			if (IDCANCEL == dlg.DoModal(Com[i].name, Com[i].num, Com[i].time, Com[i].shelf, false) ||//弹窗
+				dlg.sType.IsEmpty() || dlg.sDate.IsEmpty() || dlg.sNumber.IsEmpty() || dlg.sShelf.IsEmpty())
 				return;
 			m_List.SetItemText(i, 0, dlg.sType);
 			m_List.SetItemText(i, 1, dlg.sDate);
 			m_List.SetItemText(i, 2, dlg.sNumber);
 			m_List.SetItemText(i, 3, dlg.sShelf);
+			Delete(Com[i].code);
+			Good_Info new_good;
+			USES_CONVERSION;
+			new_good.name = W2A(dlg.sType);
+
+			std::string sou4 = W2A(dlg.sDate);
+			Time t = { 0,0,0 };
+			int p = 0;
+			while (sou4[p] != '-') {
+				t.year *= 10;
+				t.year += sou4[p++] - '0';
+			}
+			p++;
+			while (sou4[p] != '-') {
+				t.month *= 10;
+				t.month += sou4[p++] - '0';
+			}
+			p++;
+			while (sou4[p] != '\0') {
+				t.date *= 10;
+				t.date += sou4[p++] - '0';
+			}
+			new_good.time.year = t.year;
+			new_good.time.month = t.month;
+			new_good.time.date = t.date;
+
+			new_good.amount = _ttoi(dlg.sNumber);
+			new_good.location = _ttoi(dlg.sShelf);
+			Insert(new_good, i);
 		}
-		
 	}
+	transform(true);
 }
 
 

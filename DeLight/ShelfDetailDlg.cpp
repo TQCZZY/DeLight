@@ -8,7 +8,7 @@
 #include <vector>
 #include "List.h"
 #include "ShelfDetailDlg.h"
-#include "ShelfMngmntDlg.h"
+#include "GoodsMngmntDlg.h"
 
 // Huojia1 对话框
 
@@ -70,6 +70,7 @@ BOOL ShelfDetailDlg::OnInitDialog()
 	H1_List.InsertColumn(2, _T("商品库存"), 0, 200);
 
 	transform(true);
+	indexInCom.clear();
 	for (int i = 0; i < Com.size(); i++)
 	{
 		if (Com[i].shelfNo == shelfNumber)
@@ -79,6 +80,7 @@ BOOL ShelfDetailDlg::OnInitDialog()
 			H1_List.SetItemText(i, 1, Com[i].time);
 			H1_List.SetItemText(i, 2, Com[i].num);
 			H1_List.SetItemText(i, 3, Com[i].shelf);
+			indexInCom.push_back(i);
 		}
 	}
 
@@ -110,21 +112,21 @@ void ShelfDetailDlg::OnBnClickedButton4()//反选
 void ShelfDetailDlg::OnBnClickedButton3()//增添
 {
 	// TODO: 在此添加控件通知处理程序代码
-	ShelfMngmntDlg dlg;
-	dlg.DoModal();//点击增加，弹出子对话框2
-	int nCount = H1_List.GetItemCount();
-	if (dlg.sType1.IsEmpty() || dlg.sDate1.IsEmpty() || dlg.sNumber1.IsEmpty())
+	GoodsMngmntDlg dlg;
+	if (IDCANCEL == dlg.DoModal(L"", L"", L"", L"", true) ||//点击增加，弹出子对话框2
+	dlg.sType.IsEmpty() || dlg.sDate.IsEmpty() || dlg.sNumber.IsEmpty())
 		return;
+	int nCount = H1_List.GetItemCount();
 	H1_List.InsertItem(nCount, L"");
-	H1_List.SetItemText(nCount, 0, dlg.sType1);
-	H1_List.SetItemText(nCount, 1, dlg.sDate1);
-	H1_List.SetItemText(nCount, 2, dlg.sNumber1);
+	H1_List.SetItemText(nCount, 0, dlg.sType);
+	H1_List.SetItemText(nCount, 1, dlg.sDate);
+	H1_List.SetItemText(nCount, 2, dlg.sNumber);
 
 	Good_Info new_good;
 	USES_CONVERSION;
-	new_good.name = W2A(dlg.sType1);
+	new_good.name = W2A(dlg.sType);
 
-	std::string sou4 = W2A(dlg.sDate1);
+	std::string sou4 = W2A(dlg.sDate);
 	Time t = { 0,0,0 };
 	int p = 0;
 	while (sou4[p] != '-') {
@@ -145,7 +147,7 @@ void ShelfDetailDlg::OnBnClickedButton3()//增添
 	new_good.time.month = t.month;
 	new_good.time.date = t.date;
 
-	new_good.amount = _ttoi(dlg.sNumber1);
+	new_good.amount = _ttoi(dlg.sNumber);
 	new_good.location = shelfNumber;
 	Insert(new_good);
 	transform(true);
@@ -179,14 +181,42 @@ void ShelfDetailDlg::OnBnClickedButton8()//修改
 		BOOL state = H1_List.GetCheck(i);
 		if (state)
 		{
-			ShelfMngmntDlg dlg;
-			dlg.DoModal();//弹窗
-			//fixme: edit in database
-			if (dlg.sType1.IsEmpty() || dlg.sDate1.IsEmpty() || dlg.sNumber1.IsEmpty())
+			GoodsMngmntDlg dlg;
+			if (IDCANCEL == dlg.DoModal(Com[indexInCom[i]].name, Com[indexInCom[i]].num, Com[indexInCom[i]].time, Com[indexInCom[i]].shelf, true) ||//弹窗
+				dlg.sType.IsEmpty() || dlg.sDate.IsEmpty() || dlg.sNumber.IsEmpty())
 				return;
-			H1_List.SetItemText(i, 0, dlg.sType1);
-			H1_List.SetItemText(i, 1, dlg.sDate1);
-			H1_List.SetItemText(i, 2, dlg.sNumber1);
+			H1_List.SetItemText(i, 0, dlg.sType);
+			H1_List.SetItemText(i, 1, dlg.sDate);
+			H1_List.SetItemText(i, 2, dlg.sNumber);
+			Delete(Com[indexInCom[i]].code);
+			Good_Info new_good;
+			USES_CONVERSION;
+			new_good.name = W2A(dlg.sType);
+
+			std::string sou4 = W2A(dlg.sDate);
+			Time t = { 0,0,0 };
+			int p = 0;
+			while (sou4[p] != '-') {
+				t.year *= 10;
+				t.year += sou4[p++] - '0';
+			}
+			p++;
+			while (sou4[p] != '-') {
+				t.month *= 10;
+				t.month += sou4[p++] - '0';
+			}
+			p++;
+			while (sou4[p] != '\0') {
+				t.date *= 10;
+				t.date += sou4[p++] - '0';
+			}
+			new_good.time.year = t.year;
+			new_good.time.month = t.month;
+			new_good.time.date = t.date;
+
+			new_good.amount = _ttoi(dlg.sNumber);
+			new_good.location = _ttoi(dlg.sShelf);
+			Insert(new_good, indexInCom[i]);
 		}
 	}
 	transform(true);

@@ -3,6 +3,7 @@
 
 #include "pch.h"
 #include "DeLight.h"
+#include "vector"
 #include "afxdialogex.h"
 #include "ShelfListDlg.h"
 #include "ShelfDetailDlg.h"

@@ -14,7 +14,7 @@ public:
 
 // 对话框数据
 #ifdef AFX_DESIGN_TIME
-	enum { IDD_GOODS_MNG };
+	enum { IDD = IDD_GOODS_MNG };
 #endif
 
 protected:
@@ -28,4 +28,10 @@ public:
 	CString sShelf;//创建成员
 	afx_msg void OnBnClickedButtonOk();
 	afx_msg void OnBnClickedButtonNo();
+	CEdit m_editShelf;
+	virtual INT_PTR DoModal(CString name, CString count, CString date, CString shelf, bool specShelf);
+protected:
+	bool enableShelf;
+public:
+	virtual BOOL OnInitDialog();
 };

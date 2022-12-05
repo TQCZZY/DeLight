@@ -160,7 +160,7 @@ void SystemDlg::OnBnClickedDel()//删除
 {
 	for (int i = 0; i < m_List.GetItemCount/*获取条目的数量*/(); i++)
 	{
-		BOOL state=m_List.GetCheck(i);
+		BOOL state = m_List.GetCheck(i);
 		if (state)
 		{
 			m_List.DeleteItem(i);

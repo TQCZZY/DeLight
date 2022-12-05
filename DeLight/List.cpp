@@ -118,7 +118,7 @@ void Insert(Good_Info good_to_be_insert, int position) {
 
 bool Delete(int number) {
 	bool deleted = false;
-	for (Good_Info* now = head->next; now->next != NULL; now = now->next)
+	for (Good_Info* now = head; now->next != NULL; now = now->next)
 	{
 		if (now->next->number == number || number == -1) {
 			Good_Info* tmp = now->next;

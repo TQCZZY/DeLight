@@ -14,6 +14,7 @@
 #include "QueryDlg.h"
 #include "SearchMethodDlg.h"
 #include "map.hpp"
+#include "Lines.hpp"
 #include "Excel.hpp"
 
 
@@ -395,12 +396,12 @@ void SystemDlg::OnBnClickedGlbtoexcel()
 }
 
 ULONG WINAPI GetRoute(LPVOID p) {
-	std::vector<std::pair<int, int> >points = Sentpoints();
+	ReceivePoints(GetRoute(SendPoints()));
 	return 0;
 }
 
 void SystemDlg::OnBnClickedSysdlgSeldst()
 {
-	itfCreateWindow(SW_SHOW);
+	CreateMapWindow(SW_SHOW);
 	CreateThread(NULL, 0, GetRoute, NULL, NULL, NULL);//创建一个新线程
 }

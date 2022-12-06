@@ -40,7 +40,6 @@ std::vector<std::string> MapRectsDesc;
 std::vector<std::pair<int, int> > points; //存放点
 std::vector<std::pair<int, int> > RcvPoints;//接收返回点
 HWND hWnd;
-RECT rect;
 bool confirmedSel = false;
 
 //std::vector<std::pair<int, int> > cornerpoints;//
@@ -227,9 +226,6 @@ BOOL InitInstance(int nCmdShow)
         return FALSE;
     }
 
-    ShowWindow(hWnd, nCmdShow);
-        UpdateWindow(hWnd);
-
     std::fstream fs("D:\\repos\\DeLight\\Debug\\map.txt", std::ios::in);
     float x1, y1, x2, y2;
     for (int i = 0; i < 23; i++)
@@ -248,6 +244,9 @@ BOOL InitInstance(int nCmdShow)
         ls.bottom = y2;
         MapRects.push_back(ls);
     }
+
+    ShowWindow(hWnd, nCmdShow);
+    UpdateWindow(hWnd);
     return TRUE;
 }
 
@@ -291,6 +290,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
         PAINTSTRUCT ps;
         HDC hdc = BeginPaint(hWnd, &ps);
+        RECT rect;
         GetClientRect(hWnd, &rect);
         DrawText(hdc, TEXT("请点击您想要配送的位置"), -1, &rect, DT_CENTER | DT_VCENTER);
 
@@ -393,6 +393,11 @@ __declspec(dllexport)int CreateMapWindow(int nCmdShow)
             DispatchMessage(&msg);
         }
     }
+    MapRects.resize(0);
+    MapRectsDesc.resize(0);
+    points.resize(0); //存放点
+    RcvPoints.resize(0);//接收返回点
+    DestroyWindow(hWnd);
     return 0;
 }//接口输出
 
@@ -401,13 +406,14 @@ __declspec(dllexport)std::vector<std::pair<int, int> > SendPoints()
     while (!confirmedSel)
     {
     }
+    confirmedSel = false;
     return points;
 }//接口输出
 
 __declspec(dllexport)void ReceivePoints(std::vector<std::pair<int, int> >Re)
 {
     RcvPoints = Re;
-    LPRECT r = NULL;
-    GetClientRect(hWnd, r);
-    InvalidateRect(hWnd, r, TRUE);
+    RECT r;
+    GetClientRect(hWnd, &r);
+    InvalidateRect(hWnd, &r, TRUE);
 }

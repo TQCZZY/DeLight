@@ -127,7 +127,7 @@ std::vector<int>Dijkstra(int from, int to, std::vector<std::vector<float>>map) {
 				queue.push(Tmp);
 			}
 	}
-	for (int i = to; i != from; i = from_point[i])
+	for (int i = to; i != -1; i = from_point[i])
 		ans.push_back(i);
 	return ans;
 }
@@ -141,7 +141,7 @@ std::vector<int>Get_Order(int from, std::vector<int>to, std::vector<std::vector<
 	for (int i = 0; i < primary_order.size() - 1; i++) {
 		tmp = Dijkstra(primary_order[i], primary_order[i + 1], map);
 		for (int j = 0; j < tmp.size(); j++)
-			ans.push_back(tmp[tmp.size() - j]);
+			ans.push_back(tmp[tmp.size() - 1 - j]);
 	}
 	return ans;
 }

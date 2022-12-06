@@ -402,6 +402,6 @@ ULONG WINAPI GetRoute(LPVOID p) {
 
 void SystemDlg::OnBnClickedSysdlgSeldst()
 {
-	CreateMapWindow(SW_SHOW);
 	CreateThread(NULL, 0, GetRoute, NULL, NULL, NULL);//创建一个新线程
+	CreateMapWindow(SW_SHOW);
 }

@@ -126,7 +126,7 @@ int IsRouteValid(POINT End1, POINT End2)
 __declspec(dllexport) std::vector<std::pair<int, int> >
 GetRoute(std::vector<std::pair<int, int> > dst)
 {
-    std::fstream fs("map.txt", std::ios::in);
+    std::fstream fs("D:\\repos\\DeLight\\Debug\\map.txt", std::ios::in);
     float x1, y1, x2, y2;
     for (int i = 0; i < 23; i++)
     {
@@ -141,12 +141,12 @@ GetRoute(std::vector<std::pair<int, int> > dst)
     }
 
     points.push_back(std::pair<int, int>((mapRects[0].left + mapRects[0].right)/2, mapRects[0].bottom));
-    int srcCode = points.size();
+    int srcCode = points.size() - 1;
     std::vector<int>dstCode;
     for (size_t i = 0; i < dst.size(); i++)
     {
         points.push_back(dst[i]);
-        dstCode.push_back(points.size());
+        dstCode.push_back(points.size() - 1);
     }
 
     std::vector<std::vector<float> > distance(points.size(), std::vector<float>(points.size()));
@@ -164,7 +164,7 @@ GetRoute(std::vector<std::pair<int, int> > dst)
     std::vector<std::pair<int, int> > path;
     for (size_t i = 0; i < dstCode.size(); i++)
     {
-        path.push_back(points[dstCode[i] - 1]);
+        path.push_back(std::pair<int, int>(points[dstCode[i] - 1].first, points[dstCode[i] - 1].second));
     }
     return path;
 }

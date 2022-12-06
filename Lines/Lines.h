@@ -1,6 +1,6 @@
 ﻿#pragma once
 //这里引用库函数
-constexpr auto INF = 0xffffffff;
+constexpr auto INF = 0x0fffffff;
 
 //定义全局变量
 	//用于DFS的变量

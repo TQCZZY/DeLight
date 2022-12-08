@@ -253,25 +253,37 @@ void Sort(int command) {
 	}
 }
 
-void Init() {
+std::string Init() {
 	std::fstream file = std::fstream("货物数据.data", std::ios::in);
 	std::vector<uint8_t>key(2 * 1024 * 1024);//定义一个2Mb内存块
-	//file.seekg(-(2 * 1024 * 1024), std::ios::end);
-	//file.read((char*)key.data(), 2 * 1024 * 1024);
-	//int qmcrev = qmcPreDec(key.data(), 2 * 1024 * 1024, "normal");
-	//if (qmcrev == -1) {
-	//	std::string error;
-	//	qmcGetErr((char*)error.c_str());
-	//	//把这个字符串给WJB再退出
-	//}
-	//char c = '\0';
-	//int n = 0;
-	//while (c != '\n') {
-	//	file.read(&c, 1);
-	//	n *= 10;
-	//	n += c;
-	//}
-	//cnt = n;
+	file.seekg(-(2 * 1024 * 1024), std::ios::end);
+	file.read((char*)key.data(), 2 * 1024 * 1024);
+	int qmcrev = qmcPreDec(key.data(), 2 * 1024 * 1024, "normal");
+	if (qmcrev == -1) {
+		std::string error;
+		qmcGetErr((char*)error.c_str());
+		return error;
+		//把这个字符串给WJB再退出
+	}
+	key.resize(qmcrev);
+	int count = 0;
+	int lenth = 0;
+	char c = '\0';
+	int n = 0;
+	while (c != '\n') {
+		file.read(&c, sizeof(c));
+		lenth = qmcDecBlock((uint8_t*)c, sizeof(c), count);
+		count += sizeof(c);
+		if (lenth == 0) {
+			std::string error;
+			qmcGetErr((char*)error.c_str());
+			return error;
+			//把这个字符串给WJB再退出
+		}
+		n *= 10;
+		n += c;
+	}
+	cnt = n;
 	//c = '\0';
 	//n = 0;
 	//while (c != '\n') {
@@ -279,51 +291,71 @@ void Init() {
 	//	n *= 10;
 	//	n += c;
 	//}
-	//Good_Info* now=head;
-	//Good_Info* tmp;
-	//int cnt = 0;
-	//for (int i = 0; i < n; i++) {
-	//	tmp = new Good_Info;
-	//	int size = 0;
-	//	c = '\0';
-	//	while (c != '\n') {
-	//		file.read(&c, 1);
-	//		size *= 10;
-	//		size += c;
-	//	}
-	//	int lenth = qmcDecBlock((uint8_t*)tmp, size, cnt);
-	//	if (lenth == 0) {
-	//		std::string error;
-	//		qmcGetErr((char*)error.c_str());
-	//		//把这个字符串给WJB再退出
-	//	}
-	//	cnt += size;
-	//	now->next = tmp;
-	//}
-	//file.close();
-	//now->next = NULL;
+	Good_Info* now=head;
+	Good_Info* tmp;
+	for (int i = 0; i < cnt; i++) {
+		tmp = new Good_Info;
+		int size = 0;
+		c = '\0';
+		while (c != '\n') {
+			file.read(&c, sizeof(c));
+			lenth = qmcDecBlock((uint8_t*)c, sizeof(c), count);
+			count += sizeof(c);
+			if (lenth == 0) {
+				std::string error;
+				qmcGetErr((char*)error.c_str());
+				return error;
+				//把这个字符串给WJB再退出
+			}
+			size *= 10;
+			size += c;
+		}
+		file.read((char*)tmp, size);
+		lenth = qmcDecBlock((uint8_t*)tmp, size, count);
+		count += sizeof(c);
+		if (lenth == 0) {
+			std::string error;
+			qmcGetErr((char*)error.c_str());
+			return error;
+			//把这个字符串给WJB再退出
+		}
+		now->next = tmp;
+	}
+	file.close();
+	now->next = NULL;
 }
 
-void Save() {
+std::string Save() {
 	std::fstream file = std::fstream("货物数据.data", std::ios::out);
 	std::vector<uint8_t>key(2 * 1024 * 1024);//定义一个2Mb内存块
 	int qmcrev = qmcPreEnc(key.data(), key.size(), "RC4");
 	if (qmcrev == -1) {
 		std::string error;
 		qmcGetErr((char*)error.c_str());
+		return error;
 		//把这个字符串给WJB再退出
 	}
 	key.resize(qmcrev);
 	transform(true);
-	qmcEncBlock((uint8_t*)Com.data(), sizeof(Com), 0);
-	//int n = cnt;//计数
-	//std::vector<char>s;
-	//while (n != 0) {
-	//	s.push_back(n % 10);
-	//	n /= 10;
-	//}
-	//s.push_back('\n');
-	//file.write((const char*)s.data(), sizeof(s));
+	//qmcEncBlock((uint8_t*)Com.data(), sizeof(Com), 0);
+	int count = 0;
+	int lenth = 0;
+	int n = cnt;//计数
+	std::vector<char>s;
+	while (n != 0) {
+		s.push_back(n % 10);
+		n /= 10;
+	}
+	s.push_back('\n');
+	lenth = qmcEncBlock((uint8_t*)s.data(), sizeof(s), count);
+	count += sizeof(s);
+	if (lenth == 0) {
+		std::string error;
+		qmcGetErr((char*)error.c_str());
+		return error;
+		//把这个字符串给WJB再退出
+	}
+	file.write((const char*)s.data(), sizeof(s));
 	//n = 0;
 	//s.clear();
 	//for (Good_Info* now = head->next; now != NULL; now = now->next)
@@ -334,29 +366,45 @@ void Save() {
 	//}
 	//s.push_back('\n');
 	//file.write((const char*)s.data(), sizeof(s));
-	//int cnt = 0;
-	//Good_Info* tmp = head->next;
-	//for (Good_Info* now = tmp; now != NULL; now = tmp) {
-	//	tmp = tmp->next;
-	//	int size = sizeof(now);
-	//	char c;
-	//	while (size != 0) {
-	//		c = size % 10;
-	//		size /= 10;
-	//		file.write(&c, 1);
-	//	}
-	//	c = '\n';
-	//	file.write(&c, 1);
-	//	int lenth = qmcEncBlock((uint8_t*)now, sizeof(now), cnt);
-	//	if (lenth == 0) {
-	//		std::string error;
-	//		qmcGetErr((char*)error.c_str());
-	//		//把这个字符串给WJB再退出
-	//	}
-	//	file.write((const char*)now, lenth);
-	//	cnt += sizeof(now);
-	//}
-	//file.write((const char*)key.data(), key.size());
-	//file.close();
+	Good_Info* tmp = head->next;
+	for (Good_Info* now = tmp; now != NULL; now = tmp) {
+		tmp = tmp->next;
+		int size = sizeof(now);
+		char c;
+		while (size != 0) {
+			c = size % 10;
+			size /= 10;
+			lenth = qmcEncBlock((uint8_t*)c, sizeof(c), count);
+			count += sizeof(c);
+			if (lenth == 0) {
+				std::string error;
+				qmcGetErr((char*)error.c_str());
+				return error;
+				//把这个字符串给WJB再退出
+			}
+			file.write(&c, 1);
+		}
+		c = '\n';
+		lenth = qmcEncBlock((uint8_t*)c, sizeof(c), count);
+		count += sizeof(c);
+		if (lenth == 0) {
+			std::string error;
+			qmcGetErr((char*)error.c_str());
+			return error;
+			//把这个字符串给WJB再退出
+		}
+		file.write(&c, sizeof(c));
+		lenth = qmcEncBlock((uint8_t*)now, sizeof(now), count);
+		count += sizeof(now);
+		if (lenth == 0) {
+			std::string error;
+			qmcGetErr((char*)error.c_str());
+			return error;
+			//把这个字符串给WJB再退出
+		}
+		file.write((const char*)now, sizeof(now));
+	}
+	file.write((const char*)key.data(), key.size());
+	file.close();
 }
 

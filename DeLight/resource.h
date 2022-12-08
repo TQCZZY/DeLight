@@ -43,8 +43,11 @@
 #define IDC_SYSDLG_SORT_SF              1022
 #define IDC_SYSDLG_LIST                 1023
 #define IDC_GDMDLG_TYPE                 1024
+#define IDC_SAVE                        1024
 #define IDC_GDMDLG_DATE                 1025
 #define IDC_GDMDLG_NUM                  1026
+#define IDC_SAVE2                       1026
+#define IDC_LOAD                        1026
 #define IDC_GDMDLG_SLF                  1027
 #define IDC_GDMDLG_OK                   1028
 #define IDC_GDMDLG_NO                   1029

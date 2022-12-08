@@ -50,7 +50,7 @@ void Insert(Good_Info good_to_be_insert, int position = 0);
 bool Delete(int number);
 std::vector<int>Search(Search_Info info);
 void Sort(int command);
-void Init();
-void Save();
+std::string Init();
+std::string Save();
 
 void transform(bool fromList);

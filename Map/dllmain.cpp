@@ -52,16 +52,11 @@ bool IsInRect(int LX, int LY, int RX, int RY, int x, int y)
     }
 }
 
-void JudgePoint(int X, int Y)
+void FilterPoint(int X, int Y)
 {
     for (size_t i = 0; i < MapRects.size(); ++i)
     {
-        int LX = MapRects[i].left;
-        int LY = MapRects[i].top;
-        int RX = MapRects[i].right;
-        int RY = MapRects[i].bottom;
-
-        if (IsInRect(LX, LY, RX, RY, X, Y)) {
+        if (IsInRect(MapRects[i].left, MapRects[i].top, MapRects[i].right, MapRects[i].bottom, X, Y)) {
             return;
         }
     }
@@ -106,7 +101,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 
 void LoadMap()
 {
-    std::fstream fs("D:\\repos\\DeLight\\Debug\\map.txt", std::ios::in);
+    std::fstream fs("map.txt", std::ios::in);
     float x1, y1, x2, y2;
     for (int i = 0; i < 23; i++)
     {
@@ -124,6 +119,7 @@ void LoadMap()
         ls.bottom = y2;
         MapRects.push_back(ls);
     }
+    fs.close();
 }
 
 //
@@ -213,13 +209,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         GetClientRect(hWnd, &rect);
         DrawText(hdc, TEXT("请点击您想要配送的位置"), -1, &rect, DT_CENTER | DT_VCENTER);
 
-        const int length0 = 50;
-        const int length1 = 100;
-        const int length2 = 120;
-        const int length3 = 170;
-        const int length4 = 190;
-        const int length5 = 240;
-
         for (size_t i = 0; i < MapRects.size(); ++i)
         {
             Rectangle(hdc, MapRects[i].left, MapRects[i].top, MapRects[i].right, MapRects[i].bottom);
@@ -237,17 +226,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         }
         
         for (int i = 0; RcvPoints.size() != 0 && i < RcvPoints.size() - 1; ++i) {
-            int x1 = 0;
-            int y1 = 0;
-            int x2 = 0;
-            int y2 = 0;
-
-            x1 = RcvPoints[i].first;
-            y1 = RcvPoints[i].second;
-            x2 = RcvPoints[i + 1].first;
-            y2 = RcvPoints[i + 1].second;
-            MoveToEx(hdc, x1, y1, NULL); //设定起始点,不保存当前点坐标
-            LineTo(hdc, x2, y2);
+            MoveToEx(hdc, RcvPoints[i].first, RcvPoints[i].second, NULL); //设定起始点,不保存当前点坐标
+            LineTo(hdc, RcvPoints[i + 1].first, RcvPoints[i + 1].second);
         }
         EndPaint(hWnd, &ps);
         return 0;
@@ -257,7 +237,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
         int x = GET_X_LPARAM(lParam);
         int y = GET_Y_LPARAM(lParam);
-        JudgePoint(x, y);
+        FilterPoint(x, y);
     }
     break;
     case WM_DESTROY:

@@ -366,3 +366,6 @@ FodyWeavers.xsd
 *.exe
 *.lib
 DeLight/*.hpp
+
+#Map For Debug
+DeLight/map.txt

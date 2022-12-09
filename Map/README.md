@@ -1,3 +1,13 @@
+# DeLight Map
+Map Dynamic Link Library For DeLight
+
+## How to Define a Map Item
+```
+<left> <top> <right> <bottom> <description>|#
+```
+
+## Map Example (A Simple Map Of UESTC)
+```
 220 50 300 100 仓库
 50 50 200 150 女生宿舍1
 320 50 420 100 女生宿舍2
@@ -21,3 +31,4 @@
 800 400 900 500 停车场2
 1050 460 1260 510 电子大厦
 300 560 750 760 欣苑
+```

@@ -18,7 +18,8 @@
 #define IDD_SRC_MTD                     112
 #define IDD_SRC_RES                     113
 #define IDD_SRC_VAL                     114
-#define IDR_MENU1                       115
+#define IDR_SYSDLG_MENUBAR              115
+#define IDR_SYSDLG_ACCELERATOR          116
 #define IDC_RMQDLG_WHNAME               1000
 #define IDC_RMQDLG_IP                   1001
 #define IDC_RMQDLG_ENTER                1002
@@ -96,13 +97,27 @@
 #define IDM_SAVE                        32788
 #define IDM_EXPORT                      32789
 #define IDM_QUIT                        32790
+#define IDM_INBOUND                     32799
+#define IDM_OUTBOUND                    32800
+#define IDM_MODIFY                      32801
+#define IDM_SEARCHBYNAME                32802
+#define ID_SEARCHBYQUANTITY             32803
+#define IDM_SEARCHBYQUANTITY            32804
+#define IDM_SEARCHBYTIME                32805
+#define IDM_SEARCHBYSHELF               32806
+#define IDM_SORTBYNAME                  32807
+#define IDM_SORTBYQUANTITY              32808
+#define IDM_SORTBYTIME                  32809
+#define IDM_SORTBYSHELF                 32810
+#define IDM_SELALL                      32811
+#define IDM_REVSEL                      32812
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        116
-#define _APS_NEXT_COMMAND_VALUE         32791
+#define _APS_NEXT_RESOURCE_VALUE        118
+#define _APS_NEXT_COMMAND_VALUE         32817
 #define _APS_NEXT_CONTROL_VALUE         1054
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

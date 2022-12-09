@@ -90,7 +90,7 @@ __declspec(dllexport) std::vector<std::pair<int, int> >
 GetRoute(std::vector<std::pair<int, int> > dst)
 {
     points = { {310,110},{430,110},{615,110},{765,110},{915,110},{1110,110},{260,130},{260,180},{430,180},{615,180},{765,180},{915,180},{700,350},{1155,435},{850,320},{975,435},{625,530} };
-    std::fstream fs("D:\\repos\\DeLight\\Debug\\map.txt", std::ios::in);
+    std::fstream fs("map.txt", std::ios::in);
     float x1, y1, x2, y2;
     for (int i = 0; i < 23; i++)
     {
@@ -122,7 +122,15 @@ GetRoute(std::vector<std::pair<int, int> > dst)
         {
             if (i != j)
             {
-                distance[i][j] = IsRouteValid(POINT{ points[i].first, points[i].second }, POINT{ points[j].first, points[j].second }) ? sqrt(pow(points[i].first - points[j].first, 2) + pow(points[i].second - points[j].second, 2)), hasUnreachable = false : INF;
+                if (IsRouteValid(POINT{ points[i].first, points[i].second }, POINT{ points[j].first, points[j].second }))
+                {
+                    distance[i][j] = sqrt(pow(points[i].first - points[j].first, 2) + pow(points[i].second - points[j].second, 2));
+                    hasUnreachable = false;
+                }
+                else
+                {
+                    distance[i][j] = INF;
+                }
             }
         }
         if (hasUnreachable)

@@ -395,13 +395,16 @@ void SystemDlg::OnBnClickedGlbtoexcel()
 	}
 }
 
-ULONG WINAPI GetRoute(LPVOID p) {
-	ReceivePoints(GetRoute(SendPoints()));
+ULONG WINAPI GetRouteThread(LPVOID p) {
+	while (true)
+	{
+		ReceivePoints(GetRoute(SendPoints()));
+	}
 	return 0;
 }
 
 void SystemDlg::OnBnClickedSysdlgSeldst()
 {
-	CreateThread(NULL, 0, GetRoute, NULL, NULL, NULL);//创建一个新线程
+	CreateThread(NULL, 0, GetRouteThread, NULL, NULL, NULL);//创建一个新线程
 	CreateMapWindow(SW_SHOW);
 }

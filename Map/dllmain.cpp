@@ -35,97 +35,12 @@ BOOL APIENTRY DllMain(HMODULE hModule,
 // 全局变量:
 WCHAR szTitle[MAX_LOADSTRING];                  // 标题栏文本
 WCHAR szWindowClass[MAX_LOADSTRING];   // 主窗口类名
+HWND hWnd;
 std::vector<RECT> MapRects;
 std::vector<std::string> MapRectsDesc;
 std::vector<std::pair<int, int> > points; //存放点
 std::vector<std::pair<int, int> > RcvPoints;//接收返回点
-HWND hWnd;
 bool confirmedSel = false;
-
-//std::vector<std::pair<int, int> > cornerpoints;//
-//void cornerpointsbegin() {
-//    cornerpoints.push_back(std::pair<int, int>(50, 50));
-//    cornerpoints.push_back(std::pair<int, int>(200, 50));
-//    cornerpoints.push_back(std::pair<int, int>(200, 150));
-//    cornerpoints.push_back(std::pair<int, int>(50, 150));
-//    cornerpoints.push_back(std::pair<int, int>(320, 50));
-//    cornerpoints.push_back(std::pair<int, int>(420, 50));
-//    cornerpoints.push_back(std::pair<int, int>(420, 100));
-//    cornerpoints.push_back(std::pair<int, int>(320, 100));
-//    cornerpoints.push_back(std::pair<int, int>(440, 50));
-//    cornerpoints.push_back(std::pair<int, int>(590, 50));
-//    cornerpoints.push_back(std::pair<int, int>(590, 100));
-//    cornerpoints.push_back(std::pair<int, int>(440, 100));
-//    cornerpoints.push_back(std::pair<int, int>(640, 50));
-//    cornerpoints.push_back(std::pair<int, int>(740, 50));
-//    cornerpoints.push_back(std::pair<int, int>(740, 100));
-//    cornerpoints.push_back(std::pair<int, int>(640, 100));
-//    cornerpoints.push_back(std::pair<int, int>(790, 50));
-//    cornerpoints.push_back(std::pair<int, int>(890, 50));
-//    cornerpoints.push_back(std::pair<int, int>(890, 100));
-//    cornerpoints.push_back(std::pair<int, int>(790, 100));
-//    cornerpoints.push_back(std::pair<int, int>(940, 50));
-//    cornerpoints.push_back(std::pair<int, int>(1090, 50));
-//    cornerpoints.push_back(std::pair<int, int>(1090, 100));
-//    cornerpoints.push_back(std::pair<int, int>(940, 100));
-//    cornerpoints.push_back(std::pair<int, int>(1110, 50));
-//    cornerpoints.push_back(std::pair<int, int>(1260, 50));
-//    cornerpoints.push_back(std::pair<int, int>(1260, 100));
-//    cornerpoints.push_back(std::pair<int, int>(1110, 100));
-//    cornerpoints.push_back(std::pair<int, int>(320, 120));
-//    cornerpoints.push_back(std::pair<int, int>(420, 120));
-//    cornerpoints.push_back(std::pair<int, int>(420, 170));
-//    cornerpoints.push_back(std::pair<int, int>(320, 170));
-//    cornerpoints.push_back(std::pair<int, int>(440, 120));
-//    cornerpoints.push_back(std::pair<int, int>(590, 120));
-//    cornerpoints.push_back(std::pair<int, int>(590, 170));
-//    cornerpoints.push_back(std::pair<int, int>(440, 170));
-//    cornerpoints.push_back(std::pair<int, int>(640, 120));
-//    cornerpoints.push_back(std::pair<int, int>(740, 120));
-//    cornerpoints.push_back(std::pair<int, int>(740, 170));
-//    cornerpoints.push_back(std::pair<int, int>(640, 170));
-//    cornerpoints.push_back(std::pair<int, int>(790, 120));
-//    cornerpoints.push_back(std::pair<int, int>(890, 120));
-//    cornerpoints.push_back(std::pair<int, int>(890, 170));
-//    cornerpoints.push_back(std::pair<int, int>(790, 170));
-//    cornerpoints.push_back(std::pair<int, int>(150, 200));
-//    cornerpoints.push_back(std::pair<int, int>(600, 200));
-//    cornerpoints.push_back(std::pair<int, int>(600, 500));
-//    cornerpoints.push_back(std::pair<int, int>(150, 500));
-//    cornerpoints.push_back(std::pair<int, int>(640, 190));
-//    cornerpoints.push_back(std::pair<int, int>(700, 190));
-//    cornerpoints.push_back(std::pair<int, int>(700, 240));
-//    cornerpoints.push_back(std::pair<int, int>(640, 240));
-//    cornerpoints.push_back(std::pair<int, int>(700, 210));
-//    cornerpoints.push_back(std::pair<int, int>(760, 210));
-//    cornerpoints.push_back(std::pair<int, int>(760, 240));
-//    cornerpoints.push_back(std::pair<int, int>(700, 240));
-//    cornerpoints.push_back(std::pair<int, int>(790, 190));
-//    cornerpoints.push_back(std::pair<int, int>(890, 190));
-//    cornerpoints.push_back(std::pair<int, int>(890, 240));
-//    cornerpoints.push_back(std::pair<int, int>(790, 240));
-//    cornerpoints.push_back(std::pair<int, int>(1050, 360));
-//    cornerpoints.push_back(std::pair<int, int>(1260, 360));
-//    cornerpoints.push_back(std::pair<int, int>(1260, 410));
-//    cornerpoints.push_back(std::pair<int, int>(1050, 410));
-//    cornerpoints.push_back(std::pair<int, int>(800, 400));
-//    cornerpoints.push_back(std::pair<int, int>(900, 400));
-//    cornerpoints.push_back(std::pair<int, int>(800, 500));
-//    cornerpoints.push_back(std::pair<int, int>(800, 500));
-//    cornerpoints.push_back(std::pair<int, int>(1050, 460));
-//    cornerpoints.push_back(std::pair<int, int>(1260, 510));
-//    cornerpoints.push_back(std::pair<int, int>(1260, 510));
-//    cornerpoints.push_back(std::pair<int, int>(1050, 460));
-//    cornerpoints.push_back(std::pair<int, int>(300, 560));
-//    cornerpoints.push_back(std::pair<int, int>(750, 560));
-//    cornerpoints.push_back(std::pair<int, int>(750, 760));
-//    cornerpoints.push_back(std::pair<int, int>(300, 760));
-//    cornerpoints.push_back(std::pair<int, int>(940, 160));
-//    cornerpoints.push_back(std::pair<int, int>(1090, 160));
-//    cornerpoints.push_back(std::pair<int, int>(1090, 310));
-//    cornerpoints.push_back(std::pair<int, int>(940, 310));
-//    return;
-//}
 
 bool IsInRect(int LX, int LY, int RX, int RY, int x, int y)
 {
@@ -136,26 +51,6 @@ bool IsInRect(int LX, int LY, int RX, int RY, int x, int y)
         return false;
     }
 }
-
-//void judgecorner(int X, int Y)
-//{
-//    int num = cornerpoints.size();
-//    int i = 0;
-//
-//    while (i < num) {
-//        int LX = cornerpoints[i].first - 8;
-//        int LY = cornerpoints[i].second - 8;
-//        int RX = cornerpoints[i].first + 8;
-//        int RY = cornerpoints[i].second + 8;
-//
-//        if (IsInRect(LX, LY, RX, RY, X, Y)) {
-//            points.push_back(std::pair<int, int>(cornerpoints[i].first, cornerpoints[i].second));
-//            return;
-//        }
-//        i++;
-//    }
-//    return;
-//}//判断四个顶点
 
 void JudgePoint(int X, int Y)
 {
@@ -206,6 +101,28 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     return RegisterClassExW(&wcex);
 }
 
+void LoadMap()
+{
+    std::fstream fs("D:\\repos\\DeLight\\Debug\\map.txt", std::ios::in);
+    float x1, y1, x2, y2;
+    for (int i = 0; i < 23; i++)
+    {
+        std::string desc;
+        fs >> x1 >> y1 >> x2 >> y2 >> desc;
+        if (desc == "#")
+        {
+            desc = "";
+        }
+        MapRectsDesc.push_back(desc);
+        RECT ls;
+        ls.left = x1;
+        ls.top = y1;
+        ls.right = x2;
+        ls.bottom = y2;
+        MapRects.push_back(ls);
+    }
+}
+
 //
 //   函数: InitInstance(HINSTANCE, int)
 //
@@ -226,24 +143,7 @@ BOOL InitInstance(int nCmdShow)
         return FALSE;
     }
 
-    std::fstream fs("D:\\repos\\DeLight\\Debug\\map.txt", std::ios::in);
-    float x1, y1, x2, y2;
-    for (int i = 0; i < 23; i++)
-    {
-        std::string desc;
-        fs >> x1 >> y1 >> x2 >> y2 >> desc;
-        if (desc == "#")
-        {
-            desc = "";
-        }
-        MapRectsDesc.push_back(desc);
-        RECT ls;
-        ls.left = x1;
-        ls.top = y1;
-        ls.right = x2;
-        ls.bottom = y2;
-        MapRects.push_back(ls);
-    }
+    LoadMap();
 
     ShowWindow(hWnd, nCmdShow);
     UpdateWindow(hWnd);
@@ -279,7 +179,21 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             DestroyWindow(hWnd);
             break;
         case IDM_CMPLTSEL:
-            confirmedSel = true;
+            if (!RcvPoints.size())
+            {
+                confirmedSel = true;
+            }
+            else
+            {
+                MapRects.resize(0);
+                MapRectsDesc.resize(0);
+                points.resize(0); //存放点
+                RcvPoints.resize(0);//接收返回点
+                LoadMap();
+                RECT r;
+                GetClientRect(hWnd, &r);
+                InvalidateRect(hWnd, &r, TRUE);
+            }
             break;
         default:
             return DefWindowProc(hWnd, message, wParam, lParam);
@@ -312,8 +226,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             DrawText(hdc, A2W(MapRectsDesc[i].c_str()), -1, &MapRects[i], DT_CENTER | DT_VCENTER);
         }
 
-        int i = 0;
-        if (i < RcvPoints.size()) {
+        
+        for (int i = 0; RcvPoints.size() != 0 && i < RcvPoints.size() - 1; ++i) {
             int x1 = 0;
             int y1 = 0;
             int x2 = 0;
@@ -325,7 +239,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             y2 = RcvPoints[i + 1].second;
             MoveToEx(hdc, x1, y1, NULL); //设定起始点,不保存当前点坐标
             LineTo(hdc, x2, y2);
-            i++;
         }
         EndPaint(hWnd, &ps);
         return 0;
@@ -412,6 +325,10 @@ __declspec(dllexport)std::vector<std::pair<int, int> > SendPoints()
 
 __declspec(dllexport)void ReceivePoints(std::vector<std::pair<int, int> >Re)
 {
+    if (Re.size() == 0)
+    {
+        MessageBox(hWnd, L"所选目的地不在配送范围", L"无法配送", MB_ICONERROR);
+    }
     RcvPoints = Re;
     RECT r;
     GetClientRect(hWnd, &r);

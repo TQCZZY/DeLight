@@ -22,30 +22,27 @@
 #include "Lines.h"
 
 //多源最短路
-std::vector<std::vector<float>>dfs_map;
+std::vector<std::vector<double>>dfs_map;
 
 //返回最小值
-inline float Min(float a, float b) {
+inline double Min(double a, double b) {
 	return a > b ? b : a;
 }
 
 //由已有有向图生成多源最短路,时间复杂度O(n³)
-std::vector<std::vector<float>>Floyd(std::vector<std::vector<float>>map) {
+std::vector<std::vector<double>>Floyd(std::vector<std::vector<double>>map) {
 	int n = map[0].size();
-	for (int k = 0; k < n; k++)
+	for (int k = 0; k < n; k++) {
 		for (int i = 0; i < n; i++) {
-			if (k == i)
-				continue;
-			if (map[i][k] == -1)
-				continue;
-			for (int j = 0; j < n; j++) {
-				if (k == j || i == j)
-					continue;
-				if (map[k][j] == -1)
-					continue;
-				map[i][j] = Min(map[i][j], map[i][k] + map[j][k]);
+			if (k != i && map[i][k] != INF) {
+				for (int j = 0; j < n; j++) {
+					if (i != j && map[k][j] != INF) {
+						map[i][j] = Min(map[i][j], map[i][k] + map[j][k]);
+					}
+				}
 			}
 		}
+	}
 	return map;
 }
 
@@ -55,41 +52,45 @@ Dfs_Return Dfs(int start, int from, std::vector<int>to, std::vector<bool>visit, 
 	Dfs_Return ans;
 	ans.cost = INF;
 	int n = to.size();
-	if (step == n-1)
-		for (int i = 0; i < n; i++)
+	if (step == n - 1) {
+		for (int i = 0; i < n; i++) {
 			if (!visit[i]) {
 				//花费需要加上返回起点的费用
-				ans.cost = dfs_map[from][to[i]] + dfs_map[to[i]][start];
+				ans.cost = Min(dfs_map[from][to[i]] + dfs_map[to[i]][start], INF);
 				ans.order.push_back(to[i]);
 				return ans;
 			}
-	float Min_Distance = INF;
+		}
+	}
+	double Min_Distance = INF;
 	Dfs_Return tmp;
-	for (int i = 0; i < n; i++)
+	for (int i = 0; i < n; i++) {
 		if (!visit[i]) {
 			visit[i] = true;
 			tmp = Dfs(start, to[i], to, visit, step + 1);
 			visit[i] = false;
-			float New_Distance = tmp.cost + dfs_map[from][to[i]];
+			double New_Distance = Min(tmp.cost + dfs_map[from][to[i]], INF);
 			if (New_Distance < Min_Distance) {
 				Min_Distance = New_Distance;
 				ans = tmp;
-				ans.cost += dfs_map[from][to[i]];
+				ans.cost = Min(ans.cost + dfs_map[from][to[i]], INF);
 				ans.order.push_back(to[i]);
 			}
 		}
+	}
 	return ans;
 }
 
 //返回到各目的地的先后
-std::vector<int>Get_Primary_Order(int from, std::vector<int>to, std::vector<std::vector<float>>map) {
+std::vector<int>Get_Primary_Order(int from, std::vector<int>to, std::vector<std::vector<double>>map) {
 	std::vector<int>ans;
-	int n = to.size();
+	int n = map[0].size();
 	dfs_map = Floyd(map);
 	std::vector<bool>visit;
 	for (int i = 0; i < n; i++)
 		visit.push_back(false);
 	Dfs_Return Dfs_Return = Dfs(from, from, to, visit, 0);
+	n = to.size();
 	for (int i = n - 1; i >= 0; i--)
 		ans.push_back(Dfs_Return.order[i]);
 	//返回起点
@@ -98,10 +99,10 @@ std::vector<int>Get_Primary_Order(int from, std::vector<int>to, std::vector<std:
 }
 
 //堆优化的Dijkstra,但是仅用于求路径顺序,返回反向的不包含起点但包含终点的路径顺序
-std::vector<int>Dijkstra(int from, int to, std::vector<std::vector<float>>map) {
+std::vector<int>Dijkstra(int from, int to, std::vector<std::vector<double>>map) {
 	//初始化
 	std::vector<int>ans;
-	std::vector<float>from_point;
+	std::vector<double>from_point;
 	std::priority_queue<Distance_To_Start>queue;
 	int n = map[0].size();
 	Distance_To_Start head{ from,0,-1 };
@@ -119,23 +120,28 @@ std::vector<int>Dijkstra(int from, int to, std::vector<std::vector<float>>map) {
 			continue;
 		visit[now.point_number] = true;
 		from_point[now.point_number] = now.from;
-		for (int i = 0; i < n; i++)
+		for (int i = 0; i < n; i++) {
 			if (!visit[i] && map[now.point_number][i] != INF) {
 				Distance_To_Start Tmp{ i,now.cost + map[now.point_number][i],now.point_number };
 				queue.push(Tmp);
 			}
+		}
 	}
-	for (int i = to; i != -1; i = from_point[i])
+	from_point[queue.top().point_number] = queue.top().from;
+	for (int i = to; from_point[i] != -1; i = from_point[i])
 		ans.push_back(i);
 	return ans;
 }
 
 //输出具体路径信息
-std::vector<int>Get_Order(int from, std::vector<int>to, std::vector<std::vector<float>>map) {
+std::vector<int>Get_Order(int from, std::vector<int>to, std::vector<std::vector<double>>map) {
 	std::vector<int>primary_order = Get_Primary_Order(from, to, map);
 	std::vector<int>tmp;
 	std::vector<int>ans;
 	ans.push_back(from);
+	tmp = Dijkstra(from, primary_order[0], map);
+	for (int j = 0; j < tmp.size(); j++)
+		ans.push_back(tmp[tmp.size() - 1 - j]);
 	for (int i = 0; i < primary_order.size() - 1; i++) {
 		tmp = Dijkstra(primary_order[i], primary_order[i + 1], map);
 		for (int j = 0; j < tmp.size(); j++)

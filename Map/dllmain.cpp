@@ -66,6 +66,9 @@ void JudgePoint(int X, int Y)
         }
     }
     points.push_back(std::pair<int, int>(X, Y));
+    RECT r;
+    GetClientRect(hWnd, &r);
+    InvalidateRect(hWnd, &r, TRUE);
     return;
 }
 
@@ -182,6 +185,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             if (!RcvPoints.size())
             {
                 confirmedSel = true;
+                ModifyMenu(GetMenu(hWnd), IDM_CMPLTSEL, MF_BYCOMMAND | MF_STRING, IDM_CMPLTSEL, L"重置地图(&R)");
             }
             else
             {
@@ -189,6 +193,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 MapRectsDesc.resize(0);
                 points.resize(0); //存放点
                 RcvPoints.resize(0);//接收返回点
+                ModifyMenu(GetMenu(hWnd), IDM_CMPLTSEL, MF_BYCOMMAND | MF_STRING, IDM_CMPLTSEL, L"完成选择(&F)");
                 LoadMap();
                 RECT r;
                 GetClientRect(hWnd, &r);
@@ -226,6 +231,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             DrawText(hdc, A2W(MapRectsDesc[i].c_str()), -1, &MapRects[i], DT_CENTER | DT_VCENTER);
         }
 
+        for (size_t i = 0; i < points.size(); ++i)
+        {
+            Rectangle(hdc, points[i].first - 5, points[i].second - 5, points[i].first + 5, points[i].second + 5);
+        }
         
         for (int i = 0; RcvPoints.size() != 0 && i < RcvPoints.size() - 1; ++i) {
             int x1 = 0;

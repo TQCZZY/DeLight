@@ -421,6 +421,7 @@ std::string Init() {
 			return error;
 			//把这个字符串给WJB再退出
 		}
+		*tmp << binBlock;
 		now->next = tmp;
 	}
 	file.close();

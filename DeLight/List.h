@@ -18,6 +18,8 @@ struct Good_Info {
 	int location = 0;
 	Time time = { 0,0,0 };
 	Good_Info* next = NULL;
+	void operator <<(std::vector<uint8_t> src);
+	void operator >>(std::vector<uint8_t> &dst);
 };
 
 struct Search_Info {

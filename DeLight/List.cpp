@@ -81,6 +81,90 @@ bool Time::operator >(const Time x) {
 	return true;
 }
 
+void Good_Info::operator<<(std::vector<uint8_t> src)
+{
+	size_t least = (3 + 3) * sizeof(int);
+	if (src.size() < least)
+	{
+		return;
+	}
+	size_t srcIdx = 0;
+	for (size_t i = 0; i < src.size() - least; ++i, ++srcIdx)
+	{
+		name.push_back((char)src[srcIdx]);
+	}
+	uint8_t* intPtr;
+	intPtr = (uint8_t*)&amount;
+	for (size_t i = 0; i < sizeof(int); ++i, ++srcIdx)
+	{
+		*(intPtr + i) = src[srcIdx];
+	}
+	intPtr = (uint8_t*)&number;
+	for (size_t i = 0; i < sizeof(int); ++i, ++srcIdx)
+	{
+		*(intPtr + i) = src[srcIdx];
+	}
+	intPtr = (uint8_t*)&location;
+	for (size_t i = 0; i < sizeof(int); ++i, ++srcIdx)
+	{
+		*(intPtr + i) = src[srcIdx];
+	}
+	intPtr = (uint8_t*)&(time.year);
+	for (size_t i = 0; i < sizeof(int); ++i, ++srcIdx)
+	{
+		*(intPtr + i) = src[srcIdx];
+	}
+	intPtr = (uint8_t*)&(time.month);
+	for (size_t i = 0; i < sizeof(int); ++i, ++srcIdx)
+	{
+		*(intPtr + i) = src[srcIdx];
+	}
+	intPtr = (uint8_t*)&(time.date);
+	for (size_t i = 0; i < sizeof(int); ++i, ++srcIdx)
+	{
+		*(intPtr + i) = src[srcIdx];
+	}
+}
+
+void Good_Info::operator>>(std::vector<uint8_t>& dst)
+{
+	for (size_t i = 0; i < name.size(); ++i)
+	{
+		dst.push_back(name[i]);
+	}
+	uint8_t* intPtr;
+	intPtr = (uint8_t*)&amount;
+	for (size_t i = 0; i < sizeof(int); ++i)
+	{
+		dst.push_back(*(intPtr + i));
+	}
+	intPtr = (uint8_t*)&number;
+	for (size_t i = 0; i < sizeof(int); ++i)
+	{
+		dst.push_back(*(intPtr + i));
+	}
+	intPtr = (uint8_t*)&location;
+	for (size_t i = 0; i < sizeof(int); ++i)
+	{
+		dst.push_back(*(intPtr + i));
+	}
+	intPtr = (uint8_t*)&(time.year);
+	for (size_t i = 0; i < sizeof(int); ++i)
+	{
+		dst.push_back(*(intPtr + i));
+	}
+	intPtr = (uint8_t*)&(time.month);
+	for (size_t i = 0; i < sizeof(int); ++i)
+	{
+		dst.push_back(*(intPtr + i));
+	}
+	intPtr = (uint8_t*)&(time.date);
+	for (size_t i = 0; i < sizeof(int); ++i)
+	{
+		dst.push_back(*(intPtr + i));
+	}
+}
+
 void Insert(Good_Info good_to_be_insert, int position) {
 	Good_Info* tmp = new Good_Info;
 	Search_Info s;
@@ -253,6 +337,7 @@ void Sort(int command) {
 	}
 }
 
+#define FDBG
 std::string Init() {
 	std::fstream file = std::fstream("货物数据.data", std::ios::in);
 	std::vector<uint8_t>key(2 * 1024 * 1024);//定义一个2Mb内存块
@@ -267,14 +352,18 @@ std::string Init() {
 	}
 	key.resize(qmcrev);
 	int count = 0;
-	int lenth = 0;
+	int length = 0;
 	char c = '\0';
 	int n = 0;
 	while (c != '\n') {
 		file.read(&c, sizeof(c));
-		lenth = qmcDecBlock((uint8_t*)c, sizeof(c), count);
+#ifndef FDBG
+		length = qmcDecBlock((uint8_t*)c, sizeof(c), count);
+#else
+		length = sizeof(c);
+#endif
 		count += sizeof(c);
-		if (lenth == 0) {
+		if (length == 0) {
 			std::string error;
 			qmcGetErr((char*)error.c_str());
 			return error;
@@ -294,26 +383,39 @@ std::string Init() {
 	Good_Info* now=head;
 	Good_Info* tmp;
 	for (int i = 0; i < cnt; i++) {
+		std::vector<uint8_t> binBlock;
 		tmp = new Good_Info;
 		int size = 0;
 		c = '\0';
 		while (c != '\n') {
 			file.read(&c, sizeof(c));
-			lenth = qmcDecBlock((uint8_t*)c, sizeof(c), count);
+#ifndef FDBG
+			length = qmcDecBlock((uint8_t*)c, sizeof(c), count);
+#else
+			length = sizeof(c);
+#endif
 			count += sizeof(c);
-			if (lenth == 0) {
+			if (length == 0) {
 				std::string error;
 				qmcGetErr((char*)error.c_str());
 				return error;
 				//把这个字符串给WJB再退出
 			}
-			size *= 10;
-			size += c;
+			if (c == '\n')
+			{
+				size *= 10;
+				size += c;
+			}
 		}
-		file.read((char*)tmp, size);
-		lenth = qmcDecBlock((uint8_t*)tmp, size, count);
-		count += sizeof(c);
-		if (lenth == 0) {
+		binBlock.resize(size);
+		file.read((char*)binBlock.data(), size);
+#ifndef FDBG
+		length = qmcDecBlock(binBlock.data(), size, count);
+#else
+		length = size;
+#endif
+		count += size;
+		if (length == 0) {
 			std::string error;
 			qmcGetErr((char*)error.c_str());
 			return error;
@@ -323,6 +425,7 @@ std::string Init() {
 	}
 	file.close();
 	now->next = NULL;
+	return "";
 }
 
 std::string Save() {
@@ -339,7 +442,7 @@ std::string Save() {
 	transform(true);
 	//qmcEncBlock((uint8_t*)Com.data(), sizeof(Com), 0);
 	int count = 0;
-	int lenth = 0;
+	int length = 0;
 	int n = cnt;//计数
 	std::vector<char>s;
 	while (n != 0) {
@@ -347,9 +450,13 @@ std::string Save() {
 		n /= 10;
 	}
 	s.push_back('\n');
-	lenth = qmcEncBlock((uint8_t*)s.data(), sizeof(s), count);
+#ifndef FDBG
+	length = qmcEncBlock((uint8_t*)s.data(), sizeof(s), count);
+#else
+	length = sizeof(s);
+#endif
 	count += sizeof(s);
-	if (lenth == 0) {
+	if (length == 0) {
 		std::string error;
 		qmcGetErr((char*)error.c_str());
 		return error;
@@ -366,17 +473,21 @@ std::string Save() {
 	//}
 	//s.push_back('\n');
 	//file.write((const char*)s.data(), sizeof(s));
-	Good_Info* tmp = head->next;
-	for (Good_Info* now = tmp; now != NULL; now = tmp) {
-		tmp = tmp->next;
-		int size = sizeof(now);
+	for (Good_Info* now = head->next; now != NULL; now = now->next) {
+		std::vector<uint8_t> binBlock;
+		*now >> binBlock;
+		int size = binBlock.size();
 		char c;
 		while (size != 0) {
 			c = size % 10;
 			size /= 10;
-			lenth = qmcEncBlock((uint8_t*)c, sizeof(c), count);
+#ifndef FDBG
+			length = qmcEncBlock((uint8_t*)c, sizeof(c), count);
+#else
+			length = sizeof(c);
+#endif
 			count += sizeof(c);
-			if (lenth == 0) {
+			if (length == 0) {
 				std::string error;
 				qmcGetErr((char*)error.c_str());
 				return error;
@@ -385,26 +496,34 @@ std::string Save() {
 			file.write(&c, 1);
 		}
 		c = '\n';
-		lenth = qmcEncBlock((uint8_t*)c, sizeof(c), count);
+#ifndef FDBG
+		length = qmcEncBlock((uint8_t*)c, sizeof(c), count);
+#else
+		length = sizeof(c);
+#endif
 		count += sizeof(c);
-		if (lenth == 0) {
+		if (length == 0) {
 			std::string error;
 			qmcGetErr((char*)error.c_str());
 			return error;
 			//把这个字符串给WJB再退出
 		}
 		file.write(&c, sizeof(c));
-		lenth = qmcEncBlock((uint8_t*)now, sizeof(now), count);
-		count += sizeof(now);
-		if (lenth == 0) {
+#ifndef FDBG
+		length = qmcEncBlock(binBlock.data(), binBlock.size(), count);
+#else
+		length = binBlock.size();
+#endif
+		count += binBlock.size();
+		if (length == 0) {
 			std::string error;
 			qmcGetErr((char*)error.c_str());
 			return error;
 			//把这个字符串给WJB再退出
 		}
-		file.write((const char*)now, sizeof(now));
+		file.write((const char*)binBlock.data(), binBlock.size());
 	}
 	file.write((const char*)key.data(), key.size());
 	file.close();
+	return "";
 }
-

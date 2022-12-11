@@ -51,4 +51,6 @@ public:
 	afx_msg void OnDist();
 	afx_msg void OnSlfdtl();
 	afx_msg void OnRquery();
+	afx_msg void OnLoad();
+	afx_msg void OnSave();
 };

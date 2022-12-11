@@ -90,6 +90,8 @@ BEGIN_MESSAGE_MAP(SystemDlg, CDialogEx)
 	ON_COMMAND(IDM_DIST, &SystemDlg::OnDist)
 	ON_COMMAND(IDM_SLFDTL, &SystemDlg::OnSlfdtl)
 	ON_COMMAND(IDM_RQUERY, &SystemDlg::OnRquery)
+	ON_COMMAND(IDM_LOAD, &SystemDlg::OnLoad)
+	ON_COMMAND(IDM_SAVE, &SystemDlg::OnSave)
 END_MESSAGE_MAP()
 
 // SystemDlg 消息处理程序
@@ -536,4 +538,14 @@ void SystemDlg::OnRquery()
 		qd.Create(IDD_REMOTEQUERY_DIALOG, this);
 	}
 	qd.ShowWindow(SW_SHOW);
+}
+
+void SystemDlg::OnLoad()
+{
+	Init();
+}
+
+void SystemDlg::OnSave()
+{
+	Save();
 }

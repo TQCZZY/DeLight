@@ -34,4 +34,5 @@ protected:
 	bool enableShelf;
 public:
 	virtual BOOL OnInitDialog();
+	afx_msg void OnChangeGdmdlgDate();
 };

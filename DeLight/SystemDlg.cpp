@@ -7,15 +7,14 @@
 #include <string>
 #include <vector>
 #include "List.h"
-#include "SystemDlg.h"
 #include "PswDlg.h"
 #include "GoodsMngmntDlg.h"
 #include "ShelfListDlg.h"
-#include "QueryDlg.h"
-#include "SearchMethodDlg.h"
+#include "SearchValueDlg.h"
 #include "map.hpp"
 #include "Lines.hpp"
 #include "Excel.hpp"
+#include "SystemDlg.h"
 
 // 用于应用程序“关于”菜单项的 CAboutDlg 对话框
 
@@ -73,15 +72,6 @@ BEGIN_MESSAGE_MAP(SystemDlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
-	ON_BN_CLICKED(IDC_SYSDLG_SLFDTL, &SystemDlg::OnBnClickedSlfDtl)
-	ON_BN_CLICKED(IDC_SYSDLG_SEARCH, &SystemDlg::OnBnClickedSearch)
-	ON_BN_CLICKED(IDC_REMOTEQUERY, &SystemDlg::OnBnClickedRemotequery)
-	ON_BN_CLICKED(IDC_GLBTOEXCEL, &SystemDlg::OnBnClickedGlbtoexcel)
-	ON_BN_CLICKED(IDC_SYSDLG_SORT_NM, &SystemDlg::OnBnClickedSortnm)
-	ON_BN_CLICKED(IDC_SYSDLG_SORT_DT, &SystemDlg::OnBnClickedSortdt)
-	ON_BN_CLICKED(IDC_SYSDLG_SORT_QT, &SystemDlg::OnBnClickedSortqt)
-	ON_BN_CLICKED(IDC_SYSDLG_SORT_SF, &SystemDlg::OnBnClickedSortsf)
-	ON_BN_CLICKED(IDC_SYSDLG_SELDST, &SystemDlg::OnBnClickedSysdlgSeldst)
 	ON_COMMAND(IDM_QUIT, &SystemDlg::OnQuit)
 	ON_COMMAND(IDM_INBOUND, &SystemDlg::OnInbound)
 	ON_COMMAND(IDM_OUTBOUND, &SystemDlg::OnOutbound)
@@ -90,6 +80,16 @@ BEGIN_MESSAGE_MAP(SystemDlg, CDialogEx)
 	ON_COMMAND(IDM_REVSEL, &SystemDlg::OnRevsel)
 	ON_COMMAND(IDM_SORTBYNAME, &SystemDlg::OnSortbyname)
 	ON_COMMAND(IDM_SORTBYTIME, &SystemDlg::OnSortbytime)
+	ON_COMMAND(IDM_SORTBYQUANTITY, &SystemDlg::OnSortbyquantity)
+	ON_COMMAND(IDM_SORTBYSHELF, &SystemDlg::OnSortbyshelf)
+	ON_COMMAND(IDM_SEARCHBYNAME, &SystemDlg::OnSearchbyname)
+	ON_COMMAND(IDM_SEARCHBYTIME, &SystemDlg::OnSearchbytime)
+	ON_COMMAND(IDM_SEARCHBYQUANTITY, &SystemDlg::OnSearchbyquantity)
+	ON_COMMAND(IDM_SEARCHBYSHELF, &SystemDlg::OnSearchbyshelf)
+	ON_COMMAND(IDM_EXPORT, &SystemDlg::OnExport)
+	ON_COMMAND(IDM_DIST, &SystemDlg::OnDist)
+	ON_COMMAND(IDM_SLFDTL, &SystemDlg::OnSlfdtl)
+	ON_COMMAND(IDM_RQUERY, &SystemDlg::OnRquery)
 END_MESSAGE_MAP()
 
 // SystemDlg 消息处理程序
@@ -196,141 +196,6 @@ void SystemDlg::OnPaint()
 HCURSOR SystemDlg::OnQueryDragIcon()
 {
 	return static_cast<HCURSOR>(m_hIcon);
-}
-
-void SystemDlg::OnBnClickedSlfDtl()//货架详情
-{
-	// TODO: 在此添加控件通知处理程序代码
-	ShelfListDlg dlg;
-	dlg.DoModal();
-}
-
-void SystemDlg::OnBnClickedSortnm()//排序1
-{
-}
-
-void SystemDlg::OnBnClickedSortdt()//排序2
-{
-}
-
-void SystemDlg::OnBnClickedSortqt()//排序3
-{
-	// TODO: 在此添加控件通知处理程序代码
-	for (int i = 0; i < m_List.GetItemCount/*获取条目的数量*/(); i++)
-	{
-		m_List.SetCheck/*设置选中状态*/(i, TRUE);
-	}
-
-	for (int i = 0; i < m_List.GetItemCount/*获取条目的数量*/(); i++)
-	{
-		BOOL state = m_List.GetCheck(i);
-		if (state)
-		{
-			m_List.DeleteItem(i);
-			i--;//若不i--则不能多项同时删除，因为当删除0栏后，1栏会为0栏，就删不掉了
-		}
-	}
-
-	Sort(2);
-	transform(true);
-	for (int i = 0; i < Com.size(); i++)
-	{
-		m_List.InsertItem(i, Com[i].name);//第一列数据
-		m_List.SetItemText(i, 1, Com[i].time);
-		m_List.SetItemText(i, 2, Com[i].num);
-		m_List.SetItemText(i, 3, Com[i].shelf);
-	}
-}
-
-void SystemDlg::OnBnClickedSortsf()//排序4
-{
-	for (int i = 0; i < m_List.GetItemCount/*获取条目的数量*/(); i++)
-	{
-		m_List.SetCheck/*设置选中状态*/(i, TRUE);
-	}
-
-	for (int i = 0; i < m_List.GetItemCount/*获取条目的数量*/(); i++)
-	{
-		BOOL state = m_List.GetCheck(i);
-		if (state)
-		{
-			m_List.DeleteItem(i);
-			i--;//若不i--则不能多项同时删除，因为当删除0栏后，1栏会为0栏，就删不掉了
-		}
-	}
-
-	Sort(3);
-	transform(true);
-	for (int i = 0; i < Com.size(); i++)
-	{
-		m_List.InsertItem(i, Com[i].name);//第一列数据
-		m_List.SetItemText(i, 1, Com[i].time);
-		m_List.SetItemText(i, 2, Com[i].num);
-		m_List.SetItemText(i, 3, Com[i].shelf);
-	}
-}
-
-void SystemDlg::OnBnClickedSearch()
-{
-	SearchMethodDlg dlg;
-	dlg.DoModal();
-}
-
-CQueryDlg qd;
-void SystemDlg::OnBnClickedRemotequery()
-{
-	if (!AfxSocketInit())
-	{
-		AfxMessageBox(IDP_SOCKETS_INIT_FAILED);
-		return;
-	}
-	if (!qd.m_hWnd)
-	{
-		qd.Create(IDD_REMOTEQUERY_DIALOG, this);
-	}
-	qd.ShowWindow(SW_SHOW);
-}
-
-void SystemDlg::OnBnClickedGlbtoexcel()
-{
-	int item;
-	item = MessageBox(L"导出完毕后,是否自动打开导出的图表?", L"自动启动Excel", MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2);
-	MessageBox(L"你可以在你选择的目录下新建受支持格式的文档;或者你也可以从存在的文档中选择一个,但是这可能会导致原有的数据因被覆盖而丢失.", L"当心数据丢失", MB_ICONINFORMATION);
-	CString Filters = L"Excel 工作簿(*.xlsx)|*.xlsx|Excel 97-2003工作簿(*.xls)|*.xls|文本文档(含有制表符)(*.txt)|*.txt||";
-	CFileDialog dlg(TRUE, NULL, NULL, OFN_CREATEPROMPT | OFN_HIDEREADONLY, Filters);
-	dlg.m_ofn.lpstrTitle = L"打开Excel文档";
-	if (dlg.DoModal() == IDOK)
-	{
-		std::vector<std::string> nm;
-		std::vector<std::string> qt;
-		std::vector<std::string> dt;
-		std::vector<std::string> sf;
-		USES_CONVERSION;
-		transform(true);
-		for (size_t i = 0; i < Com.size(); i++)
-		{
-			nm.push_back(W2A(Com[i].name));
-			qt.push_back(W2A(Com[i].num));
-			dt.push_back(W2A(Com[i].time));
-			sf.push_back(W2A(Com[i].shelf));
-		}
-		setInfo(nm, qt, dt, sf);
-		global2Excel(dlg.GetPathName());
-	}
-}
-
-ULONG WINAPI GetRouteThread(LPVOID p) {
-	while (true)
-	{
-		ReceivePoints(GetRoute(SendPoints()));
-	}
-	return 0;
-}
-
-void SystemDlg::OnBnClickedSysdlgSeldst()
-{
-	CreateThread(NULL, 0, GetRouteThread, NULL, NULL, NULL);//创建一个新线程
-	CreateMapWindow(SW_SHOW);
 }
 
 BOOL SystemDlg::PreTranslateMessage(MSG* pMsg)
@@ -525,4 +390,150 @@ void SystemDlg::OnSortbytime()
 		m_List.SetItemText(i, 2, Com[i].num);
 		m_List.SetItemText(i, 3, Com[i].shelf);
 	}
+}
+
+void SystemDlg::OnSortbyquantity()
+{
+	for (int i = 0; i < m_List.GetItemCount/*获取条目的数量*/(); i++)
+	{
+		m_List.SetCheck/*设置选中状态*/(i, TRUE);
+	}
+
+	for (int i = 0; i < m_List.GetItemCount/*获取条目的数量*/(); i++)
+	{
+		BOOL state = m_List.GetCheck(i);
+		if (state)
+		{
+			m_List.DeleteItem(i);
+			i--;//若不i--则不能多项同时删除，因为当删除0栏后，1栏会为0栏，就删不掉了
+		}
+	}
+
+	Sort(2);
+	transform(true);
+	for (int i = 0; i < Com.size(); i++)
+	{
+		m_List.InsertItem(i, Com[i].name);//第一列数据
+		m_List.SetItemText(i, 1, Com[i].time);
+		m_List.SetItemText(i, 2, Com[i].num);
+		m_List.SetItemText(i, 3, Com[i].shelf);
+	}
+}
+
+void SystemDlg::OnSortbyshelf()
+{
+	for (int i = 0; i < m_List.GetItemCount/*获取条目的数量*/(); i++)
+	{
+		m_List.SetCheck/*设置选中状态*/(i, TRUE);
+	}
+
+	for (int i = 0; i < m_List.GetItemCount/*获取条目的数量*/(); i++)
+	{
+		BOOL state = m_List.GetCheck(i);
+		if (state)
+		{
+			m_List.DeleteItem(i);
+			i--;//若不i--则不能多项同时删除，因为当删除0栏后，1栏会为0栏，就删不掉了
+		}
+	}
+
+	Sort(3);
+	transform(true);
+	for (int i = 0; i < Com.size(); i++)
+	{
+		m_List.InsertItem(i, Com[i].name);//第一列数据
+		m_List.SetItemText(i, 1, Com[i].time);
+		m_List.SetItemText(i, 2, Com[i].num);
+		m_List.SetItemText(i, 3, Com[i].shelf);
+	}
+}
+
+void SystemDlg::OnSearchbyname()
+{
+	Sou2.type = 1;
+	SearchValueDlg dlg;
+	dlg.DoModal();
+}
+
+void SystemDlg::OnSearchbytime()
+{
+	Sou2.type = 4;
+	SearchValueDlg dlg;
+	dlg.DoModal();
+}
+
+void SystemDlg::OnSearchbyquantity()
+{
+	Sou2.type = 2;
+	SearchValueDlg dlg;
+	dlg.DoModal();
+}
+
+void SystemDlg::OnSearchbyshelf()
+{
+	Sou2.type = 3;
+	SearchValueDlg dlg;
+	dlg.DoModal();
+}
+
+void SystemDlg::OnExport()
+{
+	int item;
+	item = MessageBox(L"导出完毕后,是否自动打开导出的图表?", L"自动启动Excel", MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2);
+	MessageBox(L"你可以在你选择的目录下新建受支持格式的文档;或者你也可以从存在的文档中选择一个,但是这可能会导致原有的数据因被覆盖而丢失.", L"当心数据丢失", MB_ICONINFORMATION);
+	CString Filters = L"Excel 工作簿(*.xlsx)|*.xlsx|Excel 97-2003工作簿(*.xls)|*.xls|文本文档(含有制表符)(*.txt)|*.txt||";
+	CFileDialog dlg(TRUE, NULL, NULL, OFN_CREATEPROMPT | OFN_HIDEREADONLY, Filters);
+	dlg.m_ofn.lpstrTitle = L"打开Excel文档";
+	if (dlg.DoModal() == IDOK)
+	{
+		std::vector<std::string> nm;
+		std::vector<std::string> qt;
+		std::vector<std::string> dt;
+		std::vector<std::string> sf;
+		USES_CONVERSION;
+		transform(true);
+		for (size_t i = 0; i < Com.size(); i++)
+		{
+			nm.push_back(W2A(Com[i].name));
+			qt.push_back(W2A(Com[i].num));
+			dt.push_back(W2A(Com[i].time));
+			sf.push_back(W2A(Com[i].shelf));
+		}
+		setInfo(nm, qt, dt, sf);
+		global2Excel(dlg.GetPathName());
+	}
+}
+
+ULONG WINAPI GetRouteThread(LPVOID p) {
+	while (true)
+	{
+		ReceivePoints(GetRoute(SendPoints()));
+	}
+	return 0;
+}
+
+void SystemDlg::OnDist()
+{
+	CreateThread(NULL, 0, GetRouteThread, NULL, NULL, NULL);//创建一个新线程
+	CreateMapWindow(SW_SHOW);
+}
+
+void SystemDlg::OnSlfdtl()
+{
+	ShelfListDlg dlg;
+	dlg.DoModal();
+}
+
+void SystemDlg::OnRquery()
+{
+	if (!AfxSocketInit())
+	{
+		AfxMessageBox(IDP_SOCKETS_INIT_FAILED);
+		return;
+	}
+	if (!qd.m_hWnd)
+	{
+		qd.Create(IDD_REMOTEQUERY_DIALOG, this);
+	}
+	qd.ShowWindow(SW_SHOW);
 }

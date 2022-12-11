@@ -1,6 +1,5 @@
 ﻿#pragma once
-#include "afxdialogex.h"
-
+#include "QueryDlg.h"
 
 // SystemDlg 对话框
 
@@ -19,6 +18,7 @@ public:
 
 protected:
 	HICON m_hIcon;
+	CQueryDlg qd;
 
 	// 生成的消息映射函数
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
@@ -32,15 +32,6 @@ public:
 	CListCtrl m_List;
 	HACCEL m_hAcc;
 	CMenu m_Menubar;
-	afx_msg void OnBnClickedSlfDtl();
-	afx_msg void OnBnClickedSearch();
-	afx_msg void OnBnClickedRemotequery();
-	afx_msg void OnBnClickedGlbtoexcel();
-	afx_msg void OnBnClickedSortnm();
-	afx_msg void OnBnClickedSortdt();
-	afx_msg void OnBnClickedSortqt();
-	afx_msg void OnBnClickedSortsf();
-	afx_msg void OnBnClickedSysdlgSeldst();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	afx_msg void OnQuit();
 	afx_msg void OnInbound();
@@ -50,4 +41,14 @@ public:
 	afx_msg void OnRevsel();
 	afx_msg void OnSortbyname();
 	afx_msg void OnSortbytime();
+	afx_msg void OnSortbyquantity();
+	afx_msg void OnSortbyshelf();
+	afx_msg void OnSearchbyname();
+	afx_msg void OnSearchbytime();
+	afx_msg void OnSearchbyquantity();
+	afx_msg void OnSearchbyshelf();
+	afx_msg void OnExport();
+	afx_msg void OnDist();
+	afx_msg void OnSlfdtl();
+	afx_msg void OnRquery();
 };

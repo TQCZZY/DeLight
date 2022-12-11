@@ -186,7 +186,6 @@
     <ClInclude Include="framework.h" />
     <ClInclude Include="GoodsMngmntDlg.h" />
     <ClInclude Include="List.h" />
-    <ClInclude Include="SearchMethodDlg.h" />
     <ClInclude Include="SearchResultDlg.h" />
     <ClInclude Include="SearchValueDlg.h" />
     <ClInclude Include="DeLight.h" />
@@ -201,7 +200,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GoodsMngmntDlg.cpp" />
-    <ClCompile Include="SearchMethodDlg.cpp" />
     <ClCompile Include="SearchResultDlg.cpp" />
     <ClCompile Include="SearchValueDlg.cpp" />
     <ClCompile Include="List.cpp" />

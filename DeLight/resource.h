@@ -77,25 +77,9 @@
 #define IDC_SRDLG_LIST                  1052
 #define IDC_SVDLG_VAL                   1053
 #define IDC_SVDLG_OK                    1054
-#define ID_32771                        32771
-#define ID_32772                        32772
-#define ID_32773                        32773
-#define ID_32774                        32774
-#define ID_32775                        32775
-#define ID_32776                        32776
-#define ID_32777                        32777
-#define ID_32778                        32778
-#define ID_32779                        32779
-#define ID_32780                        32780
-#define ID_32781                        32781
-#define ID_32782                        32782
-#define ID_32783                        32783
-#define ID_32784                        32784
-#define ID_32785                        32785
-#define ID_32786                        32786
-#define IDM_LOAD                        32787
-#define IDM_SAVE                        32788
-#define IDM_EXPORT                      32789
+#define IDM_LOAD                        32771
+#define IDM_SAVE                        32772
+#define IDM_EXPORT                      32773
 #define IDM_QUIT                        32790
 #define IDM_INBOUND                     32799
 #define IDM_OUTBOUND                    32800
@@ -111,13 +95,16 @@
 #define IDM_SORTBYSHELF                 32810
 #define IDM_SELALL                      32811
 #define IDM_REVSEL                      32812
+#define IDM_DIST                        32818
+#define IDM_SLFDTL                      32822
+#define IDM_RQUERY                      32825
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        118
-#define _APS_NEXT_COMMAND_VALUE         32817
+#define _APS_NEXT_COMMAND_VALUE         32828
 #define _APS_NEXT_CONTROL_VALUE         1054
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

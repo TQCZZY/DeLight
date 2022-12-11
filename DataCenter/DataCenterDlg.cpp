@@ -172,8 +172,13 @@ HCURSOR CDataCenterDlg::OnQueryDragIcon()
 	return (HCURSOR) m_hIcon;
 }
 
+HANDLE hListenThread = INVALID_HANDLE_VALUE;
 void CDataCenterDlg::OnServer() 
 {
+	if (hListenThread != INVALID_HANDLE_VALUE)
+	{
+		return;
+	}
 	char HostName[128];
 	if (gethostname(HostName, 128) != 0)
 		return;
@@ -184,26 +189,47 @@ void CDataCenterDlg::OnServer()
 	svrMsg += lpIP;
 	svrMsg += ": online";
 	m_show.InsertString(-1, svrMsg);
-	CreateThread(NULL,0,LinsenThread,this,NULL,NULL);//创建一个新线程
+	hListenThread = CreateThread(NULL,0,LinsenThread,this,NULL,NULL);//创建一个新线程
 }
 
 struct SocMsg
 {
-	std::string ip;
-	std::string name;
-	std::string header;
-	std::string respTo;
-	std::string data;
+	char ip[21];
+	char name[31];
+	char header[11];
+	char respTo[31];
+	char data[101];
 };
 SocMsg Msg;
 SocMsg* pMsg;
 
-CStringArray m_chater;
+CStringArray m_client;
+
+size_t attackCount = 0;
+
+void sendEvent(std::string event)
+{
+	CSocket m_SendSocket;//构造一个套接字对象
+	m_SendSocket.Create(1234, SOCK_DGRAM);
+
+	strcpy(pMsg->data, event.c_str());
+	strcpy(pMsg->name, "Data Center");
+	strcpy(pMsg->header, "event");
+	strcpy(pMsg->respTo, "");
+	//把信息发送给列表中的每个客户端
+	CString listIP;
+	int len = m_client.GetSize();
+	for (int k = 0; k < len; k++) {
+		listIP = m_client.GetAt(k);
+		m_SendSocket.SendTo(pMsg, sizeof(Msg), 6666, listIP);//群发数据给客户端
+	}
+	m_SendSocket.Close();
+}
 
 /*-------------------------------------------------------------------
 线程函数名：LinsenThread
 属性：全局函数
-功能：接收对方聊天者发来的聊天信息，转发给所有聊天者，并显示到列表框中
+功能：接收客户端发来的信息，转发给所有客户端，并显示到列表框中
 参数p--指向界面对话框的指针
 ---------------------------------------------------------------------*/
 
@@ -213,7 +239,7 @@ ULONG WINAPI LinsenThread(LPVOID p){
 
 	CSocket m_ReceiveSocket;//构造一个套接字对象
 
-	CString respTo, header, data, name, chatIP;
+	CString respTo, header, data, name, clientIP;
 
 	m_ReceiveSocket.Create(8888,SOCK_DGRAM);	
 	pMsg = &Msg;
@@ -221,54 +247,76 @@ ULONG WINAPI LinsenThread(LPVOID p){
 	while(1){
 		m_ReceiveSocket.Receive(pMsg, sizeof(Msg));
 		
-		data = pMsg->data.c_str();
-		name = pMsg->name.c_str();
-		header = pMsg->header.c_str();
-		respTo = pMsg->respTo.c_str();
-		if(data.IsEmpty() || name.IsEmpty())
-			continue;
-		if (header == "require") {
-			data = name + " " + header + "s: " + data;
-		}
-		else if (header == "respond") {
-			data = name + " " + header + "s to " + respTo + ": " + data;
-		}
-		else {
-			data = header + " from " + name + ": " + data;
-		}
-		pDlg->m_show.InsertString(-1,data);
-
-		//判断发来信息的聊天者IP是否已存入聊天者列表
-		chatIP = pMsg->ip.c_str();
+		//判断列表中是否已存在该客户
+		clientIP = pMsg->ip;
 		CString listIP;
 		bool flag = 0;
-		int len = m_chater.GetSize();
-		if (header == "event")
+		int len = m_client.GetSize();
+		int i = 0;
+		for (i = 0; i < len; i++) {
+			if (clientIP == m_client.GetAt(i)) {
+				flag = 1;//列表中已存在该IP，则设为1
+				break;
+			}
+		}
+		data = pMsg->data;
+		header = pMsg->header;
+		if (flag)
 		{
-			//判断列表中是否已存在该客户
-			int i = 0;
-			for (i = 0; i < len; i++) {
-				if (chatIP == m_chater.GetAt(i)) {
-					flag = 1;//列表中已存在该IP，则设为1
-					break;
+			name = pMsg->name;
+			respTo = pMsg->respTo;
+			if (data.IsEmpty() || name.IsEmpty())
+				continue;
+			CString displayContent;
+			if (header == "require") {
+				displayContent = name + " " + header + "s: " + data;
+			}
+			else if (header == "respond") {
+				displayContent = name + " " + header + "s to " + respTo + ": " + data;
+			}
+			else {
+				displayContent = header + " from " + name + ": " + data;
+			}
+			pDlg->m_show.InsertString(-1, displayContent);
+
+			if (header == "event" && data == "offline")
+			{
+				m_client.RemoveAt(i);
+			}
+		}
+		else
+		{
+			if (header == "event" && data == "online")
+			{
+				name = pMsg->name;
+				CString displayContent;
+				displayContent = header + " from " + name + ": " + data;
+				pDlg->m_show.InsertString(-1, displayContent);
+				m_client.Add(clientIP);//如果不存在则添加到列表中
+			}
+			else
+			{
+				++attackCount;
+				if (attackCount >= 100)
+				{
+					pDlg->m_show.InsertString(-1, L"Warning: Cyber attack threshold reached. Data Center may under cyber attack.");
+					m_ReceiveSocket.Close();
+					sendEvent("protect");
+					pDlg->m_show.InsertString(-1, L"Data Center has shut down automatically as a means of protection.");
 				}
-			}
-			if (pMsg->data == "online")
-			{
-				if (!flag)
-					m_chater.Add(chatIP);//如果不存在则添加到列表中
-			}
-			else if (pMsg->data == "offline")
-			{
-				m_chater.RemoveAt(i);
+				else
+				{
+					pDlg->m_show.InsertString(-1, L"Warning: Received data from unknown source.");
+				}
+				continue;
 			}
 		}
 
 		//把信息发送给列表中的每个客户
-		len=m_chater.GetSize();
+		len= m_client.GetSize();
 		for(int k=0; k<len; k++){                  
-			listIP = m_chater.GetAt(k);			
-			m_ReceiveSocket.SendTo( pMsg, sizeof(Msg),6666,listIP);//转发数据给其他聊天者
+			listIP = m_client.GetAt(k);
+			m_ReceiveSocket.SendTo( pMsg, sizeof(Msg),6666,listIP);//转发数据给其他客户端
 		}
 	}
 	m_ReceiveSocket.Close();
@@ -277,20 +325,7 @@ ULONG WINAPI LinsenThread(LPVOID p){
 
 void CDataCenterDlg::OnBnClickedCancel()
 {
-	CSocket m_SendSocket;//构造一个套接字对象
-	m_SendSocket.Create(1234, SOCK_DGRAM);
-
-	pMsg->data = "close";
-	pMsg->name = "Data Center";
-	pMsg->header = "event";
-	pMsg->respTo = "";
-	//把信息发送给列表中的每个客户
-	CString listIP;
-	int len = m_chater.GetSize();
-	for (int k = 0; k < len; k++) {
-		listIP = m_chater.GetAt(k);
-		m_SendSocket.SendTo(pMsg, sizeof(Msg), 6666, listIP);//转发数据给其他聊天者
-	}
-	m_SendSocket.Close();
+	TerminateThread(hListenThread, 0);
+	sendEvent("close");
 	CDialog::OnCancel();
 }

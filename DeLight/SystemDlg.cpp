@@ -73,11 +73,6 @@ BEGIN_MESSAGE_MAP(SystemDlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
-	ON_BN_CLICKED(IDC_SYSDLG_SELALL, &SystemDlg::OnBnClickedSelall)
-	ON_BN_CLICKED(IDC_SYSDLG_REVERSESEL, &SystemDlg::OnBnClickedReversesel)
-	ON_BN_CLICKED(IDC_SYSDLG_ADD, &SystemDlg::OnBnClickedAdd)
-	ON_BN_CLICKED(IDC_SYSDLG_DEL, &SystemDlg::OnBnClickedDel)
-	ON_BN_CLICKED(IDC_SYSDLG_EDIT, &SystemDlg::OnBnClickedEdit)
 	ON_BN_CLICKED(IDC_SYSDLG_SLFDTL, &SystemDlg::OnBnClickedSlfDtl)
 	ON_BN_CLICKED(IDC_SYSDLG_SEARCH, &SystemDlg::OnBnClickedSearch)
 	ON_BN_CLICKED(IDC_REMOTEQUERY, &SystemDlg::OnBnClickedRemotequery)
@@ -87,6 +82,14 @@ BEGIN_MESSAGE_MAP(SystemDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_SYSDLG_SORT_QT, &SystemDlg::OnBnClickedSortqt)
 	ON_BN_CLICKED(IDC_SYSDLG_SORT_SF, &SystemDlg::OnBnClickedSortsf)
 	ON_BN_CLICKED(IDC_SYSDLG_SELDST, &SystemDlg::OnBnClickedSysdlgSeldst)
+	ON_COMMAND(IDM_QUIT, &SystemDlg::OnQuit)
+	ON_COMMAND(IDM_INBOUND, &SystemDlg::OnInbound)
+	ON_COMMAND(IDM_OUTBOUND, &SystemDlg::OnOutbound)
+	ON_COMMAND(IDM_MODIFY, &SystemDlg::OnModify)
+	ON_COMMAND(IDM_SELALL, &SystemDlg::OnSelall)
+	ON_COMMAND(IDM_REVSEL, &SystemDlg::OnRevsel)
+	ON_COMMAND(IDM_SORTBYNAME, &SystemDlg::OnSortbyname)
+	ON_COMMAND(IDM_SORTBYTIME, &SystemDlg::OnSortbytime)
 END_MESSAGE_MAP()
 
 // SystemDlg 消息处理程序
@@ -195,128 +198,6 @@ HCURSOR SystemDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
-void SystemDlg::OnBnClickedSelall()//全选
-{
-	for (int i = 0; i < m_List.GetItemCount/*获取条目的数量*/(); i++)
-	{
-		m_List.SetCheck/*设置选中状态*/(i,TRUE);
-	}
-}
-
-void SystemDlg::OnBnClickedReversesel()//反选
-{
-	for (int i = 0; i < m_List.GetItemCount/*获取条目的数量*/(); i++)
-	{
-		m_List.SetCheck/*设置选中状态*/(i, !m_List.GetCheck(i));
-	}
-}
-
-void SystemDlg::OnBnClickedAdd()//增加
-{
-	GoodsMngmntDlg dlg;
-	if (IDCANCEL == dlg.DoModal(L"", L"", L"", L"", false) ||//点击增加，弹出子对话框2
-		dlg.sType.IsEmpty() || dlg.sDate.IsEmpty() || dlg.sNumber.IsEmpty() || dlg.sShelf.IsEmpty())
-		return;
-	int nCount = m_List.GetItemCount();
-	m_List.InsertItem(nCount,dlg.sType);//新建类型
-	m_List.SetItemText(nCount, 1, dlg.sDate);
-	m_List.SetItemText(nCount, 2, dlg.sNumber);
-	m_List.SetItemText(nCount, 3, dlg.sShelf);
-	Good_Info new_good;
-	USES_CONVERSION;
-	new_good.name = W2A(dlg.sType);
-
-	std::string sou4 = W2A(dlg.sDate);
-	Time t = { 0,0,0 };
-	int p = 0;
-	while (sou4[p] != '-') {
-		t.year *= 10;
-		t.year += sou4[p++] - '0';
-	}
-	p++;
-	while (sou4[p] != '-') {
-		t.month *= 10;
-		t.month += sou4[p++] - '0';
-	}
-	p++;
-	while (sou4[p] != '\0') {
-		t.date *= 10;
-		t.date += sou4[p++] - '0';
-	}
-	new_good.time.year = t.year;
-	new_good.time.month = t.month;
-	new_good.time.date = t.date;
-
-	new_good.amount = _ttoi(dlg.sNumber);
-	new_good.location= _ttoi(dlg.sShelf);
-	Insert(new_good);
-	transform(true);
-}
-
-void SystemDlg::OnBnClickedDel()//删除
-{
-	for (int i = 0; i < m_List.GetItemCount/*获取条目的数量*/(); i++)
-	{
-		BOOL state = m_List.GetCheck(i);
-		if (state)
-		{
-			m_List.DeleteItem(i);
-			Delete(Com[i].code);
-			i--;//若不i--则不能多项同时删除，因为当删除0栏后，1栏会为0栏，就删不掉了
-		}
-	}
-	transform(true);
-}
-
-void SystemDlg::OnBnClickedEdit()//修改
-{
-	for (int i = 0; i < m_List.GetItemCount/*获取条目的数量*/(); i++)
-	{
-		BOOL state = m_List.GetCheck(i);
-		if (state)
-		{
-			GoodsMngmntDlg dlg;
-			if (IDCANCEL == dlg.DoModal(Com[i].name, Com[i].num, Com[i].time, Com[i].shelf, false) ||//弹窗
-				dlg.sType.IsEmpty() || dlg.sDate.IsEmpty() || dlg.sNumber.IsEmpty() || dlg.sShelf.IsEmpty())
-				return;
-			m_List.SetItemText(i, 0, dlg.sType);
-			m_List.SetItemText(i, 1, dlg.sDate);
-			m_List.SetItemText(i, 2, dlg.sNumber);
-			m_List.SetItemText(i, 3, dlg.sShelf);
-			Delete(Com[i].code);
-			Good_Info new_good;
-			USES_CONVERSION;
-			new_good.name = W2A(dlg.sType);
-
-			std::string sou4 = W2A(dlg.sDate);
-			Time t = { 0,0,0 };
-			int p = 0;
-			while (sou4[p] != '-') {
-				t.year *= 10;
-				t.year += sou4[p++] - '0';
-			}
-			p++;
-			while (sou4[p] != '-') {
-				t.month *= 10;
-				t.month += sou4[p++] - '0';
-			}
-			p++;
-			while (sou4[p] != '\0') {
-				t.date *= 10;
-				t.date += sou4[p++] - '0';
-			}
-			new_good.time.year = t.year;
-			new_good.time.month = t.month;
-			new_good.time.date = t.date;
-
-			new_good.amount = _ttoi(dlg.sNumber);
-			new_good.location = _ttoi(dlg.sShelf);
-			Insert(new_good, i);
-		}
-	}
-	transform(true);
-}
-
 void SystemDlg::OnBnClickedSlfDtl()//货架详情
 {
 	// TODO: 在此添加控件通知处理程序代码
@@ -326,57 +207,10 @@ void SystemDlg::OnBnClickedSlfDtl()//货架详情
 
 void SystemDlg::OnBnClickedSortnm()//排序1
 {
-	for (int i = 0; i < m_List.GetItemCount/*获取条目的数量*/(); i++)
-	{
-		m_List.SetCheck/*设置选中状态*/(i, TRUE);
-	}
-
-	for (int i = 0; i < m_List.GetItemCount/*获取条目的数量*/(); i++)
-	{
-		BOOL state = m_List.GetCheck(i);
-		if (state)
-		{
-			m_List.DeleteItem(i);
-			i--;//若不i--则不能多项同时删除，因为当删除0栏后，1栏会为0栏，就删不掉了
-		}
-	}
-	Sort(1);
-	transform(true);
-	for (int i = 0; i < Com.size(); i++)
-	{
-		m_List.InsertItem(i, Com[i].name);//第一列数据
-		m_List.SetItemText(i, 1, Com[i].time);
-		m_List.SetItemText(i, 2, Com[i].num);
-		m_List.SetItemText(i, 3, Com[i].shelf);
-	}
 }
 
 void SystemDlg::OnBnClickedSortdt()//排序2
 {
-	for (int i = 0; i < m_List.GetItemCount/*获取条目的数量*/(); i++)
-	{
-		m_List.SetCheck/*设置选中状态*/(i, TRUE);
-	}
-
-	for (int i = 0; i < m_List.GetItemCount/*获取条目的数量*/(); i++)
-	{
-		BOOL state = m_List.GetCheck(i);
-		if (state)
-		{
-			m_List.DeleteItem(i);
-			i--;//若不i--则不能多项同时删除，因为当删除0栏后，1栏会为0栏，就删不掉了
-		}
-	}
-
-	Sort(4);
-	transform(true);
-	for (int i = 0; i < Com.size(); i++)
-	{
-		m_List.InsertItem(i, Com[i].name);//第一列数据
-		m_List.SetItemText(i, 1, Com[i].time);
-		m_List.SetItemText(i, 2, Com[i].num);
-		m_List.SetItemText(i, 3, Com[i].shelf);
-	}
 }
 
 void SystemDlg::OnBnClickedSortqt()//排序3
@@ -508,4 +342,187 @@ BOOL SystemDlg::PreTranslateMessage(MSG* pMsg)
 			return TRUE;
 	}
 	return CDialogEx::PreTranslateMessage(pMsg);
+}
+
+void SystemDlg::OnQuit()
+{
+	// TODO: Ask Whether To Save Data
+	CDialogEx::OnOK();
+}
+
+void SystemDlg::OnInbound()
+{
+	GoodsMngmntDlg dlg;
+	if (IDCANCEL == dlg.DoModal(L"", L"", L"", L"", false) ||//点击增加，弹出子对话框2
+		dlg.sType.IsEmpty() || dlg.sDate.IsEmpty() || dlg.sNumber.IsEmpty() || dlg.sShelf.IsEmpty())
+		return;
+	int nCount = m_List.GetItemCount();
+	m_List.InsertItem(nCount, dlg.sType);//新建类型
+	m_List.SetItemText(nCount, 1, dlg.sDate);
+	m_List.SetItemText(nCount, 2, dlg.sNumber);
+	m_List.SetItemText(nCount, 3, dlg.sShelf);
+	Good_Info new_good;
+	USES_CONVERSION;
+	new_good.name = W2A(dlg.sType);
+
+	std::string sou4 = W2A(dlg.sDate);
+	Time t = { 0,0,0 };
+	int p = 0;
+	while (sou4[p] != '-') {
+		t.year *= 10;
+		t.year += sou4[p++] - '0';
+	}
+	p++;
+	while (sou4[p] != '-') {
+		t.month *= 10;
+		t.month += sou4[p++] - '0';
+	}
+	p++;
+	while (sou4[p] != '\0') {
+		t.date *= 10;
+		t.date += sou4[p++] - '0';
+	}
+	new_good.time.year = t.year;
+	new_good.time.month = t.month;
+	new_good.time.date = t.date;
+
+	new_good.amount = _ttoi(dlg.sNumber);
+	new_good.location = _ttoi(dlg.sShelf);
+	Insert(new_good);
+	transform(true);
+}
+
+void SystemDlg::OnOutbound()
+{
+	for (int i = 0; i < m_List.GetItemCount/*获取条目的数量*/(); i++)
+	{
+		BOOL state = m_List.GetCheck(i);
+		if (state)
+		{
+			m_List.DeleteItem(i);
+			Delete(Com[i].code);
+			i--;//若不i--则不能多项同时删除，因为当删除0栏后，1栏会为0栏，就删不掉了
+		}
+	}
+	transform(true);
+}
+
+void SystemDlg::OnModify()
+{
+	for (int i = 0; i < m_List.GetItemCount/*获取条目的数量*/(); i++)
+	{
+		BOOL state = m_List.GetCheck(i);
+		if (state)
+		{
+			GoodsMngmntDlg dlg;
+			if (IDCANCEL == dlg.DoModal(Com[i].name, Com[i].num, Com[i].time, Com[i].shelf, false) ||//弹窗
+				dlg.sType.IsEmpty() || dlg.sDate.IsEmpty() || dlg.sNumber.IsEmpty() || dlg.sShelf.IsEmpty())
+				return;
+			m_List.SetItemText(i, 0, dlg.sType);
+			m_List.SetItemText(i, 1, dlg.sDate);
+			m_List.SetItemText(i, 2, dlg.sNumber);
+			m_List.SetItemText(i, 3, dlg.sShelf);
+			Delete(Com[i].code);
+			Good_Info new_good;
+			USES_CONVERSION;
+			new_good.name = W2A(dlg.sType);
+
+			std::string sou4 = W2A(dlg.sDate);
+			Time t = { 0,0,0 };
+			int p = 0;
+			while (sou4[p] != '-') {
+				t.year *= 10;
+				t.year += sou4[p++] - '0';
+			}
+			p++;
+			while (sou4[p] != '-') {
+				t.month *= 10;
+				t.month += sou4[p++] - '0';
+			}
+			p++;
+			while (sou4[p] != '\0') {
+				t.date *= 10;
+				t.date += sou4[p++] - '0';
+			}
+			new_good.time.year = t.year;
+			new_good.time.month = t.month;
+			new_good.time.date = t.date;
+
+			new_good.amount = _ttoi(dlg.sNumber);
+			new_good.location = _ttoi(dlg.sShelf);
+			Insert(new_good, i);
+		}
+	}
+	transform(true);
+}
+
+void SystemDlg::OnSelall()
+{
+	for (int i = 0; i < m_List.GetItemCount/*获取条目的数量*/(); i++)
+	{
+		m_List.SetCheck/*设置选中状态*/(i, TRUE);
+	}
+}
+
+void SystemDlg::OnRevsel()
+{
+	for (int i = 0; i < m_List.GetItemCount/*获取条目的数量*/(); i++)
+	{
+		m_List.SetCheck/*设置选中状态*/(i, !m_List.GetCheck(i));
+	}
+}
+
+void SystemDlg::OnSortbyname()
+{
+	for (int i = 0; i < m_List.GetItemCount/*获取条目的数量*/(); i++)
+	{
+		m_List.SetCheck/*设置选中状态*/(i, TRUE);
+	}
+
+	for (int i = 0; i < m_List.GetItemCount/*获取条目的数量*/(); i++)
+	{
+		BOOL state = m_List.GetCheck(i);
+		if (state)
+		{
+			m_List.DeleteItem(i);
+			i--;//若不i--则不能多项同时删除，因为当删除0栏后，1栏会为0栏，就删不掉了
+		}
+	}
+	Sort(1);
+	transform(true);
+	for (int i = 0; i < Com.size(); i++)
+	{
+		m_List.InsertItem(i, Com[i].name);//第一列数据
+		m_List.SetItemText(i, 1, Com[i].time);
+		m_List.SetItemText(i, 2, Com[i].num);
+		m_List.SetItemText(i, 3, Com[i].shelf);
+	}
+}
+
+void SystemDlg::OnSortbytime()
+{
+	for (int i = 0; i < m_List.GetItemCount/*获取条目的数量*/(); i++)
+	{
+		m_List.SetCheck/*设置选中状态*/(i, TRUE);
+	}
+
+	for (int i = 0; i < m_List.GetItemCount/*获取条目的数量*/(); i++)
+	{
+		BOOL state = m_List.GetCheck(i);
+		if (state)
+		{
+			m_List.DeleteItem(i);
+			i--;//若不i--则不能多项同时删除，因为当删除0栏后，1栏会为0栏，就删不掉了
+		}
+	}
+
+	Sort(4);
+	transform(true);
+	for (int i = 0; i < Com.size(); i++)
+	{
+		m_List.InsertItem(i, Com[i].name);//第一列数据
+		m_List.SetItemText(i, 1, Com[i].time);
+		m_List.SetItemText(i, 2, Com[i].num);
+		m_List.SetItemText(i, 3, Com[i].shelf);
+	}
 }

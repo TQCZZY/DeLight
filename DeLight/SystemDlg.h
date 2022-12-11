@@ -32,11 +32,6 @@ public:
 	CListCtrl m_List;
 	HACCEL m_hAcc;
 	CMenu m_Menubar;
-	afx_msg void OnBnClickedSelall();
-	afx_msg void OnBnClickedReversesel();
-	afx_msg void OnBnClickedAdd();
-	afx_msg void OnBnClickedDel();
-	afx_msg void OnBnClickedEdit();
 	afx_msg void OnBnClickedSlfDtl();
 	afx_msg void OnBnClickedSearch();
 	afx_msg void OnBnClickedRemotequery();
@@ -47,4 +42,12 @@ public:
 	afx_msg void OnBnClickedSortsf();
 	afx_msg void OnBnClickedSysdlgSeldst();
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
+	afx_msg void OnQuit();
+	afx_msg void OnInbound();
+	afx_msg void OnOutbound();
+	afx_msg void OnModify();
+	afx_msg void OnSelall();
+	afx_msg void OnRevsel();
+	afx_msg void OnSortbyname();
+	afx_msg void OnSortbytime();
 };

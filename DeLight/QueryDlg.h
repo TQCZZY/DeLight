@@ -1,6 +1,14 @@
 ﻿#pragma once
 #include "afxdialogex.h"
 
+struct SocMsg
+{
+	char ip[21];
+	char name[31];
+	char header[11];
+	char respTo[31];
+	char data[101];
+};
 
 // CQueryDlg 对话框
 ULONG WINAPI LinsenThread(LPVOID p);
@@ -29,6 +37,13 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 public:
+	SocMsg Msg;
+	SocMsg* pMsg;
+	HANDLE listenThreadHandle;
+	CSocket m_ReceiveSocket;//构造一个套接字对象
+	bool dirtyReceiveSocket;
+	bool serverRespond;
+
 	afx_msg void OnBnClickedOk();
 	afx_msg void OnBnClickedSend();
 	afx_msg void OnBnClickedEnter();

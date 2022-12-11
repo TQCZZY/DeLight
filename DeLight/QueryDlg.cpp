@@ -20,6 +20,7 @@ CQueryDlg::CQueryDlg(CWnd* pParent /*=nullptr*/)
 	m_toIP = _T("");
 	m_message = _T("");
 	m_name = _T("");
+	listenThreadHandle = INVALID_HANDLE_VALUE;
 }
 
 CQueryDlg::~CQueryDlg()
@@ -48,17 +49,28 @@ END_MESSAGE_MAP()
 
 // CQueryDlg 消息处理程序
 
-struct SocMsg
-{
-	std::string ip;
-	std::string name;
-	std::string header;
-	std::string respTo;
-	std::string data;
-};
-SocMsg Msg;
-SocMsg* pMsg;
-HANDLE listenThreadHandle = INVALID_HANDLE_VALUE;
+
+ULONG WINAPI TimeoutThread(LPVOID p) {
+	Sleep(15000);
+	CQueryDlg* pDlg = (CQueryDlg*)p;
+	if (!pDlg->serverRespond)
+	{
+		pDlg->m_enter.EnableWindow(true);
+		if (pDlg->dirtyReceiveSocket)
+		{
+			WSACancelBlockingCall();
+			//m_ReceiveSocket.Close();
+			pDlg->dirtyReceiveSocket = false;
+		}
+		if (pDlg->listenThreadHandle != INVALID_HANDLE_VALUE)
+		{
+			TerminateThread(pDlg->listenThreadHandle, 0);//结束一个线程
+			pDlg->listenThreadHandle = INVALID_HANDLE_VALUE;
+		}
+		MessageBox(pDlg->m_hWnd, L"数据中心未响应请求，请重试", L"请求失败", MB_ICONERROR);
+	}
+	return 0;
+}
 
 /*-----------------------------------------------
 线程函数名：LinsenThread
@@ -71,38 +83,41 @@ ULONG WINAPI LinsenThread(LPVOID p) {
 
 	//获取指向界面对话框的指针，通过该指针可以调用界面上的控件
 	CQueryDlg* pDlg = (CQueryDlg*)p;
-	CSocket m_ReceiveSocket;//构造一个套接字对象
 
 	CString header, respTo, data, name;
 
 	//接收数据
-	m_ReceiveSocket.Create(6666, SOCK_DGRAM);
-	pMsg = &Msg;
+	pDlg->m_ReceiveSocket.Create(6666, SOCK_DGRAM);
+	pDlg->dirtyReceiveSocket = true;
+	pDlg->pMsg = &pDlg->Msg;
 
 	//发送数据的初始化
 	USES_CONVERSION;
-	Msg.ip = W2A(pDlg->m_localIP);
-	Msg.name = W2A(pDlg->m_name);
-	Msg.header = "event";
-	Msg.data = "online";
-	m_ReceiveSocket.SendTo(pMsg, sizeof(Msg), 8888, pDlg->m_toIP);//发送登录包
-	Msg.ip = "";
-	Msg.name = "";
-	Msg.header = "";
-	Msg.data = "";
-	Msg.respTo = "";
+	strcpy(pDlg->Msg.ip, W2A(pDlg->m_localIP));
+	strcpy(pDlg->Msg.name, W2A(pDlg->m_name));
+	strcpy(pDlg->Msg.header, "event");
+	strcpy(pDlg->Msg.data, "online");
+	pDlg->m_ReceiveSocket.SendTo(pDlg->pMsg, sizeof(pDlg->Msg), 8888, pDlg->m_toIP);//发送登录包
+	strcpy(pDlg->Msg.ip, "");
+	strcpy(pDlg->Msg.name, "");
+	strcpy(pDlg->Msg.header, "");
+	strcpy(pDlg->Msg.data, "");
+	strcpy(pDlg->Msg.respTo, "");
+	pDlg->serverRespond = false;
+	//CreateThread(NULL, 0, TimeoutThread, pDlg, NULL, NULL);//创建一个新线程
 
 	while (1) {
-		int n = m_ReceiveSocket.Receive(pMsg, sizeof(Msg));
+		int n = pDlg->m_ReceiveSocket.Receive(pDlg->pMsg, sizeof(pDlg->Msg));
 		if (n == 0)
 			continue;
 
-		data = pMsg->data.c_str();
-		name = pMsg->name.c_str();
-		header = pMsg->header.c_str();
-		respTo = pMsg->respTo.c_str();
-		if (data.IsEmpty() || name.IsEmpty() || (header == "event" && (name != "Data Center" || name != pDlg->m_name)) || (header == "respond" && name != pDlg->m_name && respTo != pDlg->m_name))
+		data = pDlg->pMsg->data;
+		name = pDlg->pMsg->name;
+		header = pDlg->pMsg->header;
+		respTo = pDlg->pMsg->respTo;
+		if (data.IsEmpty() || name.IsEmpty() || (header == "event" && (name != "Data Center" && name != pDlg->m_name)) || (header == "respond" && name != pDlg->m_name && respTo != pDlg->m_name))
 			continue;
+		pDlg->serverRespond = true;
 		if (header == "event")
 		{
 			pDlg->m_show.InsertString(-1, header + " from " + name + ": " + data);
@@ -113,6 +128,8 @@ ULONG WINAPI LinsenThread(LPVOID p) {
 				pDlg->m_enter.EnableWindow(true);
 				pDlg->m_toIP = "";
 				pDlg->UpdateData(false);
+				//m_ReceiveSocket.Close();
+				pDlg->dirtyReceiveSocket = false;
 				return 0;
 			}
 		}
@@ -125,31 +142,32 @@ ULONG WINAPI LinsenThread(LPVOID p) {
 				si.name = W2A(data);
 				si.type = 1;
 				std::vector<int> sr = Search(si);
-				if (!sr.size())//search success
+				if (sr.size())//search success
 				{
 					CSocket m_SendSocket;//构造一个套接字对象
 
 					//发送数据的初始化
-					Msg.ip = W2A(pDlg->m_localIP);
-					Msg.name = W2A(pDlg->m_name);
-					Msg.header = "respond";
-					Msg.data = W2A(data);
-					Msg.respTo = W2A(name);
+					strcpy(pDlg->Msg.ip, W2A(pDlg->m_localIP));
+					strcpy(pDlg->Msg.name, W2A(pDlg->m_name));
+					strcpy(pDlg->Msg.header, "respond");
+					strcpy(pDlg->Msg.data, W2A(data));
+					strcpy(pDlg->Msg.respTo, W2A(name));
 
 					//数据发送
 					m_SendSocket.Create(1234, SOCK_DGRAM);//创建一个套接字句柄（UDP）
-					m_SendSocket.SendTo(pMsg, sizeof(Msg), 8888, pDlg->m_toIP);//发送数据给本地计算机
+					m_SendSocket.SendTo(pDlg->pMsg, sizeof(pDlg->Msg), 8888, pDlg->m_toIP);//发送数据给本地计算机
 					m_SendSocket.Close();
-					Msg.ip = "";
-					Msg.name = "";
-					Msg.header = "";
-					Msg.data = "";
-					Msg.respTo = "";
+					strcpy(pDlg->Msg.ip, "");
+					strcpy(pDlg->Msg.name, "");
+					strcpy(pDlg->Msg.header, "");
+					strcpy(pDlg->Msg.data, "");
+					strcpy(pDlg->Msg.respTo, "");
 				}
 			}
 		}
 	}
-	m_ReceiveSocket.Close();
+	//m_ReceiveSocket.Close();
+	pDlg->dirtyReceiveSocket = false;
 	return 0;
 }
 
@@ -165,10 +183,10 @@ void CQueryDlg::OnBnClickedOk()
 
 	//发送数据的初始化
 	USES_CONVERSION;
-	Msg.ip = W2A(m_localIP);
-	Msg.name = W2A(m_name);
-	Msg.header = "event";
-	Msg.data = "offline";
+	strcpy(Msg.ip, W2A(m_localIP));
+	strcpy(Msg.name, W2A(m_name));
+	strcpy(Msg.header, "event");
+	strcpy(Msg.data, "offline");
 	m_SendSocket.SendTo(pMsg, sizeof(Msg), 8888, m_toIP);//发送退登包
 	m_SendSocket.Close();
 	size_t i = m_show.GetCount();
@@ -182,9 +200,17 @@ void CQueryDlg::OnBnClickedOk()
 	m_message = "";
 	m_name = "";
 	UpdateData(false);
+	if (dirtyReceiveSocket)
+	{
+		WSACancelBlockingCall();
+		m_ReceiveSocket.Close();
+		//fixme: unbind old thread and bind new thread
+		dirtyReceiveSocket = false;
+	}
 	if (listenThreadHandle != INVALID_HANDLE_VALUE)
 	{
 		TerminateThread(listenThreadHandle, 0);//结束一个线程
+		listenThreadHandle = INVALID_HANDLE_VALUE;
 	}
 	CDialogEx::OnOK();
 }
@@ -197,26 +223,25 @@ void CQueryDlg::OnBnClickedSend()
 
 	//发送数据的初始化
 	USES_CONVERSION;
-	Msg.ip = W2A(m_localIP);
-	Msg.name = W2A(m_name);
-	Msg.header = "require";
-	Msg.data = W2A(m_message);
-	Msg.respTo = "";
+	strcpy(Msg.ip, W2A(m_localIP));
+	strcpy(Msg.name, W2A(m_name));
+	strcpy(Msg.header, "require");
+	strcpy(Msg.data, W2A(m_message));
+	strcpy(Msg.respTo, "");
 	pMsg = &Msg;
 
 	//数据发送
 	m_SendSocket.Create(1234, SOCK_DGRAM);//创建一个套接字句柄（UDP）
 	m_SendSocket.SendTo(pMsg, sizeof(Msg), 8888, m_toIP);//发送数据给本地计算机
 	m_SendSocket.Close();
-	Msg.ip = "";
-	Msg.name = "";
-	Msg.header = "";
-	Msg.data = "";
-	Msg.respTo = "";
+	strcpy(Msg.ip, "");
+	strcpy(Msg.name, "");
+	strcpy(Msg.header, "");
+	strcpy(Msg.data, "");
+	strcpy(Msg.respTo, "");
 	m_message = "";
 	UpdateData(false);
 }
-
 
 void CQueryDlg::OnBnClickedEnter()
 {
@@ -232,6 +257,6 @@ void CQueryDlg::OnBnClickedEnter()
 	m_enter.EnableWindow(false);
 	if (listenThreadHandle == INVALID_HANDLE_VALUE)
 	{
-		CreateThread(NULL, 0, LinsenThread, this, NULL, NULL);//创建一个新线程
+		listenThreadHandle = CreateThread(NULL, 0, LinsenThread, this, NULL, NULL);//创建一个新线程
 	}
 }

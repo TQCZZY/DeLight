@@ -542,10 +542,20 @@ void SystemDlg::OnRquery()
 
 void SystemDlg::OnLoad()
 {
-	Init();
+	std::string err = Init();
+	if (err != "")
+	{
+		USES_CONVERSION;
+		MessageBox(A2W(err.c_str()), L"加载失败", MB_ICONERROR);
+	}
 }
 
 void SystemDlg::OnSave()
 {
-	Save();
+	std::string err = Save();
+	if (err != "")
+	{
+		USES_CONVERSION;
+		MessageBox(A2W(err.c_str()), L"加载失败", MB_ICONERROR);
+	}
 }

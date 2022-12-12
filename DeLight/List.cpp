@@ -165,6 +165,15 @@ void Good_Info::operator>>(std::vector<uint8_t>& dst)
 	}
 }
 
+void Good_Info::operator=(const Good_Info rightOperand)
+{
+	name = rightOperand.name;
+	amount = rightOperand.amount;
+	number = rightOperand.number;
+	location = rightOperand.location;
+	time = rightOperand.time;
+}
+
 size_t Good_Info::size()
 {
 	return name.size() + (3 + 3) * sizeof(int);
@@ -189,13 +198,6 @@ void Insert(Good_Info good_to_be_insert, int position) {
 		}
 	}
 	//新建
-	if (position == 0) {
-		tmp->next = head->next;
-		head->next = tmp;
-		*tmp = good_to_be_insert;
-		tmp->number = ++cnt;
-		return;
-	}
 	Good_Info* now = head;
 	for (int i = 0; i < position; i++)
 		now = now->next;
@@ -346,7 +348,7 @@ void Sort(int command) {
 std::string Init() {
 	std::fstream file = std::fstream("货物数据.data", std::ios::in | std::ios::binary);
 	file.seekg(0, std::ios::end);
-	int fs = min((size_t)file.tellg(), 2 * 1024 * 1024);
+	int fs = min((int)file.tellg(), 2 * 1024 * 1024);
 	std::vector<uint8_t>key(fs);//定义一个2Mb内存块
 	file.seekg(-fs, std::ios::end);
 	file.read((char*)key.data(), fs);
@@ -355,7 +357,6 @@ std::string Init() {
 		std::string error;
 		qmcGetErr((char*)error.c_str());
 		return error;
-		//把这个字符串给WJB再退出
 	}
 	key.resize(qmcrev);
 	file.seekg(0, std::ios::beg);
@@ -374,7 +375,6 @@ std::string Init() {
 		std::string error;
 		qmcGetErr((char*)error.c_str());
 		return error;
-		//把这个字符串给WJB再退出
 	}
 	count += binBlock.size();
 	intPtr = (uint8_t*)&cnt;
@@ -397,7 +397,6 @@ std::string Init() {
 			std::string error;
 			qmcGetErr((char*)error.c_str());
 			return error;
-			//把这个字符串给WJB再退出
 		}
 		count += binBlock.size();
 		intPtr = (uint8_t*)&size;
@@ -417,7 +416,6 @@ std::string Init() {
 			std::string error;
 			qmcGetErr((char*)error.c_str());
 			return error;
-			//把这个字符串给WJB再退出
 		}
 		count += size;
 		*tmp << binBlock;
@@ -437,7 +435,6 @@ std::string Save() {
 		std::string error;
 		qmcGetErr((char*)error.c_str());
 		return error;
-		//把这个字符串给WJB再退出
 	}
 	key.resize(qmcrev);
 	int count = 0;
@@ -458,7 +455,6 @@ std::string Save() {
 		std::string error;
 		qmcGetErr((char*)error.c_str());
 		return error;
-		//把这个字符串给WJB再退出
 	}
 	count += binBlock.size();
 	file.write((char*)binBlock.data(), binBlock.size());
@@ -479,7 +475,6 @@ std::string Save() {
 			std::string error;
 			qmcGetErr((char*)error.c_str());
 			return error;
-			//把这个字符串给WJB再退出
 		}
 		count += binBlock.size();
 		file.write((char*)binBlock.data(), binBlock.size());
@@ -494,13 +489,12 @@ std::string Save() {
 			std::string error;
 			qmcGetErr((char*)error.c_str());
 			return error;
-			//把这个字符串给WJB再退出
 		}
 		count += binBlock.size();
-		file.write((const char*)binBlock.data(), binBlock.size());
+		file.write((char*)binBlock.data(), binBlock.size());
 		binBlock.resize(0);
 	}
-	file.write((const char*)key.data(), key.size());
+	file.write((char*)key.data(), key.size());
 	file.close();
 	return "";
 }

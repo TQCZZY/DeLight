@@ -20,6 +20,7 @@ struct Good_Info {
 	Good_Info* next = NULL;
 	void operator <<(std::vector<uint8_t> src);
 	void operator >>(std::vector<uint8_t> &dst);
+	void operator =(const Good_Info rightOperand);
 	size_t size();
 };
 

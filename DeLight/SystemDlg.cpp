@@ -548,6 +548,14 @@ void SystemDlg::OnLoad()
 		USES_CONVERSION;
 		MessageBox(A2W(err.c_str()), L"加载失败", MB_ICONERROR);
 	}
+	transform(true);
+	for (int i = 0; i < Com.size(); i++)
+	{
+		m_List.InsertItem(i, Com[i].name);//第一列数据
+		m_List.SetItemText(i, 1, Com[i].time);
+		m_List.SetItemText(i, 2, Com[i].num);
+		m_List.SetItemText(i, 3, Com[i].shelf);
+	}
 }
 
 void SystemDlg::OnSave()

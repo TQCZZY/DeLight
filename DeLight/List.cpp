@@ -165,6 +165,11 @@ void Good_Info::operator>>(std::vector<uint8_t>& dst)
 	}
 }
 
+size_t Good_Info::size()
+{
+	return name.size() + (3 + 3) * sizeof(int);
+}
+
 void Insert(Good_Info good_to_be_insert, int position) {
 	Good_Info* tmp = new Good_Info;
 	Search_Info s;
@@ -339,11 +344,13 @@ void Sort(int command) {
 
 #define FDBG
 std::string Init() {
-	std::fstream file = std::fstream("货物数据.data", std::ios::in);
-	std::vector<uint8_t>key(2 * 1024 * 1024);//定义一个2Mb内存块
-	file.seekg(-(2 * 1024 * 1024), std::ios::end);
-	file.read((char*)key.data(), 2 * 1024 * 1024);
-	int qmcrev = qmcPreDec(key.data(), 2 * 1024 * 1024, "normal");
+	std::fstream file = std::fstream("货物数据.data", std::ios::in | std::ios::binary);
+	file.seekg(0, std::ios::end);
+	int fs = min((size_t)file.tellg(), 2 * 1024 * 1024);
+	std::vector<uint8_t>key(fs);//定义一个2Mb内存块
+	file.seekg(-fs, std::ios::end);
+	file.read((char*)key.data(), fs);
+	int qmcrev = qmcPreDec(key.data(), fs, "normal");
 	if (qmcrev == -1) {
 		std::string error;
 		qmcGetErr((char*)error.c_str());
@@ -351,62 +358,54 @@ std::string Init() {
 		//把这个字符串给WJB再退出
 	}
 	key.resize(qmcrev);
+	file.seekg(0, std::ios::beg);
 	int count = 0;
 	int length = 0;
-	char c = '\0';
-	int n = 0;
-	while (c != '\n') {
-		file.read(&c, sizeof(c));
+	std::vector<uint8_t> binBlock;
+	uint8_t* intPtr;
+	binBlock.resize(sizeof(int));
+	file.read((char*)binBlock.data(), binBlock.size());
 #ifndef FDBG
-		length = qmcDecBlock((uint8_t*)c, sizeof(c), count);
+	length = qmcDecBlock(binBlock.data(), binBlock.size(), count);
 #else
-		length = sizeof(c);
+	length = binBlock.size();
 #endif
-		count += sizeof(c);
+	if (length == 0) {
+		std::string error;
+		qmcGetErr((char*)error.c_str());
+		return error;
+		//把这个字符串给WJB再退出
+	}
+	count += binBlock.size();
+	intPtr = (uint8_t*)&cnt;
+	for (size_t i = 0; i < sizeof(int); ++i)
+	{
+		*(intPtr + i) = binBlock[i];
+	}
+	Good_Info* now = head;
+	Good_Info* tmp;
+	for (int i = 0; i < cnt; i++) {
+		int size;
+		binBlock.resize(sizeof(int));
+		file.read((char*)binBlock.data(), binBlock.size());
+#ifndef FDBG
+		length = qmcDecBlock(binBlock.data(), binBlock.size(), count);
+#else
+		length = binBlock.size();
+#endif
 		if (length == 0) {
 			std::string error;
 			qmcGetErr((char*)error.c_str());
 			return error;
 			//把这个字符串给WJB再退出
 		}
-		n *= 10;
-		n += c;
-	}
-	cnt = n;
-	//c = '\0';
-	//n = 0;
-	//while (c != '\n') {
-	//	file.read(&c, 1);
-	//	n *= 10;
-	//	n += c;
-	//}
-	Good_Info* now=head;
-	Good_Info* tmp;
-	for (int i = 0; i < cnt; i++) {
-		std::vector<uint8_t> binBlock;
-		tmp = new Good_Info;
-		int size = 0;
-		c = '\0';
-		while (c != '\n') {
-			file.read(&c, sizeof(c));
-#ifndef FDBG
-			length = qmcDecBlock((uint8_t*)c, sizeof(c), count);
-#else
-			length = sizeof(c);
-#endif
-			count += sizeof(c);
-			if (length == 0) {
-				std::string error;
-				qmcGetErr((char*)error.c_str());
-				return error;
-				//把这个字符串给WJB再退出
-			}
-			if (c == '\n')
-			{
-				size *= 10;
-				size += c;
-			}
+		count += binBlock.size();
+		intPtr = (uint8_t*)&size;
+		for (size_t i = 0; i < sizeof(int); ++i)
+		{
+			*(intPtr + i) = binBlock[i];
 		}
+		tmp = new Good_Info;
 		binBlock.resize(size);
 		file.read((char*)binBlock.data(), size);
 #ifndef FDBG
@@ -414,15 +413,16 @@ std::string Init() {
 #else
 		length = size;
 #endif
-		count += size;
 		if (length == 0) {
 			std::string error;
 			qmcGetErr((char*)error.c_str());
 			return error;
 			//把这个字符串给WJB再退出
 		}
+		count += size;
 		*tmp << binBlock;
 		now->next = tmp;
+		now = now->next;
 	}
 	file.close();
 	now->next = NULL;
@@ -430,7 +430,7 @@ std::string Init() {
 }
 
 std::string Save() {
-	std::fstream file = std::fstream("货物数据.data", std::ios::out);
+	std::fstream file = std::fstream("货物数据.data", std::ios::out | std::ios::binary);
 	std::vector<uint8_t>key(2 * 1024 * 1024);//定义一个2Mb内存块
 	int qmcrev = qmcPreEnc(key.data(), key.size(), "RC4");
 	if (qmcrev == -1) {
@@ -440,89 +440,65 @@ std::string Save() {
 		//把这个字符串给WJB再退出
 	}
 	key.resize(qmcrev);
-	transform(true);
-	//qmcEncBlock((uint8_t*)Com.data(), sizeof(Com), 0);
 	int count = 0;
 	int length = 0;
-	int n = cnt;//计数
-	std::vector<char>s;
-	while (n != 0) {
-		s.push_back(n % 10);
-		n /= 10;
+	std::vector<uint8_t> binBlock;
+	uint8_t* intPtr;
+	intPtr = (uint8_t*)&cnt;
+	for (size_t i = 0; i < sizeof(int); ++i)
+	{
+		binBlock.push_back(*(intPtr + i));
 	}
-	s.push_back('\n');
 #ifndef FDBG
-	length = qmcEncBlock((uint8_t*)s.data(), sizeof(s), count);
+	length = qmcEncBlock(binBlock.data(), binBlock.size(), count);
 #else
-	length = sizeof(s);
+	length = binBlock.size();
 #endif
-	count += sizeof(s);
 	if (length == 0) {
 		std::string error;
 		qmcGetErr((char*)error.c_str());
 		return error;
 		//把这个字符串给WJB再退出
 	}
-	file.write((const char*)s.data(), sizeof(s));
-	//n = 0;
-	//s.clear();
-	//for (Good_Info* now = head->next; now != NULL; now = now->next)
-	//	n++;
-	//while (n != 0) {
-	//	s.push_back(n % 10);
-	//	n /= 10;
-	//}
-	//s.push_back('\n');
-	//file.write((const char*)s.data(), sizeof(s));
+	count += binBlock.size();
+	file.write((char*)binBlock.data(), binBlock.size());
+	binBlock.resize(0);
 	for (Good_Info* now = head->next; now != NULL; now = now->next) {
-		std::vector<uint8_t> binBlock;
-		*now >> binBlock;
-		int size = binBlock.size();
-		char c;
-		while (size != 0) {
-			c = size % 10;
-			size /= 10;
-#ifndef FDBG
-			length = qmcEncBlock((uint8_t*)c, sizeof(c), count);
-#else
-			length = sizeof(c);
-#endif
-			count += sizeof(c);
-			if (length == 0) {
-				std::string error;
-				qmcGetErr((char*)error.c_str());
-				return error;
-				//把这个字符串给WJB再退出
-			}
-			file.write(&c, 1);
+		int size = (*now).size();
+		intPtr = (uint8_t*)&size;
+		for (size_t i = 0; i < sizeof(int); ++i)
+		{
+			binBlock.push_back(*(intPtr + i));
 		}
-		c = '\n';
-#ifndef FDBG
-		length = qmcEncBlock((uint8_t*)c, sizeof(c), count);
-#else
-		length = sizeof(c);
-#endif
-		count += sizeof(c);
-		if (length == 0) {
-			std::string error;
-			qmcGetErr((char*)error.c_str());
-			return error;
-			//把这个字符串给WJB再退出
-		}
-		file.write(&c, sizeof(c));
 #ifndef FDBG
 		length = qmcEncBlock(binBlock.data(), binBlock.size(), count);
 #else
 		length = binBlock.size();
 #endif
-		count += binBlock.size();
 		if (length == 0) {
 			std::string error;
 			qmcGetErr((char*)error.c_str());
 			return error;
 			//把这个字符串给WJB再退出
 		}
+		count += binBlock.size();
+		file.write((char*)binBlock.data(), binBlock.size());
+		binBlock.resize(0);
+		*now >> binBlock;
+#ifndef FDBG
+		length = qmcEncBlock(binBlock.data(), binBlock.size(), count);
+#else
+		length = binBlock.size();
+#endif
+		if (length == 0) {
+			std::string error;
+			qmcGetErr((char*)error.c_str());
+			return error;
+			//把这个字符串给WJB再退出
+		}
+		count += binBlock.size();
 		file.write((const char*)binBlock.data(), binBlock.size());
+		binBlock.resize(0);
 	}
 	file.write((const char*)key.data(), key.size());
 	file.close();

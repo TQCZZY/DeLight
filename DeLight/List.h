@@ -20,6 +20,7 @@ struct Good_Info {
 	Good_Info* next = NULL;
 	void operator <<(std::vector<uint8_t> src);
 	void operator >>(std::vector<uint8_t> &dst);
+	size_t size();
 };
 
 struct Search_Info {

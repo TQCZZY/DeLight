@@ -344,7 +344,6 @@ void Sort(int command) {
 	}
 }
 
-#define FDBG
 std::string Init() {
 	std::fstream file = std::fstream("货物数据.data", std::ios::in | std::ios::binary);
 	file.seekg(0, std::ios::end);
@@ -366,11 +365,7 @@ std::string Init() {
 	uint8_t* intPtr;
 	binBlock.resize(sizeof(int));
 	file.read((char*)binBlock.data(), binBlock.size());
-#ifndef FDBG
 	length = qmcDecBlock(binBlock.data(), binBlock.size(), count);
-#else
-	length = binBlock.size();
-#endif
 	if (length == 0) {
 		std::string error;
 		qmcGetErr((char*)error.c_str());
@@ -388,11 +383,7 @@ std::string Init() {
 		int size;
 		binBlock.resize(sizeof(int));
 		file.read((char*)binBlock.data(), binBlock.size());
-#ifndef FDBG
 		length = qmcDecBlock(binBlock.data(), binBlock.size(), count);
-#else
-		length = binBlock.size();
-#endif
 		if (length == 0) {
 			std::string error;
 			qmcGetErr((char*)error.c_str());
@@ -407,11 +398,7 @@ std::string Init() {
 		tmp = new Good_Info;
 		binBlock.resize(size);
 		file.read((char*)binBlock.data(), size);
-#ifndef FDBG
 		length = qmcDecBlock(binBlock.data(), size, count);
-#else
-		length = size;
-#endif
 		if (length == 0) {
 			std::string error;
 			qmcGetErr((char*)error.c_str());
@@ -446,11 +433,7 @@ std::string Save() {
 	{
 		binBlock.push_back(*(intPtr + i));
 	}
-#ifndef FDBG
 	length = qmcEncBlock(binBlock.data(), binBlock.size(), count);
-#else
-	length = binBlock.size();
-#endif
 	if (length == 0) {
 		std::string error;
 		qmcGetErr((char*)error.c_str());
@@ -466,11 +449,7 @@ std::string Save() {
 		{
 			binBlock.push_back(*(intPtr + i));
 		}
-#ifndef FDBG
 		length = qmcEncBlock(binBlock.data(), binBlock.size(), count);
-#else
-		length = binBlock.size();
-#endif
 		if (length == 0) {
 			std::string error;
 			qmcGetErr((char*)error.c_str());
@@ -480,11 +459,7 @@ std::string Save() {
 		file.write((char*)binBlock.data(), binBlock.size());
 		binBlock.resize(0);
 		*now >> binBlock;
-#ifndef FDBG
 		length = qmcEncBlock(binBlock.data(), binBlock.size(), count);
-#else
-		length = binBlock.size();
-#endif
 		if (length == 0) {
 			std::string error;
 			qmcGetErr((char*)error.c_str());

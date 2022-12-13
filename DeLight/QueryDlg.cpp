@@ -51,22 +51,24 @@ END_MESSAGE_MAP()
 
 
 ULONG WINAPI TimeoutThread(LPVOID p) {
-	Sleep(15000);
+	Sleep(5000);
 	CQueryDlg* pDlg = (CQueryDlg*)p;
 	if (!pDlg->serverRespond)
 	{
+		CSocket m_SendSocket;//构造一个套接字对象
+
+		m_SendSocket.Create(1234, SOCK_DGRAM);
+		pDlg->pMsg = &pDlg->Msg;
+
+		//发送数据的初始化
+		USES_CONVERSION;
+		strcpy(pDlg->Msg.ip, W2A(pDlg->m_localIP));
+		strcpy(pDlg->Msg.name, W2A(pDlg->m_name));
+		strcpy(pDlg->Msg.header, "event");
+		strcpy(pDlg->Msg.data, "close");
+		m_SendSocket.SendTo(pDlg->pMsg, sizeof(pDlg->Msg), 6666, pDlg->m_localIP);//发送退登包
+		m_SendSocket.Close();
 		pDlg->m_enter.EnableWindow(true);
-		if (pDlg->dirtyReceiveSocket)
-		{
-			WSACancelBlockingCall();
-			//m_ReceiveSocket.Close();
-			pDlg->dirtyReceiveSocket = false;
-		}
-		if (pDlg->listenThreadHandle != INVALID_HANDLE_VALUE)
-		{
-			TerminateThread(pDlg->listenThreadHandle, 0);//结束一个线程
-			pDlg->listenThreadHandle = INVALID_HANDLE_VALUE;
-		}
 		MessageBox(pDlg->m_hWnd, L"数据中心未响应请求，请重试", L"请求失败", MB_ICONERROR);
 	}
 	return 0;
@@ -104,7 +106,7 @@ ULONG WINAPI LinsenThread(LPVOID p) {
 	strcpy(pDlg->Msg.data, "");
 	strcpy(pDlg->Msg.respTo, "");
 	pDlg->serverRespond = false;
-	//CreateThread(NULL, 0, TimeoutThread, pDlg, NULL, NULL);//创建一个新线程
+	CreateThread(NULL, 0, TimeoutThread, pDlg, NULL, NULL);//创建一个新线程
 
 	while (1) {
 		int n = pDlg->m_ReceiveSocket.Receive(pDlg->pMsg, sizeof(pDlg->Msg));
@@ -120,6 +122,13 @@ ULONG WINAPI LinsenThread(LPVOID p) {
 		pDlg->serverRespond = true;
 		if (header == "event")
 		{
+			if (name == pDlg->m_name && data == "close")
+			{
+				pDlg->m_ReceiveSocket.Close();
+				pDlg->dirtyReceiveSocket = false;
+				pDlg->listenThreadHandle = INVALID_HANDLE_VALUE;
+				return 0;
+			}
 			pDlg->m_show.InsertString(-1, header + " from " + name + ": " + data);
 			if (name == "Data Center" && data == "close")
 			{
@@ -128,8 +137,9 @@ ULONG WINAPI LinsenThread(LPVOID p) {
 				pDlg->m_enter.EnableWindow(true);
 				pDlg->m_toIP = "";
 				pDlg->UpdateData(false);
-				//m_ReceiveSocket.Close();
+				pDlg->m_ReceiveSocket.Close();
 				pDlg->dirtyReceiveSocket = false;
+				pDlg->listenThreadHandle = INVALID_HANDLE_VALUE;
 				return 0;
 			}
 		}
@@ -177,7 +187,6 @@ void CQueryDlg::OnBnClickedOk()
 
 	CString header, respTo, data, name;
 
-	//接收数据
 	m_SendSocket.Create(1234, SOCK_DGRAM);
 	pMsg = &Msg;
 
@@ -188,7 +197,11 @@ void CQueryDlg::OnBnClickedOk()
 	strcpy(Msg.header, "event");
 	strcpy(Msg.data, "offline");
 	m_SendSocket.SendTo(pMsg, sizeof(Msg), 8888, m_toIP);//发送退登包
-	m_SendSocket.Close();
+	if (listenThreadHandle == INVALID_HANDLE_VALUE)
+	{
+		strcpy(Msg.data, "close");
+		m_SendSocket.SendTo(pMsg, sizeof(Msg), 6666, m_localIP);//发送退登包
+	}
 	size_t i = m_show.GetCount();
 	for (; i > 0; i--)
 	{
@@ -200,18 +213,7 @@ void CQueryDlg::OnBnClickedOk()
 	m_message = "";
 	m_name = "";
 	UpdateData(false);
-	if (dirtyReceiveSocket)
-	{
-		WSACancelBlockingCall();
-		m_ReceiveSocket.Close();
-		//fixme: unbind old thread and bind new thread
-		dirtyReceiveSocket = false;
-	}
-	if (listenThreadHandle != INVALID_HANDLE_VALUE)
-	{
-		TerminateThread(listenThreadHandle, 0);//结束一个线程
-		listenThreadHandle = INVALID_HANDLE_VALUE;
-	}
+	m_SendSocket.Close();
 	CDialogEx::OnOK();
 }
 

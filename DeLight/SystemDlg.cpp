@@ -13,6 +13,7 @@
 #include "SearchValueDlg.h"
 #include "map.hpp"
 #include "Lines.hpp"
+#include "ExcelSettingsDlg.h"
 #include "Excel.hpp"
 #include "SystemDlg.h"
 
@@ -242,7 +243,7 @@ retryIn:
 	}
 	int nCount = m_List.GetItemCount();
 	m_List.InsertItem(nCount, dlg.sType);//新建类型
-	m_List.SetItemText(nCount, 1, dlg.sDate);
+	m_List.SetItemText(nCount, 1, A2W(t.toString().c_str()));
 	m_List.SetItemText(nCount, 2, dlg.sNumber);
 	m_List.SetItemText(nCount, 3, dlg.sShelf);
 	Good_Info new_good;
@@ -259,8 +260,7 @@ void SystemDlg::OnOutbound()
 {
 	for (int i = 0; i < m_List.GetItemCount/*获取条目的数量*/(); i++)
 	{
-		BOOL state = m_List.GetCheck(i);
-		if (state)
+		if (m_List.GetCheck(i))
 		{
 			m_List.DeleteItem(i);
 			Delete(Com[i].code);
@@ -274,8 +274,7 @@ void SystemDlg::OnModify()
 {
 	for (int i = 0; i < m_List.GetItemCount/*获取条目的数量*/(); i++)
 	{
-		BOOL state = m_List.GetCheck(i);
-		if (state)
+		if (m_List.GetCheck(i))
 		{
 			CString csName = Com[i].name;
 			CString csNum = Com[i].num;
@@ -299,7 +298,7 @@ void SystemDlg::OnModify()
 				goto retryMd;
 			}
 			m_List.SetItemText(i, 0, dlg.sType);
-			m_List.SetItemText(i, 1, dlg.sDate);
+			m_List.SetItemText(i, 1, A2W(t.toString().c_str()));
 			m_List.SetItemText(i, 2, dlg.sNumber);
 			m_List.SetItemText(i, 3, dlg.sShelf);
 			Delete(Com[i].code);
@@ -340,8 +339,7 @@ void SystemDlg::OnSortbyname()
 
 	for (int i = 0; i < m_List.GetItemCount/*获取条目的数量*/(); i++)
 	{
-		BOOL state = m_List.GetCheck(i);
-		if (state)
+		if (m_List.GetCheck(i))
 		{
 			m_List.DeleteItem(i);
 			i--;//若不i--则不能多项同时删除，因为当删除0栏后，1栏会为0栏，就删不掉了
@@ -468,8 +466,6 @@ void SystemDlg::OnSearchbyshelf()
 
 void SystemDlg::OnExport()
 {
-	int item;
-	item = MessageBox(L"导出完毕后,是否自动打开导出的图表?", L"自动启动Excel", MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2);
 	MessageBox(L"你可以在你选择的目录下新建受支持格式的文档;或者你也可以从存在的文档中选择一个,但是这可能会导致原有的数据因被覆盖而丢失.", L"当心数据丢失", MB_ICONINFORMATION);
 	CString Filters = L"Excel 工作簿(*.xlsx)|*.xlsx|Excel 97-2003工作簿(*.xls)|*.xls|文本文档(含有制表符)(*.txt)|*.txt||";
 	CFileDialog dlg(TRUE, NULL, NULL, OFN_CREATEPROMPT | OFN_HIDEREADONLY, Filters);
@@ -490,7 +486,9 @@ void SystemDlg::OnExport()
 			sf.push_back(W2A(Com[i].shelf));
 		}
 		setInfo(nm, qt, dt, sf);
-		global2Excel(dlg.GetPathName());
+		ExcelSettingsDlg exstDlg;
+		exstDlg.DoModal();
+		global2Excel(dlg.GetPathName(), IDNO == MessageBox(L"导出完毕后,是否自动打开导出的图表?", L"自动启动Excel", MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2), exstDlg.readOnly, exstDlg.m_psw, exstDlg.m_wrpsw);
 	}
 }
 

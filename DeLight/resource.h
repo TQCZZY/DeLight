@@ -13,9 +13,8 @@
 #define IDD_SYSTEMDLG                   107
 #define IDD_GOODS_MNG                   108
 #define IDD_SLF_LIST                    109
-#define IDD_SLF_MNG                     110
+#define IDD_EXCEL_SETTINGS              110
 #define IDD_SLF_DTL                     111
-#define IDD_SRC_MTD                     112
 #define IDD_SRC_RES                     113
 #define IDD_SRC_VAL                     114
 #define IDR_SYSDLG_MENUBAR              115
@@ -53,11 +52,9 @@
 #define IDC_GDMDLG_OK                   1028
 #define IDC_GDMDLG_NO                   1029
 #define IDC_SFLSTDLG_LIST               1030
-#define IDC_SFMDLG_TYPE                 1031
-#define IDC_SFMDLG_TIME                 1032
-#define IDC_SFMDLG_NUM                  1033
-#define IDC_SFMDLG_OK                   1034
-#define IDC_SFMDLG_NO                   1035
+#define IDC_EXSTDLG_PSW                 1032
+#define IDC_EXSTDLG_WRPSW               1033
+#define IDC_EXSTDLG_OK                  1034
 #define IDC_SFDTLDLG_SELALL             1036
 #define IDC_SFDTLDLG_REVERSESEL         1037
 #define IDC_SFDTLDLG_ADD                1038
@@ -67,16 +64,13 @@
 #define IDC_SFDTLDLG_SORT_DT            1042
 #define IDC_SFDTLDLG_SORT_QT            1043
 #define IDC_SFDTLDLG_LIST               1044
-#define IDC_SMDLG_NM                    1045
-#define IDC_SMDLG_DT                    1046
-#define IDC_SMDLG_QT                    1047
-#define IDC_SMDLG_SF                    1048
 #define IDC_SRDLG_SELALL                1049
 #define IDC_SRDLG_REVERSESEL            1050
 #define IDC_SRDLG_DEL                   1051
 #define IDC_SRDLG_LIST                  1052
 #define IDC_SVDLG_VAL                   1053
 #define IDC_SVDLG_OK                    1054
+#define IDC_EXSTDLG_RO                  1062
 #define IDM_LOAD                        32771
 #define IDM_SAVE                        32772
 #define IDM_EXPORT                      32773
@@ -103,9 +97,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        118
+#define _APS_NEXT_RESOURCE_VALUE        121
 #define _APS_NEXT_COMMAND_VALUE         32828
-#define _APS_NEXT_CONTROL_VALUE         1054
+#define _APS_NEXT_CONTROL_VALUE         1063
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

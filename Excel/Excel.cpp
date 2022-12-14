@@ -36,7 +36,7 @@ EXCEL_API void global2Excel(CString PathName, bool AutoQuit, bool ReadOnly, CStr
 	}
 	app.SetVisible(!AutoQuit);
 	books.AttachDispatch(app.GetWorkbooks(), true);
-	lpDisp = books.Open(PathName, covOptional, _variant_t(ReadOnly),
+	lpDisp = books.Open(PathName, covOptional, covOptional,
 		covOptional, Password == L"" ? covOptional : _variant_t(Password),
 		WriteResPassword == L"" ? covOptional : _variant_t(WriteResPassword),
 		covOptional, covOptional, covOptional, covOptional, covOptional,
@@ -89,11 +89,18 @@ EXCEL_API void global2Excel(CString PathName, bool AutoQuit, bool ReadOnly, CStr
 		COleVariant(L"货物"),
 		COleVariant(L"数量"),
 		covOptional);
-	book.Save();
+	app.SetDisplayAlerts(false);
+	book.SaveAs(_variant_t(PathName), covOptional, _variant_t(Password),
+		_variant_t(WriteResPassword), _variant_t(ReadOnly), covOptional,
+		1, covOptional, covOptional, covOptional, covOptional,
+		covOptional, covOptional);
 	if (AutoQuit)
 	{
-		app.SetDisplayAlerts(false);
 		app.Quit();
+	}
+	else
+	{
+		app.SetDisplayAlerts(true);
 	}
 	range.ReleaseDispatch();
 	sheet.ReleaseDispatch();
@@ -101,6 +108,10 @@ EXCEL_API void global2Excel(CString PathName, bool AutoQuit, bool ReadOnly, CStr
 	book.ReleaseDispatch();
 	books.ReleaseDispatch();
 	app.ReleaseDispatch();
+	if (ReadOnly)
+	{
+		SetFileAttributes(PathName, FILE_ATTRIBUTE_READONLY);
+	}
 	return;
 }
 
@@ -122,7 +133,7 @@ EXCEL_API void singleGoods2Excel(CString PathName, bool AutoQuit, bool ReadOnly,
 	}
 	app.SetVisible(!AutoQuit);
 	books.AttachDispatch(app.GetWorkbooks(), true);
-	lpDisp = books.Open(PathName, covOptional, _variant_t(ReadOnly),
+	lpDisp = books.Open(PathName, covOptional, covOptional,
 		covOptional, Password == L"" ? covOptional : _variant_t(Password),
 		WriteResPassword == L"" ? covOptional : _variant_t(WriteResPassword),
 		covOptional, covOptional, covOptional, covOptional, covOptional,
@@ -178,11 +189,18 @@ EXCEL_API void singleGoods2Excel(CString PathName, bool AutoQuit, bool ReadOnly,
 		COleVariant(L"货架"),
 		COleVariant(L"数量"),
 		covOptional);
-	book.Save();
+	app.SetDisplayAlerts(false);
+	book.SaveAs(_variant_t(PathName), covOptional, _variant_t(Password),
+		_variant_t(WriteResPassword), _variant_t(ReadOnly), covOptional,
+		1, covOptional, covOptional, covOptional, covOptional,
+		covOptional, covOptional);
 	if (AutoQuit)
 	{
-		app.SetDisplayAlerts(false);
 		app.Quit();
+	}
+	else
+	{
+		app.SetDisplayAlerts(true);
 	}
 	range.ReleaseDispatch();
 	sheet.ReleaseDispatch();
@@ -190,6 +208,10 @@ EXCEL_API void singleGoods2Excel(CString PathName, bool AutoQuit, bool ReadOnly,
 	book.ReleaseDispatch();
 	books.ReleaseDispatch();
 	app.ReleaseDispatch();
+	if (ReadOnly)
+	{
+		SetFileAttributes(PathName, FILE_ATTRIBUTE_READONLY);
+	}
 	return;
 }
 
@@ -211,7 +233,7 @@ EXCEL_API void shelf2Excel(CString PathName, bool AutoQuit, bool ReadOnly, CStri
 	}
 	app.SetVisible(!AutoQuit);
 	books.AttachDispatch(app.GetWorkbooks(), true);
-	lpDisp = books.Open(PathName, covOptional, _variant_t(ReadOnly),
+	lpDisp = books.Open(PathName, covOptional, covOptional,
 		covOptional, Password == L"" ? covOptional : _variant_t(Password),
 		WriteResPassword == L"" ? covOptional : _variant_t(WriteResPassword),
 		covOptional, covOptional, covOptional, covOptional, covOptional,
@@ -267,11 +289,18 @@ EXCEL_API void shelf2Excel(CString PathName, bool AutoQuit, bool ReadOnly, CStri
 		COleVariant(L"货物"),
 		COleVariant(L"数量"),
 		covOptional);
-	book.Save();
+	app.SetDisplayAlerts(false);
+	book.SaveAs(_variant_t(PathName), covOptional, _variant_t(Password),
+		_variant_t(WriteResPassword), _variant_t(ReadOnly), covOptional,
+		1, covOptional, covOptional, covOptional, covOptional,
+		covOptional, covOptional);
 	if (AutoQuit)
 	{
-		app.SetDisplayAlerts(false);
 		app.Quit();
+	}
+	else
+	{
+		app.SetDisplayAlerts(true);
 	}
 	range.ReleaseDispatch();
 	sheet.ReleaseDispatch();
@@ -279,6 +308,10 @@ EXCEL_API void shelf2Excel(CString PathName, bool AutoQuit, bool ReadOnly, CStri
 	book.ReleaseDispatch();
 	books.ReleaseDispatch();
 	app.ReleaseDispatch();
+	if (ReadOnly)
+	{
+		SetFileAttributes(PathName, FILE_ATTRIBUTE_READONLY);
+	}
 	return;
 }
 
@@ -300,7 +333,7 @@ EXCEL_API void specDate2Excel(CString PathName, bool AutoQuit, bool ReadOnly, CS
 	}
 	app.SetVisible(!AutoQuit);
 	books.AttachDispatch(app.GetWorkbooks(), true);
-	lpDisp = books.Open(PathName, covOptional, _variant_t(ReadOnly),
+	lpDisp = books.Open(PathName, covOptional, covOptional,
 		covOptional, Password == L"" ? covOptional : _variant_t(Password),
 		WriteResPassword == L"" ? covOptional : _variant_t(WriteResPassword),
 		covOptional, covOptional, covOptional, covOptional, covOptional,
@@ -356,11 +389,18 @@ EXCEL_API void specDate2Excel(CString PathName, bool AutoQuit, bool ReadOnly, CS
 		COleVariant(L"货物"),
 		COleVariant(L"数量"),
 		covOptional);
-	book.Save();
+	app.SetDisplayAlerts(false);
+	book.SaveAs(_variant_t(PathName), covOptional, _variant_t(Password),
+		_variant_t(WriteResPassword), _variant_t(ReadOnly), covOptional,
+		1, covOptional, covOptional, covOptional, covOptional,
+		covOptional, covOptional);
 	if (AutoQuit)
 	{
-		app.SetDisplayAlerts(false);
 		app.Quit();
+	}
+	else
+	{
+		app.SetDisplayAlerts(true);
 	}
 	range.ReleaseDispatch();
 	sheet.ReleaseDispatch();
@@ -368,6 +408,10 @@ EXCEL_API void specDate2Excel(CString PathName, bool AutoQuit, bool ReadOnly, CS
 	book.ReleaseDispatch();
 	books.ReleaseDispatch();
 	app.ReleaseDispatch();
+	if (ReadOnly)
+	{
+		SetFileAttributes(PathName, FILE_ATTRIBUTE_READONLY);
+	}
 	return;
 }
 

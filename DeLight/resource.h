@@ -69,6 +69,7 @@
 #define IDC_SRDLG_DEL                   1051
 #define IDC_SRDLG_LIST                  1052
 #define IDC_SVDLG_VAL                   1053
+#define IDC_SRDLG_EXPORT                1053
 #define IDC_SVDLG_OK                    1054
 #define IDC_EXSTDLG_RO                  1062
 #define IDM_LOAD                        32771
@@ -97,7 +98,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        121
+#define _APS_NEXT_RESOURCE_VALUE        122
 #define _APS_NEXT_COMMAND_VALUE         32828
 #define _APS_NEXT_CONTROL_VALUE         1063
 #define _APS_NEXT_SYMED_VALUE           101

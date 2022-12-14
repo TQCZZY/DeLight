@@ -8,6 +8,8 @@
 #include <vector>
 #include "List.h"
 #include "SearchResultDlg.h"
+#include "ExcelSettingsDlg.h"
+#include "Excel.hpp"
 
 // SearchResultDlg 对话框
 
@@ -27,12 +29,14 @@ void SearchResultDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_SRDLG_LIST, S_List);
+	DDX_Control(pDX, IDC_SRDLG_EXPORT, m_btnExport);
 }
 
 BEGIN_MESSAGE_MAP(SearchResultDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_SRDLG_SELALL, &SearchResultDlg::OnBnClickedButton1)
 	ON_BN_CLICKED(IDC_SRDLG_REVERSESEL, &SearchResultDlg::OnBnClickedButton7)
 	ON_BN_CLICKED(IDC_SRDLG_DEL, &SearchResultDlg::OnBnClickedButton2)
+	ON_BN_CLICKED(IDC_SRDLG_EXPORT, &SearchResultDlg::OnClickedSrdlgExport)
 END_MESSAGE_MAP()
 
 // SearchResultDlg 消息处理程序
@@ -50,8 +54,9 @@ BOOL SearchResultDlg::OnInitDialog()
 
 	for (int i = 0; i < Com.size(); i++)
 	{
-		for (int j = 0; j < dispContent.size(); j++)
-			if (Com[i].code == dispContent[j])
+		for (int j = 0; j < searchResult.size(); j++)
+		{
+			if (Com[i].code == searchResult[j])
 			{
 				S_List.InsertItem(i, Com[i].name);//第一列数据
 				S_List.SetItemText(i, 1, Com[i].time);
@@ -59,6 +64,11 @@ BOOL SearchResultDlg::OnInitDialog()
 				S_List.SetItemText(i, 3, Com[i].shelf);
 				break;
 			}
+		}
+	}
+	if (searchType == 2)
+	{
+		m_btnExport.ShowWindow(SW_HIDE);
 	}
 
 	return TRUE;  // return TRUE unless you set the focus to a control
@@ -87,8 +97,7 @@ void SearchResultDlg::OnBnClickedButton2()
 {
 	for (int i = 0; i < S_List.GetItemCount/*获取条目的数量*/(); i++)
 	{
-		BOOL state = S_List.GetCheck(i);
-		if (state)
+		if (S_List.GetCheck(i))
 		{
 			S_List.DeleteItem(i);
 			i--;//若不i--则不能多项同时删除，因为当删除0栏后，1栏会为0栏，就删不掉了
@@ -96,8 +105,56 @@ void SearchResultDlg::OnBnClickedButton2()
 	}
 }
 
-INT_PTR SearchResultDlg::DoModal(std::vector<int> sr)
+INT_PTR SearchResultDlg::DoModal(int st, std::vector<int> sr)
 {
-	dispContent = sr;
+	searchType = st;
+	searchResult = sr;
 	return CDialogEx::DoModal();
+}
+
+void SearchResultDlg::OnClickedSrdlgExport()
+{
+	MessageBox(L"你可以在你选择的目录下新建受支持格式的文档;或者你也可以从存在的文档中选择一个,但是这可能会导致原有的数据因被覆盖而丢失.", L"当心数据丢失", MB_ICONINFORMATION);
+	CString Filters = L"Excel 工作簿(*.xlsx)|*.xlsx|Excel 97-2003工作簿(*.xls)|*.xls|文本文档(含有制表符)(*.txt)|*.txt||";
+	CFileDialog dlg(TRUE, NULL, NULL, OFN_CREATEPROMPT | OFN_HIDEREADONLY, Filters);
+	dlg.m_ofn.lpstrTitle = L"打开Excel文档";
+	if (dlg.DoModal() == IDOK)
+	{
+		std::vector<std::string> nm;
+		std::vector<std::string> qt;
+		std::vector<std::string> dt;
+		std::vector<std::string> sf;
+		USES_CONVERSION;
+		for (size_t i = 0; i < Com.size(); i++)
+		{
+			for (int j = 0; j < searchResult.size(); j++)
+			{
+				if (Com[i].code == searchResult[j])
+				{
+					nm.push_back(W2A(Com[i].name));
+					dt.push_back(W2A(Com[i].time));
+					qt.push_back(W2A(Com[i].num));
+					sf.push_back(W2A(Com[i].shelf));
+					break;
+				}
+			}
+		}
+		setInfo(nm, qt, dt, sf);
+		ExcelSettingsDlg exstDlg;
+		exstDlg.DoModal();
+		switch (searchType)
+		{
+		case 1:
+			singleGoods2Excel(dlg.GetPathName(), IDNO == MessageBox(L"导出完毕后,是否自动打开导出的图表?", L"自动启动Excel", MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2), exstDlg.readOnly, exstDlg.m_psw, exstDlg.m_wrpsw);
+			break;
+		case 3:
+			shelf2Excel(dlg.GetPathName(), IDNO == MessageBox(L"导出完毕后,是否自动打开导出的图表?", L"自动启动Excel", MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2), exstDlg.readOnly, exstDlg.m_psw, exstDlg.m_wrpsw);
+			break;
+		case 4:
+			specDate2Excel(dlg.GetPathName(), IDNO == MessageBox(L"导出完毕后,是否自动打开导出的图表?", L"自动启动Excel", MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2), exstDlg.readOnly, exstDlg.m_psw, exstDlg.m_wrpsw);
+			break;
+		default:
+			break;
+		}
+	}
 }

@@ -72,7 +72,7 @@ void SearchValueDlg::OnBnClickedButton1()
 	}
 	EndDialog(0);
 	SearchResultDlg dlg;
-	dlg.DoModal(Search(si));
+	dlg.DoModal(searchType, Search(si));
 }
 
 INT_PTR SearchValueDlg::DoModal(int st)

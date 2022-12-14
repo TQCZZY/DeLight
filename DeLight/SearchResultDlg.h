@@ -18,7 +18,9 @@ public:
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
-	std::vector<int> dispContent;
+	int searchType;
+	std::vector<int> searchResult;
+	CButton m_btnExport;
 	DECLARE_MESSAGE_MAP()
 public:
 	// 这是展示搜索结果的
@@ -27,5 +29,6 @@ public:
 	afx_msg void OnBnClickedButton1();
 	afx_msg void OnBnClickedButton7();
 	afx_msg void OnBnClickedButton2();
-	virtual INT_PTR DoModal(std::vector<int> sr);
+	virtual INT_PTR DoModal(int st, std::vector<int> sr);
+	afx_msg void OnClickedSrdlgExport();
 };

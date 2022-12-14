@@ -39,7 +39,6 @@ void GoodsMngmntDlg::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(GoodsMngmntDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_GDMDLG_OK, &GoodsMngmntDlg::OnBnClickedButtonOk)
 	ON_BN_CLICKED(IDC_GDMDLG_NO, &GoodsMngmntDlg::OnBnClickedButtonNo)
-	ON_EN_CHANGE(IDC_GDMDLG_DATE, &GoodsMngmntDlg::OnChangeGdmdlgDate)
 END_MESSAGE_MAP()
 
 
@@ -81,31 +80,4 @@ BOOL GoodsMngmntDlg::OnInitDialog()
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常: OCX 属性页应返回 FALSE
-}
-
-size_t NumericLength(CString str, size_t startAt = 0)
-{
-	size_t i;
-	for (i = startAt; i < str.GetLength(); ++i)
-	{
-		if (!(str[i] >= '0' && str[i] <= '9'))
-		{
-			break;
-		}
-	}
-	return i - startAt;
-}
-void GoodsMngmntDlg::OnChangeGdmdlgDate()
-{
-	CString newValue;
-	GetDlgItemText(IDC_GDMDLG_DATE, newValue);
-	if (sDate.GetLength() < newValue.GetLength())
-	{
-		return;
-	}
-	size_t length = NumericLength(sDate, 0);
-	if (length == 4)
-	{
-
-	}
 }

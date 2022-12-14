@@ -219,39 +219,35 @@ void SystemDlg::OnQuit()
 
 void SystemDlg::OnInbound()
 {
+	CString csName = L"";
+	CString csNum = L"";
+	CString csDate = L"";
+	CString csShelf = L"";
+retryIn:
 	GoodsMngmntDlg dlg;
-	if (IDCANCEL == dlg.DoModal(L"", L"", L"", L"", false) ||//点击增加，弹出子对话框2
+	if (IDCANCEL == dlg.DoModal(csName, csNum, csDate, csShelf, false) ||//点击增加，弹出子对话框2
 		dlg.sType.IsEmpty() || dlg.sDate.IsEmpty() || dlg.sNumber.IsEmpty() || dlg.sShelf.IsEmpty())
 		return;
+	csName = dlg.sType;
+	csNum = dlg.sNumber;
+	csDate = dlg.sDate;
+	csShelf = dlg.sShelf;
+	USES_CONVERSION;
+	Time t;
+	t << W2A(dlg.sDate);
+	if (t == Time{ 0, 0, 0 })
+	{
+		MessageBox(L"日期格式错误，请更正\n如下是一些支持的日期示例:\n2022 1 1\n2022,1,1\n2022.1.1\n2022/1/1\n2022-1-1\n20220101", L"更正日期格式", MB_ICONERROR);
+		goto retryIn;
+	}
 	int nCount = m_List.GetItemCount();
 	m_List.InsertItem(nCount, dlg.sType);//新建类型
 	m_List.SetItemText(nCount, 1, dlg.sDate);
 	m_List.SetItemText(nCount, 2, dlg.sNumber);
 	m_List.SetItemText(nCount, 3, dlg.sShelf);
 	Good_Info new_good;
-	USES_CONVERSION;
 	new_good.name = W2A(dlg.sType);
-
-	std::string sou4 = W2A(dlg.sDate);
-	Time t = { 0,0,0 };
-	int p = 0;
-	while (sou4[p] != '-') {
-		t.year *= 10;
-		t.year += sou4[p++] - '0';
-	}
-	p++;
-	while (sou4[p] != '-') {
-		t.month *= 10;
-		t.month += sou4[p++] - '0';
-	}
-	p++;
-	while (sou4[p] != '\0') {
-		t.date *= 10;
-		t.date += sou4[p++] - '0';
-	}
-	new_good.time.year = t.year;
-	new_good.time.month = t.month;
-	new_good.time.date = t.date;
+	new_good.time = t;
 
 	new_good.amount = _ttoi(dlg.sNumber);
 	new_good.location = _ttoi(dlg.sShelf);
@@ -281,39 +277,35 @@ void SystemDlg::OnModify()
 		BOOL state = m_List.GetCheck(i);
 		if (state)
 		{
+			CString csName = Com[i].name;
+			CString csNum = Com[i].num;
+			CString csDate = Com[i].time;
+			CString csShelf = Com[i].shelf;
+		retryMd:
 			GoodsMngmntDlg dlg;
-			if (IDCANCEL == dlg.DoModal(Com[i].name, Com[i].num, Com[i].time, Com[i].shelf, false) ||//弹窗
+			if (IDCANCEL == dlg.DoModal(csName, csNum, csDate, csShelf, false) ||//弹窗
 				dlg.sType.IsEmpty() || dlg.sDate.IsEmpty() || dlg.sNumber.IsEmpty() || dlg.sShelf.IsEmpty())
 				return;
+			csName = dlg.sType;
+			csNum = dlg.sNumber;
+			csDate = dlg.sDate;
+			csShelf = dlg.sShelf;
+			USES_CONVERSION;
+			Time t;
+			t << W2A(dlg.sDate);
+			if (t == Time{ 0, 0, 0 })
+			{
+				MessageBox(L"日期格式错误，请更正\n如下是一些支持的日期示例:\n2022 1 1\n2022,1,1\n2022.1.1\n2022/1/1\n2022-1-1\n20220101", L"更正日期格式", MB_ICONERROR);
+				goto retryMd;
+			}
 			m_List.SetItemText(i, 0, dlg.sType);
 			m_List.SetItemText(i, 1, dlg.sDate);
 			m_List.SetItemText(i, 2, dlg.sNumber);
 			m_List.SetItemText(i, 3, dlg.sShelf);
 			Delete(Com[i].code);
 			Good_Info new_good;
-			USES_CONVERSION;
 			new_good.name = W2A(dlg.sType);
-
-			std::string sou4 = W2A(dlg.sDate);
-			Time t = { 0,0,0 };
-			int p = 0;
-			while (sou4[p] != '-') {
-				t.year *= 10;
-				t.year += sou4[p++] - '0';
-			}
-			p++;
-			while (sou4[p] != '-') {
-				t.month *= 10;
-				t.month += sou4[p++] - '0';
-			}
-			p++;
-			while (sou4[p] != '\0') {
-				t.date *= 10;
-				t.date += sou4[p++] - '0';
-			}
-			new_good.time.year = t.year;
-			new_good.time.month = t.month;
-			new_good.time.date = t.date;
+			new_good.time = t;
 
 			new_good.amount = _ttoi(dlg.sNumber);
 			new_good.location = _ttoi(dlg.sShelf);
@@ -452,30 +444,26 @@ void SystemDlg::OnSortbyshelf()
 
 void SystemDlg::OnSearchbyname()
 {
-	Sou2.type = 1;
 	SearchValueDlg dlg;
-	dlg.DoModal();
+	dlg.DoModal(1);
 }
 
 void SystemDlg::OnSearchbytime()
 {
-	Sou2.type = 4;
 	SearchValueDlg dlg;
-	dlg.DoModal();
+	dlg.DoModal(4);
 }
 
 void SystemDlg::OnSearchbyquantity()
 {
-	Sou2.type = 2;
 	SearchValueDlg dlg;
-	dlg.DoModal();
+	dlg.DoModal(2);
 }
 
 void SystemDlg::OnSearchbyshelf()
 {
-	Sou2.type = 3;
 	SearchValueDlg dlg;
-	dlg.DoModal();
+	dlg.DoModal(3);
 }
 
 void SystemDlg::OnExport()

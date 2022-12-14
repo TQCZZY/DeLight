@@ -1,8 +1,7 @@
 ﻿#pragma once
 #include "afxdialogex.h"
 
-
-// kuang 对话框
+// SearchResultDlg 对话框
 
 class SearchResultDlg : public CDialogEx
 {
@@ -19,7 +18,7 @@ public:
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
-
+	std::vector<int> dispContent;
 	DECLARE_MESSAGE_MAP()
 public:
 	// 这是展示搜索结果的
@@ -28,5 +27,5 @@ public:
 	afx_msg void OnBnClickedButton1();
 	afx_msg void OnBnClickedButton7();
 	afx_msg void OnBnClickedButton2();
-	CListCtrl SOU;
+	virtual INT_PTR DoModal(std::vector<int> sr);
 };

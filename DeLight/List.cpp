@@ -2,24 +2,24 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <regex>
 #include "List.h"
 #include "EncryptionDll.hpp"
 
 std::vector<Goodinfor>Com;
 Goodinfor tmp;
 
-Search_Info Sou2;
-
 Good_Info* head = new Good_Info;
 int cnt;
 
 void transform(bool fromList) {
+	USES_CONVERSION;
 	if (fromList)
 	{
 		Com.clear();
 		for (Good_Info* now = head->next; now != NULL; now = now->next) {
 			tmp.name = now->name.c_str();
-			tmp.time = (std::to_string(now->time.year) + "-" + std::to_string(now->time.month) + "-" + std::to_string(now->time.date)).c_str();
+			tmp.time = A2W(now->time.toString().c_str());
 			tmp.num = std::to_string(now->amount).c_str();
 			tmp.shelf = std::to_string(now->location).c_str();
 			tmp.shelfNo = now->location;
@@ -28,7 +28,6 @@ void transform(bool fromList) {
 		}
 	} else {
 		Delete(-1);
-		USES_CONVERSION;
 		for (int i = 0; i < Com.size(); ++i) {
 			Good_Info new_good;
 			USES_CONVERSION;
@@ -62,6 +61,8 @@ void transform(bool fromList) {
 	}
 }
 
+static const std::regex date_regex{ "(([0-9]{4})[ ,\\./-]{1}([01]?[0-9]{1})[ ,\\./-]{1}([0-3]?[0-9]{1}))|(([0-9]{4})([01]{1}[0-9]{1})([0-3]{1}[0-9]{1}))" };
+
 void Time::operator =(const Time x) {
 	this->year = x.year;
 	this->month = x.month;
@@ -79,6 +80,34 @@ bool Time::operator >(const Time x) {
 	if (this->date < x.date)
 		return false;
 	return true;
+}
+
+void Time::operator<<(std::string src)
+{
+	if (!regex_match(src, date_regex))
+	{
+		*this = { 0, 0, 0 };
+		return;
+	}
+	if (regex_replace(src, date_regex, "$1") != "")
+	{
+		*this = { atoi(regex_replace(src, date_regex, "$2").c_str()),atoi(regex_replace(src, date_regex, "$3").c_str()), atoi(regex_replace(src, date_regex, "$4").c_str()) };
+	}
+	else
+	{
+		*this = { atoi(regex_replace(src, date_regex, "$6").c_str()),atoi(regex_replace(src, date_regex, "$7").c_str()), atoi(regex_replace(src, date_regex, "$8").c_str()) };
+	}
+	return;
+}
+
+void Time::operator>>(std::string& dst)
+{
+	dst = (std::to_string(year) + "/" + std::to_string(month) + "/" + std::to_string(date)).c_str();
+}
+
+std::string Time::toString()
+{
+	return std::to_string(year) + "/" + std::to_string(month) + "/" + std::to_string(date);
 }
 
 void Good_Info::operator<<(std::vector<uint8_t> src)

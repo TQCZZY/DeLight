@@ -10,8 +10,6 @@
 #include "SearchValueDlg.h"
 #include "SearchResultDlg.h"
 
-std::vector<int>b;
-
 // SearchValueDlg 对话框
 
 IMPLEMENT_DYNAMIC(SearchValueDlg, CDialogEx)
@@ -31,67 +29,54 @@ void SearchValueDlg::DoDataExchange(CDataExchange* pDX)
 	CDialogEx::DoDataExchange(pDX);
 }
 
-
 BEGIN_MESSAGE_MAP(SearchValueDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_SVDLG_OK, &SearchValueDlg::OnBnClickedButton1)
 END_MESSAGE_MAP()
-
 
 // SearchValueDlg 消息处理程序
 
 void SearchValueDlg::OnBnClickedButton1()
 {
-	// TODO: 在此添加控件通知处理程序代码2
-	GetDlgItemText(IDC_SVDLG_VAL, Sousuo);
+	GetDlgItemText(IDC_SVDLG_VAL, keyword);
 	USES_CONVERSION;
-	switch (Sou2.type) {
+	Search_Info si;
+	si.type = searchType;
+	switch (searchType) {
 	case 1:
 	{
-		std::string sou1 = W2A(Sousuo);
-		Sou2.name = sou1;
+		si.name = W2A(keyword);
 	}
 	break;
 	case 2:
 	{
-		int sou2;
-		sou2 = _ttoi(Sousuo);
-		Sou2.amount = sou2;
+		si.amount = _ttoi(keyword);
 	}
 	break;
 	case 3:
 	{
-		int sou3;
-		sou3 = _ttoi(Sousuo);
-		Sou2.location = sou3;
+		si.location = _ttoi(keyword);
 	}
 	break;
 	case 4:
 	{
-		std::string sou4 = W2A(Sousuo);
 		Time t = { 0,0,0 };
-		int p=0;
-		while (sou4[p] != '-') {
-			t.year *= 10;
-			t.year += sou4[p++] - '0';
+		t << W2A(keyword);
+		if (t == Time{ 0, 0, 0 })
+		{
+			MessageBox(L"日期格式错误，请更正\n如下是一些支持的日期示例:\n2022 1 1\n2022,1,1\n2022.1.1\n2022/1/1\n2022-1-1\n20220101", L"更正日期格式", MB_ICONERROR);
+			return;
 		}
-		p++;
-		while (sou4[p] != '-') {
-			t.month *= 10;
-			t.month += sou4[p++] - '0';
-		}
-		p++;
-		while (sou4[p] != '\0') {
-			t.date *= 10;
-			t.date += sou4[p++] - '0';
-		}
-		Sou2.time.year=t.year;
-		Sou2.time.month = t.month;
-		Sou2.time.date = t.date;
+		si.time = t;
 	}	
 	break;
 	}
-	b = Search(Sou2);
 	EndDialog(0);
 	SearchResultDlg dlg;
-	dlg.DoModal();
+	dlg.DoModal(Search(si));
+}
+
+INT_PTR SearchValueDlg::DoModal(int st)
+{
+	searchType = st;
+	return CDialogEx::DoModal();
 }

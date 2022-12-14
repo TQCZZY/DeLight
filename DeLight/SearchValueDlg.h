@@ -2,8 +2,6 @@
 #include "afxdialogex.h"
 #include "vector"
 
-extern std::vector<int>b;
-
 // SearchValueDlg 对话框
 
 class SearchValueDlg : public CDialogEx
@@ -21,8 +19,10 @@ public:
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
-
+	int searchType;
 	DECLARE_MESSAGE_MAP()
-public:CString Sousuo;
+public:
+	CString keyword;
 	afx_msg void OnBnClickedButton1();
+	virtual INT_PTR DoModal(int st);
 };

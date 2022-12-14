@@ -9,6 +9,9 @@ struct Time {
 	void operator =(const Time x);
 	bool operator ==(const Time x);
 	bool operator >(const Time x);
+	void operator <<(std::string src);
+	void operator >>(std::string& dst);
+	std::string toString();
 };
 
 struct Good_Info {
@@ -44,8 +47,6 @@ struct Goodinfor {
 
 extern std::vector<Goodinfor>Com;
 extern Goodinfor tmp;
-
-extern Search_Info Sou2;
 
 extern Good_Info* head;
 extern int cnt;

@@ -66,11 +66,12 @@
 #define IDC_SFDTLDLG_LIST               1044
 #define IDC_SRDLG_SELALL                1049
 #define IDC_SRDLG_REVERSESEL            1050
-#define IDC_SRDLG_DEL                   1051
+#define IDC_SRDLG_RMV                   1051
 #define IDC_SRDLG_LIST                  1052
 #define IDC_SVDLG_VAL                   1053
 #define IDC_SRDLG_EXPORT                1053
 #define IDC_SVDLG_OK                    1054
+#define IDC_SRDLG_OUT                   1055
 #define IDC_EXSTDLG_RO                  1062
 #define IDM_LOAD                        32771
 #define IDM_SAVE                        32772

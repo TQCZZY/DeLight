@@ -18,6 +18,7 @@ public:
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
+	bool isOutbound;
 	int searchType;
 	std::vector<int> searchResult;
 	CButton m_btnExport;
@@ -26,9 +27,10 @@ public:
 	// 这是展示搜索结果的
 	CListCtrl S_List;
 	virtual BOOL OnInitDialog();
-	afx_msg void OnBnClickedButton1();
-	afx_msg void OnBnClickedButton7();
-	afx_msg void OnBnClickedButton2();
-	virtual INT_PTR DoModal(int st, std::vector<int> sr);
+	afx_msg void OnClickedSelall();
+	afx_msg void OnClickedReversesel();
+	afx_msg void OnClickedRmv();
 	afx_msg void OnClickedSrdlgExport();
+	afx_msg void OnClickedSrdlgOut();
+	virtual INT_PTR DoModal(int st, std::vector<int> sr);
 };

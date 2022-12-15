@@ -17,6 +17,7 @@ IMPLEMENT_DYNAMIC(SearchResultDlg, CDialogEx)
 
 SearchResultDlg::SearchResultDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_SRC_RES, pParent)
+	, isOutbound(false)
 {
 
 }
@@ -33,10 +34,11 @@ void SearchResultDlg::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(SearchResultDlg, CDialogEx)
-	ON_BN_CLICKED(IDC_SRDLG_SELALL, &SearchResultDlg::OnBnClickedButton1)
-	ON_BN_CLICKED(IDC_SRDLG_REVERSESEL, &SearchResultDlg::OnBnClickedButton7)
-	ON_BN_CLICKED(IDC_SRDLG_DEL, &SearchResultDlg::OnBnClickedButton2)
+	ON_BN_CLICKED(IDC_SRDLG_SELALL, &SearchResultDlg::OnClickedSelall)
+	ON_BN_CLICKED(IDC_SRDLG_REVERSESEL, &SearchResultDlg::OnClickedReversesel)
+	ON_BN_CLICKED(IDC_SRDLG_RMV, &SearchResultDlg::OnClickedRmv)
 	ON_BN_CLICKED(IDC_SRDLG_EXPORT, &SearchResultDlg::OnClickedSrdlgExport)
+	ON_BN_CLICKED(IDC_SRDLG_OUT, &SearchResultDlg::OnClickedSrdlgOut)
 END_MESSAGE_MAP()
 
 // SearchResultDlg 消息处理程序
@@ -52,9 +54,9 @@ BOOL SearchResultDlg::OnInitDialog()
 	S_List.InsertColumn(2, _T("商品库存"), 0, 200);
 	S_List.InsertColumn(3, _T("货架编号"), 0, 200);
 
-	for (int i = 0; i < Com.size(); i++)
+	for (int i = 0; i < searchResult.size(); i++)
 	{
-		for (int j = 0; j < searchResult.size(); j++)
+		for (int j = 0; j < Com.size(); j++)
 		{
 			if (Com[i].code == searchResult[j])
 			{
@@ -76,7 +78,7 @@ BOOL SearchResultDlg::OnInitDialog()
 }
 
 
-void SearchResultDlg::OnBnClickedButton1()
+void SearchResultDlg::OnClickedSelall()
 {
 	for (int i = 0; i < S_List.GetItemCount/*获取条目的数量*/(); i++)
 	{
@@ -85,7 +87,7 @@ void SearchResultDlg::OnBnClickedButton1()
 }
 
 
-void SearchResultDlg::OnBnClickedButton7()
+void SearchResultDlg::OnClickedReversesel()
 {
 	for (int i = 0; i < S_List.GetItemCount/*获取条目的数量*/(); i++)
 	{
@@ -93,9 +95,46 @@ void SearchResultDlg::OnBnClickedButton7()
 	}
 }
 
-void SearchResultDlg::OnBnClickedButton2()
+void SearchResultDlg::OnClickedRmv()
 {
-	for (int i = 0; i < S_List.GetItemCount/*获取条目的数量*/(); i++)
+	if (!isOutbound)
+	{
+		MessageBox(L"该操作仅将勾选的条目从搜索结果中移除，相应货物并不会出库。", L"注意", MB_ICONINFORMATION);
+	}
+	size_t delCount = 0;
+	for (int i = 0; i < S_List.GetItemCount/*获取条目的数量*/(); ++i)
+	{
+		if (S_List.GetCheck(i))
+		{
+			if (isOutbound)
+			{
+				Delete(searchResult[i]);
+			}
+			searchResult[i] = 0;
+			++delCount;
+		}
+	}
+	for (int i = 0; i < searchResult.size(); ++i)
+	{
+		if (searchResult[i] == 0)
+		{
+			for (int j = i + 1; j < searchResult.size(); ++j)
+			{
+				if (searchResult[j] != 0)
+				{
+					searchResult[i] = searchResult[j];
+					searchResult[j] = 0;
+					break;
+				}
+			}
+			if (searchResult[i] == 0)
+			{
+				break;
+			}
+		}
+	}
+	searchResult.resize(searchResult.size() - delCount);
+	for (int i = 0; i < S_List.GetItemCount/*获取条目的数量*/(); ++i)
 	{
 		if (S_List.GetCheck(i))
 		{
@@ -105,11 +144,11 @@ void SearchResultDlg::OnBnClickedButton2()
 	}
 }
 
-INT_PTR SearchResultDlg::DoModal(int st, std::vector<int> sr)
+void SearchResultDlg::OnClickedSrdlgOut()
 {
-	searchType = st;
-	searchResult = sr;
-	return CDialogEx::DoModal();
+	isOutbound = true;
+	OnClickedRmv();
+	isOutbound = false;
 }
 
 void SearchResultDlg::OnClickedSrdlgExport()
@@ -157,4 +196,11 @@ void SearchResultDlg::OnClickedSrdlgExport()
 			break;
 		}
 	}
+}
+
+INT_PTR SearchResultDlg::DoModal(int st, std::vector<int> sr)
+{
+	searchType = st;
+	searchResult = sr;
+	return CDialogEx::DoModal();
 }

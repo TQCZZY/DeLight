@@ -5,6 +5,7 @@
 #include "DeLight.h"
 #include "vector"
 #include "afxdialogex.h"
+#include "List.h"
 #include "ShelfListDlg.h"
 #include "ShelfDetailDlg.h"
 
@@ -44,11 +45,27 @@ BOOL ShelfListDlg::OnInitDialog()
 
 	T_List.InsertColumn(0, _T("货架编号"), 0, 200/*宽度*/);
 
-	CString sthing;
-	for (int i = 1; i < 4; i++)
+	bool isDuplicate;
+	csShelf.clear();
+	for (int i = 0; i < Com.size(); ++i)
 	{
-		sthing.Format(_T("%d号货架"), i);
-		T_List.InsertItem(i, sthing);
+		isDuplicate = false;
+		for (int j = 0; j < csShelf.size(); ++j)
+		{
+			if (Com[i].shelf == csShelf[j])
+			{
+				isDuplicate = true;
+				break;
+			}
+		}
+		if (!isDuplicate)
+		{
+			csShelf.push_back(Com[i].shelf);
+		}
+	}
+	for (int i = 1; i <= csShelf.size(); ++i)
+	{
+		T_List.InsertItem(i, csShelf[i - 1] + "号货架");
 	}
 	
 	return TRUE;  // return TRUE unless you set the focus to a control
@@ -57,7 +74,7 @@ BOOL ShelfListDlg::OnInitDialog()
 
 void ShelfListDlg::OnDblclkSlfdtldlgList(NMHDR* pNMHDR, LRESULT* pResult)
 {
-	shelfNo = ((NM_LISTVIEW*)pNMHDR)->iItem + 1;
+	shelfNo = _ttoi(csShelf[((NM_LISTVIEW*)pNMHDR)->iItem]);
 	ShelfDetailDlg dlg;
 	dlg.DoModal(shelfNo);
 	*pResult = 0;

@@ -19,7 +19,7 @@ public:
 protected:
 	int shelfNo;
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
-
+	std::vector<CString> csShelf;
 	DECLARE_MESSAGE_MAP()
 public:
 	// 这是排列货架序号的列表

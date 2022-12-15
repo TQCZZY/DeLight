@@ -57,13 +57,14 @@
 #define IDC_EXSTDLG_OK                  1034
 #define IDC_SFDTLDLG_SELALL             1036
 #define IDC_SFDTLDLG_REVERSESEL         1037
-#define IDC_SFDTLDLG_ADD                1038
-#define IDC_SFDTLDLG_DEL                1039
+#define IDC_SFDTLDLG_IN                 1038
+#define IDC_SFDTLDLG_OUT                1039
 #define IDC_SFDTLDLG_EDIT               1040
 #define IDC_SFDTLDLG_SORT_NM            1041
 #define IDC_SFDTLDLG_SORT_DT            1042
 #define IDC_SFDTLDLG_SORT_QT            1043
 #define IDC_SFDTLDLG_LIST               1044
+#define IDC_SFDTLDLG_EXPORT             1045
 #define IDC_SRDLG_SELALL                1049
 #define IDC_SRDLG_REVERSESEL            1050
 #define IDC_SRDLG_RMV                   1051
@@ -99,7 +100,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        122
+#define _APS_NEXT_RESOURCE_VALUE        123
 #define _APS_NEXT_COMMAND_VALUE         32828
 #define _APS_NEXT_CONTROL_VALUE         1063
 #define _APS_NEXT_SYMED_VALUE           101

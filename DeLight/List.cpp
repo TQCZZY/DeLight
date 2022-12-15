@@ -18,10 +18,10 @@ void transform(bool fromList) {
 	{
 		Com.clear();
 		for (Good_Info* now = head->next; now != NULL; now = now->next) {
-			tmp.name = now->name.c_str();
+			tmp.name = A2W(now->name.c_str());
 			tmp.time = A2W(now->time.toString().c_str());
-			tmp.num = std::to_string(now->amount).c_str();
-			tmp.shelf = std::to_string(now->location).c_str();
+			tmp.num = A2W(std::to_string(now->amount).c_str());
+			tmp.shelf = A2W(std::to_string(now->location).c_str());
 			tmp.shelfNo = now->location;
 			tmp.code = now->number;
 			Com.push_back(tmp);
@@ -32,28 +32,7 @@ void transform(bool fromList) {
 			Good_Info new_good;
 			USES_CONVERSION;
 			new_good.name = W2A(Com[i].name);
-
-			std::string rawDate = W2A(Com[i].time);
-			Time t = { 0,0,0 };
-			int p = 0;
-			while (rawDate[p] != '-') {
-				t.year *= 10;
-				t.year += rawDate[p++] - '0';
-			}
-			p++;
-			while (rawDate[p] != '-') {
-				t.month *= 10;
-				t.month += rawDate[p++] - '0';
-			}
-			p++;
-			while (rawDate[p] != '\0') {
-				t.date *= 10;
-				t.date += rawDate[p++] - '0';
-			}
-			new_good.time.year = t.year;
-			new_good.time.month = t.month;
-			new_good.time.date = t.date;
-
+			new_good.time << W2A(Com[i].time);
 			new_good.amount = _ttoi(Com[i].num);
 			new_good.location = Com[i].shelfNo;
 			Insert(new_good);

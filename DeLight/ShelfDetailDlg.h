@@ -21,20 +21,19 @@ protected:
 	int shelfNumber;
 	std::vector<int> indexInCom;
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
-
+	CListCtrl m_list;
 	DECLARE_MESSAGE_MAP()
 public:
-	// 1号货物列表
-	CListCtrl H1_List;
 	afx_msg void OnClose();
 	virtual BOOL OnInitDialog();
-	afx_msg void OnBnClickedButton1();
-	afx_msg void OnBnClickedButton4();
-	afx_msg void OnBnClickedButton3();
-	afx_msg void OnBnClickedButton7();
-	afx_msg void OnBnClickedButton8();
-	afx_msg void OnBnClickedButton2();
-	afx_msg void OnBnClickedButton11();
-	afx_msg void OnBnClickedButton12();
+	afx_msg void OnClickedSelall();
+	afx_msg void OnClickedReversesel();
+	afx_msg void OnClickedInbound();
+	afx_msg void OnClickedOutbound();
+	afx_msg void OnClickedEdit();
+	afx_msg void OnClickedSortnm();
+	afx_msg void OnClickedSortdt();
+	afx_msg void OnClickedSortqt();
 	virtual INT_PTR DoModal(int shelfNo);
+	afx_msg void OnClickedSfdtldlgExport();
 };

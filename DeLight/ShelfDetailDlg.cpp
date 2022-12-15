@@ -107,41 +107,33 @@ void ShelfDetailDlg::OnClickedReversesel()//反选
 
 void ShelfDetailDlg::OnClickedInbound()//入库
 {
-	// TODO: 在此添加控件通知处理程序代码
+	CString csName = L"";
+	CString csNum = L"";
+	CString csDate = L"";
+	USES_CONVERSION;
+ShelfDetailDlgRetryIn:
 	GoodsMngmntDlg dlg;
-	if (IDCANCEL == dlg.DoModal(L"", L"", L"", L"", true) ||//点击增加，弹出子对话框2
+	if (IDCANCEL == dlg.DoModal(csName, csNum, csDate, A2W(std::to_string(shelfNumber).c_str()), true) ||//点击增加，弹出子对话框
 	dlg.sType.IsEmpty() || dlg.sDate.IsEmpty() || dlg.sNumber.IsEmpty())
 		return;
+	csName = dlg.sType;
+	csNum = dlg.sNumber;
+	csDate = dlg.sDate;
+	Time t;
+	t << W2A(dlg.sDate);
+	if (t == Time{ 0, 0, 0 })
+	{
+		MessageBox(L"日期格式错误，请更正\n如下是一些支持的日期示例:\n2022 1 1\n2022,1,1\n2022.1.1\n2022/1/1\n2022-1-1\n20220101", L"更正日期格式", MB_ICONERROR);
+		goto ShelfDetailDlgRetryIn;
+	}
 	int nCount = m_list.GetItemCount();
 	m_list.InsertItem(nCount, L"");
 	m_list.SetItemText(nCount, 0, dlg.sType);
 	m_list.SetItemText(nCount, 1, dlg.sDate);
 	m_list.SetItemText(nCount, 2, dlg.sNumber);
-
 	Good_Info new_good;
-	USES_CONVERSION;
 	new_good.name = W2A(dlg.sType);
-
-	std::string sou4 = W2A(dlg.sDate);
-	Time t = { 0,0,0 };
-	int p = 0;
-	while (sou4[p] != '-') {
-		t.year *= 10;
-		t.year += sou4[p++] - '0';
-	}
-	p++;
-	while (sou4[p] != '-') {
-		t.month *= 10;
-		t.month += sou4[p++] - '0';
-	}
-	p++;
-	while (sou4[p] != '\0') {
-		t.date *= 10;
-		t.date += sou4[p++] - '0';
-	}
-	new_good.time.year = t.year;
-	new_good.time.month = t.month;
-	new_good.time.date = t.date;
+	new_good.time = t;
 
 	new_good.amount = _ttoi(dlg.sNumber);
 	new_good.location = shelfNumber;
@@ -151,7 +143,6 @@ void ShelfDetailDlg::OnClickedInbound()//入库
 
 void ShelfDetailDlg::OnClickedOutbound()//出库
 {
-	// TODO: 在此添加控件通知处理程序代码
 	size_t realIdx = 0;
 	for (int i = 0; i < m_list.GetItemCount/*获取条目的数量*/(); ++i, ++realIdx)
 	{
@@ -167,45 +158,37 @@ void ShelfDetailDlg::OnClickedOutbound()//出库
 
 void ShelfDetailDlg::OnClickedEdit()//修改
 {
-	// TODO: 在此添加控件通知处理程序代码
 	size_t realIdx = 0;
 	for (int i = 0; i < m_list.GetItemCount/*获取条目的数量*/(); ++i, ++realIdx)
 	{
-		BOOL state = m_list.GetCheck(i);
-		if (state)
+		if (m_list.GetCheck(i))
 		{
+			CString csName = Com[indexInCom[i]].name;
+			CString csNum = Com[indexInCom[i]].num;
+			CString csDate = Com[indexInCom[i]].time;
+		ShelfDetailDlgRetryMd:
 			GoodsMngmntDlg dlg;
-			if (IDCANCEL == dlg.DoModal(Com[indexInCom[i]].name, Com[indexInCom[i]].num, Com[indexInCom[i]].time, Com[indexInCom[i]].shelf, true) ||//弹窗
+			if (IDCANCEL == dlg.DoModal(csName, csNum, csDate, Com[indexInCom[i]].shelf, true) ||//弹窗
 				dlg.sType.IsEmpty() || dlg.sDate.IsEmpty() || dlg.sNumber.IsEmpty())
 				return;
+			csName = dlg.sType;
+			csNum = dlg.sNumber;
+			csDate = dlg.sDate;
+			USES_CONVERSION;
+			Time t;
+			t << W2A(dlg.sDate);
+			if (t == Time{ 0, 0, 0 })
+			{
+				MessageBox(L"日期格式错误，请更正\n如下是一些支持的日期示例:\n2022 1 1\n2022,1,1\n2022.1.1\n2022/1/1\n2022-1-1\n20220101", L"更正日期格式", MB_ICONERROR);
+				goto ShelfDetailDlgRetryMd;
+			}
 			m_list.SetItemText(i, 0, dlg.sType);
 			m_list.SetItemText(i, 1, dlg.sDate);
 			m_list.SetItemText(i, 2, dlg.sNumber);
 			Delete(Com[indexInCom[i]].code);
 			Good_Info new_good;
-			USES_CONVERSION;
 			new_good.name = W2A(dlg.sType);
-
-			std::string sou4 = W2A(dlg.sDate);
-			Time t = { 0,0,0 };
-			int p = 0;
-			while (sou4[p] != '-') {
-				t.year *= 10;
-				t.year += sou4[p++] - '0';
-			}
-			p++;
-			while (sou4[p] != '-') {
-				t.month *= 10;
-				t.month += sou4[p++] - '0';
-			}
-			p++;
-			while (sou4[p] != '\0') {
-				t.date *= 10;
-				t.date += sou4[p++] - '0';
-			}
-			new_good.time.year = t.year;
-			new_good.time.month = t.month;
-			new_good.time.date = t.date;
+			new_good.time = t;
 
 			new_good.amount = _ttoi(dlg.sNumber);
 			new_good.location = _ttoi(dlg.sShelf);
@@ -217,20 +200,10 @@ void ShelfDetailDlg::OnClickedEdit()//修改
 
 void ShelfDetailDlg::OnClickedSortnm()//排序1
 {
-	// TODO: 在此添加控件通知处理程序代码
 	for (int i = 0; i < m_list.GetItemCount/*获取条目的数量*/(); i++)
 	{
-		m_list.SetCheck/*设置选中状态*/(i, TRUE);
-	}
-
-	for (int i = 0; i < m_list.GetItemCount/*获取条目的数量*/(); i++)
-	{
-		BOOL state = m_list.GetCheck(i);
-		if (state)
-		{
-			m_list.DeleteItem(i);
-			i--;//若不i--则不能多项同时删除，因为当删除0栏后，1栏会为0栏，就删不掉了
-		}
+		m_list.DeleteItem(i);
+		i--;//若不i--则不能多项同时删除，因为当删除0栏后，1栏会为0栏，就删不掉了
 	}
 
 	Sort(1);
@@ -249,20 +222,10 @@ void ShelfDetailDlg::OnClickedSortnm()//排序1
 
 void ShelfDetailDlg::OnClickedSortdt()//排序2
 {
-	// TODO: 在此添加控件通知处理程序代码
 	for (int i = 0; i < m_list.GetItemCount/*获取条目的数量*/(); i++)
 	{
-		m_list.SetCheck/*设置选中状态*/(i, TRUE);
-	}
-
-	for (int i = 0; i < m_list.GetItemCount/*获取条目的数量*/(); i++)
-	{
-		BOOL state = m_list.GetCheck(i);
-		if (state)
-		{
-			m_list.DeleteItem(i);
-			i--;//若不i--则不能多项同时删除，因为当删除0栏后，1栏会为0栏，就删不掉了
-		}
+		m_list.DeleteItem(i);
+		i--;//若不i--则不能多项同时删除，因为当删除0栏后，1栏会为0栏，就删不掉了
 	}
 
 	Sort(4);
@@ -281,20 +244,10 @@ void ShelfDetailDlg::OnClickedSortdt()//排序2
 
 void ShelfDetailDlg::OnClickedSortqt()//排序3
 {
-	// TODO: 在此添加控件通知处理程序代码
 	for (int i = 0; i < m_list.GetItemCount/*获取条目的数量*/(); i++)
 	{
-		m_list.SetCheck/*设置选中状态*/(i, TRUE);
-	}
-
-	for (int i = 0; i < m_list.GetItemCount/*获取条目的数量*/(); i++)
-	{
-		BOOL state = m_list.GetCheck(i);
-		if (state)
-		{
-			m_list.DeleteItem(i);
-			i--;//若不i--则不能多项同时删除，因为当删除0栏后，1栏会为0栏，就删不掉了
-		}
+		m_list.DeleteItem(i);
+		i--;//若不i--则不能多项同时删除，因为当删除0栏后，1栏会为0栏，就删不掉了
 	}
 
 	Sort(2);

@@ -226,7 +226,7 @@ void SystemDlg::OnInbound()
 	CString csShelf = L"";
 retryIn:
 	GoodsMngmntDlg dlg;
-	if (IDCANCEL == dlg.DoModal(csName, csNum, csDate, csShelf, false) ||//点击增加，弹出子对话框2
+	if (IDCANCEL == dlg.DoModal(csName, csNum, csDate, csShelf, false) ||//点击增加，弹出子对话框
 		dlg.sType.IsEmpty() || dlg.sDate.IsEmpty() || dlg.sNumber.IsEmpty() || dlg.sShelf.IsEmpty())
 		return;
 	csName = dlg.sType;

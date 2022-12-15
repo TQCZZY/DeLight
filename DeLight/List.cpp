@@ -374,7 +374,12 @@ void Sort(int command) {
 }
 
 std::string Init() {
-	std::fstream file = std::fstream("货物数据.data", std::ios::in | std::ios::binary);
+	std::fstream file("货物数据.data", std::ios::in | std::ios::binary);
+	if (!file.is_open())
+	{
+		file.close();
+		return "无法打开相应文件以载入数据，请检查文件状态";
+	}
 	file.seekg(0, std::ios::end);
 	int fs = min((int)file.tellg(), 2 * 1024 * 1024);
 	std::vector<uint8_t>key(fs);//定义一个2Mb内存块
@@ -444,7 +449,7 @@ std::string Init() {
 }
 
 std::string Save() {
-	std::fstream file = std::fstream("货物数据.data", std::ios::out | std::ios::binary);
+	std::fstream file("货物数据.data", std::ios::out | std::ios::binary);
 	std::vector<uint8_t>key(2 * 1024 * 1024);//定义一个2Mb内存块
 	int qmcrev = qmcPreEnc(key.data(), key.size(), "RC4");
 	if (qmcrev == -1) {

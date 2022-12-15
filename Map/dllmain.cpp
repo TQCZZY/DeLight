@@ -1,7 +1,7 @@
 ﻿// dllmain.cpp : 定义 DLL 应用程序的入口点。
 #include "pch.h"
 
-HINSTANCE hInst;                                // 当前实例
+HINSTANCE hInst;// 当前实例
 
 BOOL APIENTRY DllMain(HMODULE hModule,
     DWORD  ul_reason_for_call,
@@ -28,18 +28,17 @@ BOOL APIENTRY DllMain(HMODULE hModule,
 #include <atlconv.h>
 
 #define MAX_LOADSTRING 100
-#define GET_X_LPARAM(lp)                        ((int)(short)LOWORD(lp))
-
-#define GET_Y_LPARAM(lp)                        ((int)(short)HIWORD(lp))
+#define GET_X_LPARAM(lp) ((int)(short)LOWORD(lp))
+#define GET_Y_LPARAM(lp) ((int)(short)HIWORD(lp))
 
 // 全局变量:
-WCHAR szTitle[MAX_LOADSTRING];                  // 标题栏文本
-WCHAR szWindowClass[MAX_LOADSTRING];   // 主窗口类名
+WCHAR szTitle[MAX_LOADSTRING];// 标题栏文本
+WCHAR szWindowClass[MAX_LOADSTRING];// 主窗口类名
 HWND hWnd;
 std::vector<RECT> MapRects;
 std::vector<std::string> MapRectsDesc;
-std::vector<std::pair<int, int> > points; //存放点
-std::vector<std::pair<int, int> > RcvPoints;//接收返回点
+std::vector<std::pair<int, int> > points;// 存放点
+std::vector<std::pair<int, int> > RcvPoints;// 接收返回点
 bool confirmedSel = false;
 
 bool IsInRect(int LX, int LY, int RX, int RY, int x, int y)

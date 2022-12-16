@@ -361,3 +361,11 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+#Builds & Exports
+*.exe
+*.lib
+DeLight/*.hpp
+
+#Map For Debug
+DeLight/map.txt

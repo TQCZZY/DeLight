@@ -445,6 +445,7 @@ void SystemDlg::OnSearchbyname()
 	SearchValueDlg dlg;
 	dlg.DoModal(1);
 	transform(true);
+	m_List.DeleteAllItems();
 	for (int i = 0; i < Com.size(); i++)
 	{
 		m_List.InsertItem(i, Com[i].name);//第一列数据
@@ -459,6 +460,7 @@ void SystemDlg::OnSearchbytime()
 	SearchValueDlg dlg;
 	dlg.DoModal(4);
 	transform(true);
+	m_List.DeleteAllItems();
 	for (int i = 0; i < Com.size(); i++)
 	{
 		m_List.InsertItem(i, Com[i].name);//第一列数据
@@ -473,6 +475,7 @@ void SystemDlg::OnSearchbyquantity()
 	SearchValueDlg dlg;
 	dlg.DoModal(2);
 	transform(true);
+	m_List.DeleteAllItems();
 	for (int i = 0; i < Com.size(); i++)
 	{
 		m_List.InsertItem(i, Com[i].name);//第一列数据
@@ -487,6 +490,7 @@ void SystemDlg::OnSearchbyshelf()
 	SearchValueDlg dlg;
 	dlg.DoModal(3);
 	transform(true);
+	m_List.DeleteAllItems();
 	for (int i = 0; i < Com.size(); i++)
 	{
 		m_List.InsertItem(i, Com[i].name);//第一列数据
@@ -543,6 +547,7 @@ void SystemDlg::OnSlfdtl()
 	ShelfListDlg dlg;
 	dlg.DoModal();
 	transform(true);
+	m_List.DeleteAllItems();
 	for (int i = 0; i < Com.size(); i++)
 	{
 		m_List.InsertItem(i, Com[i].name);//第一列数据
@@ -575,6 +580,7 @@ void SystemDlg::OnLoad()
 		MessageBox(A2W(err.c_str()), L"加载失败", MB_ICONERROR);
 	}
 	transform(true);
+	m_List.DeleteAllItems();
 	for (int i = 0; i < Com.size(); i++)
 	{
 		m_List.InsertItem(i, Com[i].name);//第一列数据

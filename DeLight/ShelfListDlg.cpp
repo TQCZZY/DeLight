@@ -4,6 +4,7 @@
 #include "pch.h"
 #include "DeLight.h"
 #include "vector"
+#include "string"
 #include "afxdialogex.h"
 #include "List.h"
 #include "ShelfListDlg.h"

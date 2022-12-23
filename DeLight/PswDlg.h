@@ -1,5 +1,5 @@
 ﻿
-// DeLightDlg.h: 头文件
+// PswDlg.h: 头文件
 //
 
 #pragma once
@@ -16,15 +16,12 @@ public:
 	enum { IDD = IDD_PSW_DIALOG };
 #endif
 
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV 支持
-
-
 // 实现
 protected:
+	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV 支持
 
-	virtual BOOL OnInitDialog();
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnBnClickedButtonLgn();
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 };

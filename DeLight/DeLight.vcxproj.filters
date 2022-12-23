@@ -37,6 +37,9 @@
     <ClCompile Include="ExcelSettingsDlg.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="jsoncpp.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DeLight.h">
@@ -82,6 +85,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="ExcelSettingsDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="json.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="json-forwards.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

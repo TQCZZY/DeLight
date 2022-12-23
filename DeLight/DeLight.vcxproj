@@ -186,6 +186,8 @@
     <ClInclude Include="ExcelSettingsDlg.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="GoodsMngmntDlg.h" />
+    <ClInclude Include="json-forwards.h" />
+    <ClInclude Include="json.h" />
     <ClInclude Include="List.h" />
     <ClInclude Include="SearchResultDlg.h" />
     <ClInclude Include="SearchValueDlg.h" />
@@ -202,6 +204,7 @@
   <ItemGroup>
     <ClCompile Include="ExcelSettingsDlg.cpp" />
     <ClCompile Include="GoodsMngmntDlg.cpp" />
+    <ClCompile Include="jsoncpp.cpp" />
     <ClCompile Include="SearchResultDlg.cpp" />
     <ClCompile Include="SearchValueDlg.cpp" />
     <ClCompile Include="List.cpp" />
